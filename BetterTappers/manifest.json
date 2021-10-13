@@ -2,7 +2,7 @@
   "Name": "BetterTappers",
   "Author": "CaptainSully",
   "Version": "0.0.1",
-  "Description": "Changes the time tappers take to produce",
+  "Description": "Makes tapper production times configurable",
   "UniqueID": "CaptainSully.BetterTappers",
   "EntryDll": "BetterTappers.dll",
   "MinimumApiVersion": "3.0.0",
