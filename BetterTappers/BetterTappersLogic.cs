@@ -1,23 +1,20 @@
 ﻿namespace BetterTappers
 {
-    using StardewModdingAPI;
-    using StardewValley;
-    using StardewValley.Objects;
     using StardewValley.TerrainFeatures;
-    using StardewModdingAPI.Events;
     using StardewObject = StardewValley.Object;
 
     internal class BetterTappersLogic
     {
-        public static void CheckTappers(ModEntry mod, Object o)
+        /*
+        public static void CheckTappers(BetterTappersEntry mod, Object o)
         {
             if (IsAnyTapper(o))
             {
                 ChangeTapperMinutes(mod, o);
             }
         }
-
-        public static void ChangeTapperMinutes(ModEntry mod, Object tapper)
+        
+        public static void ChangeTapperMinutes(BetterTappersEntry mod, Object tapper)
         {
             foreach (var terrainfeature in Game1.currentLocation.terrainFeatures.Pairs)
             {
@@ -30,8 +27,9 @@
                 }
             }
         }
+        */
 
-        public static int DesiredMinutes(ModEntry mod, int index, Tree tree)
+        public static int DesiredMinutes(BetterTappersEntry mod, int index, Tree tree)
         {
             if (index == 105)
             {
@@ -86,7 +84,7 @@
             }
             else
             {
-                mod.Monitor.Log($"Error in: BetterTappers.DesiredMinutes method, somehow the object is a tapper but isn't a tapper.", LogLevel.Debug);
+                mod.DebugLog("BetterTappers: Problem in DesiredMinutes, returning default");
                 return 1440;
             }
         }
