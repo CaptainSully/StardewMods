@@ -26,9 +26,8 @@
         public void ErrorLog(object o, Exception e = null)
         {
             string baseMessage = o == null ? "null" : o.ToString();
-
             string errorMessage = e == null ? string.Empty : $"\n{e.Message}\n{e.StackTrace}";
-
+            
             Monitor.Log(baseMessage + errorMessage, LogLevel.Error);
         }
 
