@@ -5,6 +5,5 @@
   "Description": "Start game with greenhouse enabled",
   "UniqueID": "CaptainSully.StartWithGreenhouse",
   "EntryDll": "StartWithGreenhouse.dll",
-  "MinimumApiVersion": "3.0.0",
   "UpdateKeys": [ "Nexus:9878" ]
 }

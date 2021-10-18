@@ -1,6 +1,5 @@
 ﻿namespace BetterTappers
 {
-    using StardewValley.TerrainFeatures;
     using StardewObject = StardewValley.Object;
 
     internal class BetterTappersLogic
@@ -29,11 +28,11 @@
         }
         */
 
-        public static int DesiredMinutes(BetterTappersEntry mod, int index, Tree tree)
+        public static int DesiredMinutes(BetterTappersEntry mod, int index, int treeType)
         {
             if (index == 105)
             {
-                switch (tree.treeType)
+                switch (treeType)
                 {
                     case 1:
                     case 2:
@@ -49,9 +48,9 @@
             }
             else if (index == 264)
             {
-                if (mod.Config.OverrideHeavyTapperDefaults)
+                if (mod.Config.OverrideHeavyTapperDefault)
                 {
-                    switch (tree.treeType)
+                    switch (treeType)
                     {
                         case 1:
                         case 2:
@@ -67,7 +66,7 @@
                 }
                 else
                 {
-                    switch (tree.treeType)
+                    switch (treeType)
                     {
                         case 1:
                         case 2:
@@ -88,7 +87,7 @@
                 return 1440;
             }
         }
-
+        
         public static bool IsAnyTapper(StardewObject o)
         {
             return o != null && o.bigCraftable && (o.ParentSheetIndex == 105 || o.parentSheetIndex == 264);

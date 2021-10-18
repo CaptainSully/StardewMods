@@ -55,6 +55,7 @@
     <Compile Include="BetterTappersEntry.cs" />
     <Compile Include="Patcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json" />
