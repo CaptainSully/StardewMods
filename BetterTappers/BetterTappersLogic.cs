@@ -1,91 +1,63 @@
 ﻿namespace BetterTappers
 {
+    using StardewModdingAPI;
+    using StardewValley;
     using StardewValley.TerrainFeatures;
+    using System;
     using StardewObject = StardewValley.Object;
 
     internal class BetterTappersLogic
     {
-        /*
-        public static void CheckTappers(BetterTappersEntry mod, Object o)
-        {
-            if (IsAnyTapper(o))
-            {
-                ChangeTapperMinutes(mod, o);
-            }
-        }
-        
-        public static void ChangeTapperMinutes(BetterTappersEntry mod, Object tapper)
-        {
-            foreach (var terrainfeature in Game1.currentLocation.terrainFeatures.Pairs)
-            {
-                if (terrainfeature.Value is Tree tree)
-                {
-                    if (tree.currentTileLocation == tapper.TileLocation)
-                    {
-                        tapper.MinutesUntilReady = DesiredMinutes(mod, tapper.parentSheetIndex, tree);
-                    }
-                }
-            }
-        }
-        */
+        public const int LvlCap = 100;
+        public const int formula = 0;
 
-        public static int DesiredMinutes(BetterTappersEntry mod, int index, Tree tree)
+        public static int GetTreeAgeMonths(Tree tree)
         {
-            if (index == 105)
+            return (int)Math.Floor(GetTreeAge(tree)/28f);
+        }
+
+        public static int GetTreeAge(Tree tree)
+        {
+            tree.modData.TryGetValue($"{BetterTappersEntry.UID}/treeAge", out string data);
+
+            if (!string.IsNullOrEmpty(data))
             {
-                switch (tree.treeType)
+                return int.Parse(data);
+            }
+            BetterTappersEntry.DebugLog("BetterTappers: Could not get tree age.", true);
+            return 0;
+        }
+
+        public static void IncreaseTreeAges()
+        {
+            if (!Context.IsMainPlayer)
+            {
+                return;
+            }
+
+            foreach (var location in Game1.locations)
+            {
+                foreach (var terrainfeature in location.terrainFeatures.Pairs)
                 {
-                    case 1:
-                    case 2:
-                    case 3:
-                        return (int)(1440 * mod.Config.DaysForSyrups);
-                    case 7:
-                        return (int)(1440 * mod.Config.DaysForMushroom);
-                    case 8:
-                        return (int)(1440 * mod.Config.DaysForSap);
-                    default:
-                        return 1440;
+                    if (terrainfeature.Value is Tree tree)
+                    {
+                        IncreaseTreeAge(tree);
+                    }
                 }
             }
-            else if (index == 264)
+        }
+
+        public static void IncreaseTreeAge(Tree tree)
+        {
+            tree.modData.TryGetValue($"{BetterTappersEntry.UID}/treeAge", out string data);
+
+            if (!string.IsNullOrEmpty(data))
             {
-                if (mod.Config.OverrideHeavyTapperDefaults)
-                {
-                    switch (tree.treeType)
-                    {
-                        case 1:
-                        case 2:
-                        case 3:
-                            return (int)(1440 * mod.Config.DaysForSyrupsHeavy);
-                        case 7:
-                            return (int)(1440 * mod.Config.DaysForMushroomHeavy);
-                        case 8:
-                            return (int)(1440 * mod.Config.DaysForSapHeavy);
-                        default:
-                            return 1440;
-                    }
-                }
-                else
-                {
-                    switch (tree.treeType)
-                    {
-                        case 1:
-                        case 2:
-                        case 3:
-                            return (int)((1440 * mod.Config.DaysForSyrups) / 2);
-                        case 7:
-                            return (int)((1440 * mod.Config.DaysForMushroom) / 2);
-                        case 8:
-                            return (int)((1440 * mod.Config.DaysForSap) / 2);
-                        default:
-                            return 1440;
-                    }
-                }
+                tree.modData[$"{BetterTappersEntry.UID}/treeAge"] = (int.Parse(data) + 1).ToString();
             }
             else
             {
-                mod.DebugLog("BetterTappers: Problem in DesiredMinutes, returning default");
-                return 1440;
+                tree.modData[$"{BetterTappersEntry.UID}/treeAge"] = "1";
             }
         }
 

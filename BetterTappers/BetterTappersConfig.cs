@@ -3,33 +3,65 @@
     using System;
     using StardewModdingAPI;
 
-    public interface GenericModConfigMenuAPI
+    public interface IGenericModConfigMenuAPI
     {
-        void RegisterModConfig(IManifest mod, Action revertToDefault, Action saveToFile);
-        void RegisterLabel(IManifest mod, string labelName, string labelDesc);
-        void RegisterSimpleOption(IManifest mod, string optionName, string optionDesc, Func<bool> optionGet, Action<bool> optionSet);
-        void RegisterSimpleOption(IManifest mod, string optionName, string optionDesc, Func<float> optionGet, Action<float> optionSet);
-    }
+        void Register(IManifest mod, Action reset, Action save, bool titleScreenOnly = false);
+        void AddSectionTitle(IManifest mod, Func<string> text, Func<string> tooltip = null);
+        void AddParagraph(IManifest mod, Func<string> text);
+        void AddBoolOption(IManifest mod, Func<bool> getValue, Action<bool> setValue, Func<string> name, Func<string> tooltip = null, string fieldId = null);
+        void AddNumberOption(IManifest mod, Func<int> getValue, Action<int> setValue, Func<string> name, Func<string> tooltip = null, int? min = null, int? max = null, int? interval = null, string fieldId = null);
+        void AddNumberOption(IManifest mod, Func<float> getValue, Action<float> setValue, Func<string> name, Func<string> tooltip = null, float? min = null, float? max = null, float? interval = null, string fieldId = null);
+     }
+
     public class BetterTappersConfig
     {
+        //general options
+        public bool DisableAllModEffects { get; set; } = false;
+        public bool ChangeTapperTimes { get; set; } = true;
+        public bool TappersUseQuality { get; set; } = true;
+        public int TapperXP { get; set; } = 10;
+        public bool GathererAffectsTappers { get; set; } = true;
+        public bool BotanistAffectsTappers { get; set; } = true;
+
+
         //options for regular tappers
         public float DaysForSyrups { get; set; } = 7f;
         public float DaysForSap { get; set; } = 1f;
         public float DaysForMushroom { get; set; } = 7f;
 
         //options for hardwood tappers
-        public Boolean OverrideHeavyTapperDefaults = false;
+        public bool OverrideHeavyTapperDefault { get; set; } = false;
+        public float HeavyTapperMultiplier { get; set; } = 0.5f;
         public float DaysForSyrupsHeavy { get; set; } = 3.5f;
         public float DaysForSapHeavy { get; set; } = 0.5f;
         public float DaysForMushroomHeavy { get; set; } = 3.5f;
 
-        //other options
-        //public int TapperQualityOptions { get; set; } = 0;
-        //public int TapperExp { get; set; } = 0;
+        //quality options
+        public bool ForageLevelAffectsQuality { get; set; } = true;
+        public bool TimesHarvestedAffectsQuality { get; set; } = true;
+        public bool TreeAgeAffectsQuality { get; set; } = true;
+        internal int Formula { get; set; } = 0;
+        internal int LvlCap { get; set; } = 0;
+
+        //Debug mode
+        public bool DebugMode { get; set; } = false;
+        internal bool DebugTapper { get; set; } = false;
+        internal bool DebugLogic { get; set; } = false;
+        internal bool DebugPatcher { get; set; } = false;
+        internal bool DebugMethods { get; set; } = false;
+
+        //different outputs?
+        //more outputs? (like 3-8 sap)
 
         public static void VerifyConfigValues(BetterTappersConfig config, BetterTappersEntry mod)
         {
             bool invalidConfig = false;
+
+            if (config.TapperXP < 0)
+            {
+                invalidConfig = true;
+                config.TapperXP = 0;
+            }
 
             if (config.DaysForSyrups < 0)
             {
@@ -47,6 +79,12 @@
             {
                 invalidConfig = true;
                 config.DaysForMushroom = 7f;
+            }
+
+            if (config.HeavyTapperMultiplier < 0)
+            {
+                invalidConfig = true;
+                config.HeavyTapperMultiplier = 0.5f;
             }
 
             if (config.DaysForSyrupsHeavy < 0)
@@ -69,36 +107,84 @@
 
             if (invalidConfig)
             {
-                mod.DebugLog("At least one config value was out of range and was reset.");
+                BetterTappersEntry.DebugLog("BetterTappers: At least one config value was out of range and was reset.", true);
                 mod.Helper.WriteConfig(config);
             }
         }
-
+        
         public static void SetUpModConfigMenu(BetterTappersConfig config, BetterTappersEntry mod)
         {
-            GenericModConfigMenuAPI api = mod.Helper.ModRegistry.GetApi<GenericModConfigMenuAPI>("spacechase0.GenericModConfigMenu");
-
-            if (api == null)
-            {
-                return;
-            }
-
+            IGenericModConfigMenuAPI api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuAPI>("spacechase0.GenericModConfigMenu");
+            if (api == null) { return; }
             var manifest = mod.ModManifest;
 
-            api.RegisterModConfig(manifest, () => config = new BetterTappersConfig(), delegate { mod.Helper.WriteConfig(config); VerifyConfigValues(config, mod); });
+            api.Register(manifest, () => config = new BetterTappersConfig(), delegate { mod.Helper.WriteConfig(config); VerifyConfigValues(config, mod); });
 
-            api.RegisterLabel(manifest, "Tappers", null);
+            //General mod settings. Some of these affect the other categories
+            api.AddSectionTitle(manifest, text: () => "General");
 
-            api.RegisterSimpleOption(manifest, "Days for maple/oak/pine trees", "Number of days for regular tappers to produce on listed trees.\nVanilla is 5-9 depending on tree type.", () => config.DaysForSyrups, (float val) => config.DaysForSyrups = val);
-            api.RegisterSimpleOption(manifest, "Days for mahogany trees", "Number of days for regular tappers to produce on mahogany trees.\nVanilla is 1.", () => config.DaysForSap, (float val) => config.DaysForSap = val);
-            api.RegisterSimpleOption(manifest, "Days for mushroom trees", "Number of days for regular tappers to produce on mushroom trees.\nVanilla is varies heavily.\nNote that rules for type of mushroom are not changed in any way.", () => config.DaysForMushroom, (float val) => config.DaysForMushroom = val);
+            api.AddBoolOption(manifest, () => config.DisableAllModEffects, (bool val) => config.DisableAllModEffects = val,
+                    name: () => "Disable this mods effects", tooltip: () => "Game will follow vanilla behaviour if true.\n'True' overrides ALL other settings.");
+            api.AddBoolOption(manifest, () => config.ChangeTapperTimes, (bool val) => config.ChangeTapperTimes = val,
+                    name: () => "Enable modified production times", tooltip: () => "Let tappers use modified product times.\n'False' overrides the production times settings.");
+            /*api.AddBoolOption(manifest, () => config.Stackable, (bool val) => config.Stackable = val,
+                    name: () => "Make tappers stackable", tooltip: () => "Lets tappers stack in your inventory.\nStack size is 999.");*/
+            api.AddBoolOption(manifest, () => config.TappersUseQuality, (bool val) => config.TappersUseQuality = val,
+                    name: () => "Enable quality for tapper products", tooltip: () => "Lets tappers produce items with higher qualities.\n'False' overrides the quality section below.");
+            api.AddNumberOption(manifest, () => config.TapperXP, (int val) => config.TapperXP = val,
+                    name: () => "Tapper experience gain", tooltip: () => "Amount of experience gained for harvesting from tappers.\nMod default is 10, vanilla is 0.");
+            api.AddBoolOption(manifest, () => config.GathererAffectsTappers, (bool val) => config.GathererAffectsTappers = val,
+                    name: () => "Enable Gatherer perk on tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");
+            api.AddBoolOption(manifest, () => config.GathererAffectsTappers, (bool val) => config.GathererAffectsTappers = val,
+                    name: () => "Enable Botanist perk on tappers", tooltip: () => "The botanist foraging perk (vanilla) makes forage items always irridium quality.");
 
-            api.RegisterLabel(manifest, "Heavy Tappers", null);
 
-            api.RegisterSimpleOption(manifest, "Manually set times for heavy tappers?", "Defaults to half of normal tappers if false.", () => config.OverrideHeavyTapperDefaults, (bool val) => config.OverrideHeavyTapperDefaults = val);
-            api.RegisterSimpleOption(manifest, "Days for maple/oak/pine trees", "Number of days for regular tappers to produce on listed trees.", () => config.DaysForSyrupsHeavy, (float val) => config.DaysForSyrupsHeavy = val);
-            api.RegisterSimpleOption(manifest, "Days for mahogany trees", "Number of days for regular tappers to produce on mahogany trees.", () => config.DaysForSapHeavy, (float val) => config.DaysForSapHeavy = val);
-            api.RegisterSimpleOption(manifest, "Days for mushroom trees", "Number of days for regular tappers to produce on mushroom trees.\nVanilla is varies heavily.\nNote that rules for type of mushroom are not changed in any way.", () => config.DaysForMushroomHeavy, (float val) => config.DaysForMushroomHeavy = val);
+            //Production times for normal tappers
+            api.AddSectionTitle(manifest, text: () => "Tappers",
+                tooltip: () => "These options affect production time of tappers.\nThis section requires 'Enable modified production times' to be true.");
+
+            api.AddNumberOption(manifest, () => config.DaysForSyrups, (float val) => config.DaysForSyrups = val,
+                    name: () => "Days for maple/oak/pine trees", tooltip: () => "Number of days for regular tappers to produce on listed trees.\nVanilla is 5-9 depending on tree type.");
+            api.AddNumberOption(manifest, () => config.DaysForSap, (float val) => config.DaysForSap = val,
+                    name: () => "Days for mahogany trees", tooltip: () => "Number of days for regular tappers to produce on mahogany trees.\nVanilla is 1.");
+            api.AddNumberOption(manifest, () => config.DaysForMushroom, (float val) => config.DaysForMushroom = val,
+                    name: () => "Days for mushroom trees", tooltip: () => "Number of days for regular tappers to produce on mushroom trees.\nVanilla is varies heavily based on season.\nNote that rules for *which* mushroom is produced are not changed in any way.");
+
+
+            //Production time for heavy tappers
+            api.AddSectionTitle(manifest, text: () => "Heavy Tappers",
+                tooltip: () => "These options affect production time of heavy tappers.\nThis section requires 'Enable modified production times' to be true.");
+
+            api.AddNumberOption(manifest, () => config.HeavyTapperMultiplier, (float val) => config.HeavyTapperMultiplier = val,
+                    name: () => "Heavy tapper time multiplier", tooltip: () => "Defaults to half normal tappers, which is the same as vanilla.\nThis gets overriden if the manual setting below is true.");
+            api.AddBoolOption(manifest, () => config.OverrideHeavyTapperDefault, (bool val) => config.OverrideHeavyTapperDefault = val,
+                    name: () => "Manually set times for heavy tappers", tooltip: () => "Uses the above setting if this is false, and ignores the next 3 settings.");
+            api.AddNumberOption(manifest, () => config.DaysForSyrupsHeavy, (float val) => config.DaysForSyrupsHeavy = val,
+                    name: () => "Days for maple/oak/pine trees", tooltip: () => "Number of days for heavy tappers to produce on listed trees.");
+            api.AddNumberOption(manifest, () => config.DaysForSapHeavy, (float val) => config.DaysForSapHeavy = val,
+                    name: () => "Days for mahogany trees", tooltip: () => "Number of days for heavy tappers to produce on mahogany trees.");
+            api.AddNumberOption(manifest, () => config.DaysForMushroomHeavy, (float val) => config.DaysForMushroomHeavy = val,
+                    name: () => "Days for mushroom trees", tooltip: () => "Number of days for heavy tappers to produce on mushroom trees.");
+
+
+            //How to determine tapper product quality
+            api.AddSectionTitle(manifest, text: () => "Tapper Product Quality");
+            api.AddParagraph(manifest, text: () => "These options affect how output quality is determined. This section requires " +
+                    "'Enable quality for tapper products' to be true. If all of these are false products will never have quality." +
+                    "\nWith default settings, each of 'Forage level', 'Times harvested', and 'Tree age' can one level of quality to an output. " +
+                    "Ex. if your forage level is high, and the tree is old, but you haven't harvested from the tapper much you will likely " +
+                    "end up with +2 quality levels (gold).");
+
+            api.AddBoolOption(manifest, () => config.ForageLevelAffectsQuality, (bool val) => config.ForageLevelAffectsQuality = val,
+                    name: () => "Forage level affects quality", tooltip: () => "Your level of foraging will affect the quality of tapper products.");
+            api.AddBoolOption(manifest, () => config.TimesHarvestedAffectsQuality, (bool val) => config.TimesHarvestedAffectsQuality = val,
+                    name: () => "Times harvested affects quality", tooltip: () => "Number of times a tapper has been harvested will affect the quality of its products.");
+            api.AddBoolOption(manifest, () => config.TreeAgeAffectsQuality, (bool val) => config.TreeAgeAffectsQuality = val,
+                    name: () => "Tree age affects quality", tooltip: () => "Tree age will affect the quality of tapper products.");
+
+            api.AddSectionTitle(manifest, text: () => "\n\nDebug");
+            api.AddBoolOption(manifest, () => config.DebugMode, (bool val) => config.DebugMode = val,
+                    name: () => "This is for helping me test things, leave disabled.", tooltip: () => null);
         }
     }//END class
 }//END namespace
