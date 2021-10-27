@@ -1,7 +1,7 @@
 {
   "Name": "BetterTappers",
   "Author": "CaptainSully",
-  "Version": "0.1.2",
+  "Version": "1.0.0",
   "Description": "Changes the time tappers take to produce",
   "UniqueID": "CaptainSully.BetterTappers",
   "EntryDll": "BetterTappers.dll",

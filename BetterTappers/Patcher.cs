@@ -11,18 +11,14 @@
     {
         private static BetterTappersEntry mod;
 
-        public static void PatchAll(BetterTappersEntry btaps)
+        public static void PatchAll(BetterTappersEntry bte)
         {
-            mod = btaps;
+            mod = bte;
 
             var harmony = new Harmony(mod.ModManifest.UniqueID);
 
             try
             {
-                harmony.Patch(
-                   original: AccessTools.Method(typeof(Tree), "UpdateTapperProduct"),
-                   postfix: new HarmonyMethod(typeof(Patcher), nameof(PatchTapperTime))
-                );
                 harmony.Patch(
                    original: AccessTools.Method(typeof(StardewObject), "placementAction"),
                    prefix: new HarmonyMethod(typeof(Patcher), nameof(PatchTapperPlacementAction))
@@ -30,7 +26,7 @@
             }
             catch (Exception e)
             {
-                mod.ErrorLog("Error while trying to setup required patches:", e);
+                BetterTappersEntry.ErrorLog("BetterTappers: Error while trying to setup required patches:", e);
             }
         }
 
@@ -56,12 +52,14 @@
                         if ((int)tree.growthStage >= 5 && !tree.stump && !location.objects.ContainsKey(placementTile))
                         {
                             Tapper tapper_instance = new Tapper(__instance.tileLocation, __instance.parentSheetIndex);
+                            tapper_instance.Config = BetterTappersEntry.Config;
                             tapper_instance.CopyObjTapper(__instance);
                             tapper_instance.heldObject.Value = null;
                             tapper_instance.tileLocation.Value = placementTile;
                             location.objects.Add(placementTile, tapper_instance);
                             tree.tapped.Value = true;
                             tree.UpdateTapperProduct(tapper_instance);
+                            tapper_instance.SetTapperMinutes(tree.treeType);
                             location.playSound("axe");
 
                             __result = true;
@@ -72,21 +70,6 @@
                     return false;
             }
             return true;
-        }
-
-        public static void PatchTapperTime(ref Tree __instance, ref StardewObject tapper_instance, ref StardewObject previous_object)
-        {
-            try
-            {
-                if (mod.Config.UseBetterTappers && __instance != null && tapper_instance != null && BetterTappersLogic.IsAnyTapper(tapper_instance))
-                {
-                    tapper_instance.MinutesUntilReady = BetterTappersLogic.DesiredMinutes(mod, tapper_instance.parentSheetIndex, __instance.treeType);
-                }
-            }
-            catch (Exception e)
-            {
-                mod.ErrorLog("There was an exception in a patch", e);
-            }
         }
     }
 }

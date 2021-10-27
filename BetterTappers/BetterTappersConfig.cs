@@ -11,17 +11,17 @@
         void AddBoolOption(IManifest mod, Func<bool> getValue, Action<bool> setValue, Func<string> name, Func<string> tooltip = null, string fieldId = null);
         void AddNumberOption(IManifest mod, Func<int> getValue, Action<int> setValue, Func<string> name, Func<string> tooltip = null, int? min = null, int? max = null, int? interval = null, string fieldId = null);
         void AddNumberOption(IManifest mod, Func<float> getValue, Action<float> setValue, Func<string> name, Func<string> tooltip = null, float? min = null, float? max = null, float? interval = null, string fieldId = null);
-        void AddTextOption(IManifest mod, Func<string> getValue, Action<string> setValue, Func<string> name, Func<string> tooltip = null, string[] allowedValues = null, string fieldId = null);
      }
 
     public class BetterTappersConfig
     {
         //general options
-        public bool UseBetterTappers { get; set; } = true;
-        public bool Stackable { get; set; } = true;
-        public bool TapperQuality { get; set; } = true;
+        public bool DisableAllModEffects { get; set; } = false;
+        public bool ChangeTapperTimes { get; set; } = true;
+        public bool TappersUseQuality { get; set; } = true;
         public int TapperXP { get; set; } = 10;
         public bool GathererAffectsTappers { get; set; } = true;
+        public bool BotanistAffectsTappers { get; set; } = true;
 
 
         //options for regular tappers
@@ -30,18 +30,25 @@
         public float DaysForMushroom { get; set; } = 7f;
 
         //options for hardwood tappers
-        public float HeavyTapperMultiplier = 0.5f;
-        public bool OverrideHeavyTapperDefault = false;
+        public bool OverrideHeavyTapperDefault { get; set; } = false;
+        public float HeavyTapperMultiplier { get; set; } = 0.5f;
         public float DaysForSyrupsHeavy { get; set; } = 3.5f;
         public float DaysForSapHeavy { get; set; } = 0.5f;
         public float DaysForMushroomHeavy { get; set; } = 3.5f;
 
         //quality options
-        public bool UseVanillaBotanist { get; set; } = false;
-        public bool BotanistAffectsQuality { get; set; } = true;
         public bool ForageLevelAffectsQuality { get; set; } = true;
         public bool TimesHarvestedAffectsQuality { get; set; } = true;
         public bool TreeAgeAffectsQuality { get; set; } = true;
+        internal int Formula { get; set; } = 0;
+        internal int LvlCap { get; set; } = 0;
+
+        //Debug mode
+        public bool DebugMode { get; set; } = false;
+        internal bool DebugTapper { get; set; } = false;
+        internal bool DebugLogic { get; set; } = false;
+        internal bool DebugPatcher { get; set; } = false;
+        internal bool DebugMethods { get; set; } = false;
 
         //different outputs?
         //more outputs? (like 3-8 sap)
@@ -49,6 +56,12 @@
         public static void VerifyConfigValues(BetterTappersConfig config, BetterTappersEntry mod)
         {
             bool invalidConfig = false;
+
+            if (config.TapperXP < 0)
+            {
+                invalidConfig = true;
+                config.TapperXP = 0;
+            }
 
             if (config.DaysForSyrups < 0)
             {
@@ -94,11 +107,11 @@
 
             if (invalidConfig)
             {
-                mod.DebugLog("At least one config value was out of range and was reset.");
+                BetterTappersEntry.DebugLog("BetterTappers: At least one config value was out of range and was reset.", true);
                 mod.Helper.WriteConfig(config);
             }
         }
-
+        
         public static void SetUpModConfigMenu(BetterTappersConfig config, BetterTappersEntry mod)
         {
             IGenericModConfigMenuAPI api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuAPI>("spacechase0.GenericModConfigMenu");
@@ -110,20 +123,25 @@
             //General mod settings. Some of these affect the other categories
             api.AddSectionTitle(manifest, text: () => "General");
 
-            api.AddBoolOption(manifest, () => config.UseBetterTappers, (bool val) => config.UseBetterTappers = val,
-                    name: () => "Use this mods configurations", tooltip: () => "Game will follow vanilla behavour if false.\nThis overrides ALL other settings.");
-            api.AddBoolOption(manifest, () => config.Stackable, (bool val) => config.Stackable = val,
-                    name: () => "Make tappers stackable", tooltip: () => "Lets tappers stack in your inventory.\nStack size is 999.");
-            api.AddBoolOption(manifest, () => config.TapperQuality, (bool val) => config.TapperQuality = val,
-                    name: () => "Enable quality for tapper products", tooltip: () => "Lets tappers produce items with higher qualities.\nThis enables the quality section below.");
+            api.AddBoolOption(manifest, () => config.DisableAllModEffects, (bool val) => config.DisableAllModEffects = val,
+                    name: () => "Disable this mods effects", tooltip: () => "Game will follow vanilla behaviour if true.\n'True' overrides ALL other settings.");
+            api.AddBoolOption(manifest, () => config.ChangeTapperTimes, (bool val) => config.ChangeTapperTimes = val,
+                    name: () => "Enable modified production times", tooltip: () => "Let tappers use modified product times.\n'False' overrides the production times settings.");
+            /*api.AddBoolOption(manifest, () => config.Stackable, (bool val) => config.Stackable = val,
+                    name: () => "Make tappers stackable", tooltip: () => "Lets tappers stack in your inventory.\nStack size is 999.");*/
+            api.AddBoolOption(manifest, () => config.TappersUseQuality, (bool val) => config.TappersUseQuality = val,
+                    name: () => "Enable quality for tapper products", tooltip: () => "Lets tappers produce items with higher qualities.\n'False' overrides the quality section below.");
             api.AddNumberOption(manifest, () => config.TapperXP, (int val) => config.TapperXP = val,
                     name: () => "Tapper experience gain", tooltip: () => "Amount of experience gained for harvesting from tappers.\nMod default is 10, vanilla is 0.");
             api.AddBoolOption(manifest, () => config.GathererAffectsTappers, (bool val) => config.GathererAffectsTappers = val,
-                   name: () => "Gatherer perk affect tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");
+                    name: () => "Enable Gatherer perk on tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");
+            api.AddBoolOption(manifest, () => config.GathererAffectsTappers, (bool val) => config.GathererAffectsTappers = val,
+                    name: () => "Enable Botanist perk on tappers", tooltip: () => "The botanist foraging perk (vanilla) makes forage items always irridium quality.");
+
 
             //Production times for normal tappers
             api.AddSectionTitle(manifest, text: () => "Tappers",
-                tooltip: () => "These options affect production time of tappers.");
+                tooltip: () => "These options affect production time of tappers.\nThis section requires 'Enable modified production times' to be true.");
 
             api.AddNumberOption(manifest, () => config.DaysForSyrups, (float val) => config.DaysForSyrups = val,
                     name: () => "Days for maple/oak/pine trees", tooltip: () => "Number of days for regular tappers to produce on listed trees.\nVanilla is 5-9 depending on tree type.");
@@ -132,9 +150,10 @@
             api.AddNumberOption(manifest, () => config.DaysForMushroom, (float val) => config.DaysForMushroom = val,
                     name: () => "Days for mushroom trees", tooltip: () => "Number of days for regular tappers to produce on mushroom trees.\nVanilla is varies heavily based on season.\nNote that rules for *which* mushroom is produced are not changed in any way.");
 
+
             //Production time for heavy tappers
             api.AddSectionTitle(manifest, text: () => "Heavy Tappers",
-                tooltip: () => "These options affect production time of heavy tappers.");
+                tooltip: () => "These options affect production time of heavy tappers.\nThis section requires 'Enable modified production times' to be true.");
 
             api.AddNumberOption(manifest, () => config.HeavyTapperMultiplier, (float val) => config.HeavyTapperMultiplier = val,
                     name: () => "Heavy tapper time multiplier", tooltip: () => "Defaults to half normal tappers, which is the same as vanilla.\nThis gets overriden if the manual setting below is true.");
@@ -147,20 +166,25 @@
             api.AddNumberOption(manifest, () => config.DaysForMushroomHeavy, (float val) => config.DaysForMushroomHeavy = val,
                     name: () => "Days for mushroom trees", tooltip: () => "Number of days for heavy tappers to produce on mushroom trees.");
 
-            //How to determine tapper product quality
-            api.AddSectionTitle(manifest, text: () => "Tapper Product Quality", 
-                    tooltip: () => "These options effect how output quality is determined.\nNone of these do anything if Enable quality is false (under General).");
 
-            api.AddBoolOption(manifest, () => config.UseVanillaBotanist, (bool val) => config.UseVanillaBotanist = val,
-                   name: () => "Gatherer perk affect tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");
-            api.AddBoolOption(manifest, () => config.BotanistAffectsQuality, (bool val) => config.BotanistAffectsQuality = val,
-                               name: () => "Gatherer perk affect tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");
+            //How to determine tapper product quality
+            api.AddSectionTitle(manifest, text: () => "Tapper Product Quality");
+            api.AddParagraph(manifest, text: () => "These options affect how output quality is determined. This section requires " +
+                    "'Enable quality for tapper products' to be true. If all of these are false products will never have quality." +
+                    "\nWith default settings, each of 'Forage level', 'Times harvested', and 'Tree age' can one level of quality to an output. " +
+                    "Ex. if your forage level is high, and the tree is old, but you haven't harvested from the tapper much you will likely " +
+                    "end up with +2 quality levels (gold).");
+
             api.AddBoolOption(manifest, () => config.ForageLevelAffectsQuality, (bool val) => config.ForageLevelAffectsQuality = val,
-                               name: () => "Gatherer perk affect tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");
+                    name: () => "Forage level affects quality", tooltip: () => "Your level of foraging will affect the quality of tapper products.");
             api.AddBoolOption(manifest, () => config.TimesHarvestedAffectsQuality, (bool val) => config.TimesHarvestedAffectsQuality = val,
-                               name: () => "Gatherer perk affect tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");
+                    name: () => "Times harvested affects quality", tooltip: () => "Number of times a tapper has been harvested will affect the quality of its products.");
             api.AddBoolOption(manifest, () => config.TreeAgeAffectsQuality, (bool val) => config.TreeAgeAffectsQuality = val,
-                               name: () => "Gatherer perk affect tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");
+                    name: () => "Tree age affects quality", tooltip: () => "Tree age will affect the quality of tapper products.");
+
+            api.AddSectionTitle(manifest, text: () => "\n\nDebug");
+            api.AddBoolOption(manifest, () => config.DebugMode, (bool val) => config.DebugMode = val,
+                    name: () => "This is for helping me test things, leave disabled.", tooltip: () => null);
         }
     }//END class
 }//END namespace
