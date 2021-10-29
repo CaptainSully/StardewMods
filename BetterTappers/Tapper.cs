@@ -1,19 +1,22 @@
-﻿namespace BetterTappers
-{
-	using Microsoft.Xna.Framework;
-	using StardewValley;
-	using StardewValley.TerrainFeatures;
-    using System;
-	using StardewObject = StardewValley.Object;
+﻿using Microsoft.Xna.Framework;
+using StardewValley;
+using StardewValley.TerrainFeatures;
+using System;
+using System.Xml.Serialization;
+using StardewObject = StardewValley.Object;
 
-	class Tapper : StardewObject
+
+namespace BetterTappers
+{
+	[XmlType("Mods_CaptainSully_BetterTappers_Tapper")] // SpaceCore serialisation signature
+	public class Tapper : StardewObject
 	{
-		//Custom variables
+		// Custom variables
 		public BetterTappersConfig Config { get; set; } = new BetterTappersConfig();
 		public int TimesHarvested { get; set; } = 0;
 
 
-		//Overrides
+		// Overrides
         public Tapper() : base() { }
 
 		public Tapper(Vector2 tileLocation, int parentSheetIndex, bool isRecipe = false)
@@ -42,7 +45,7 @@
 			return @tapper;
 		}
 
-		//Most of this is vanilla behaviour thats been stripped of things unrelated to tappers. New things have comments
+		// Mostly vanilla behaviour thats been stripped of things unrelated to tappers. New things have comments
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
 		{
 			if (isTemporarilyInvisible || justCheckingForActivity)
@@ -119,7 +122,7 @@
 		}
 
 
-		//Custom methods
+		// Custom methods
 		public void CopyObjTapper(StardewObject parent)
 		{
 			name = parent.name;

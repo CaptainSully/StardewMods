@@ -1,12 +1,12 @@
-﻿namespace BetterTappers
-{
-    using System;
-    using HarmonyLib;
-    using Microsoft.Xna.Framework;
-    using StardewValley;
-    using StardewValley.TerrainFeatures;
-    using StardewObject = StardewValley.Object;
+﻿using System;
+using HarmonyLib;
+using Microsoft.Xna.Framework;
+using StardewValley;
+using StardewValley.TerrainFeatures;
+using StardewObject = StardewValley.Object;
 
+namespace BetterTappers
+{
     internal class Patcher
     {
         private static BetterTappersEntry mod;
@@ -26,7 +26,7 @@
             }
             catch (Exception e)
             {
-                BetterTappersEntry.ErrorLog("BetterTappers: Error while trying to setup required patches:", e);
+                BetterTappersEntry.ErrorLog("Error while trying to setup required patches:", e);
             }
         }
 

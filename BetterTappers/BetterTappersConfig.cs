@@ -1,8 +1,8 @@
-﻿namespace BetterTappers
-{
-    using System;
-    using StardewModdingAPI;
+﻿using System;
+using StardewModdingAPI;
 
+namespace BetterTappers
+{
     public interface IGenericModConfigMenuAPI
     {
         void Register(IManifest mod, Action reset, Action save, bool titleScreenOnly = false);
@@ -15,7 +15,7 @@
 
     public class BetterTappersConfig
     {
-        //general options
+        // General options
         public bool DisableAllModEffects { get; set; } = false;
         public bool ChangeTapperTimes { get; set; } = true;
         public bool TappersUseQuality { get; set; } = true;
@@ -24,26 +24,26 @@
         public bool BotanistAffectsTappers { get; set; } = true;
 
 
-        //options for regular tappers
+        // Options for regular tappers
         public float DaysForSyrups { get; set; } = 7f;
         public float DaysForSap { get; set; } = 1f;
         public float DaysForMushroom { get; set; } = 7f;
 
-        //options for hardwood tappers
+        // Options for hardwood tappers
         public bool OverrideHeavyTapperDefault { get; set; } = false;
         public float HeavyTapperMultiplier { get; set; } = 0.5f;
         public float DaysForSyrupsHeavy { get; set; } = 3.5f;
         public float DaysForSapHeavy { get; set; } = 0.5f;
         public float DaysForMushroomHeavy { get; set; } = 3.5f;
 
-        //quality options
+        // Quality options
         public bool ForageLevelAffectsQuality { get; set; } = true;
         public bool TimesHarvestedAffectsQuality { get; set; } = true;
         public bool TreeAgeAffectsQuality { get; set; } = true;
         internal int Formula { get; set; } = 0;
         internal int LvlCap { get; set; } = 0;
 
-        //Debug mode
+        // Debug mode
         public bool DebugMode { get; set; } = false;
         internal bool DebugTapper { get; set; } = false;
         internal bool DebugLogic { get; set; } = false;
@@ -120,15 +120,13 @@
 
             api.Register(manifest, () => config = new BetterTappersConfig(), delegate { mod.Helper.WriteConfig(config); VerifyConfigValues(config, mod); });
 
-            //General mod settings. Some of these affect the other categories
+            // General mod settings. Some of these affect the other categories
             api.AddSectionTitle(manifest, text: () => "General");
 
             api.AddBoolOption(manifest, () => config.DisableAllModEffects, (bool val) => config.DisableAllModEffects = val,
                     name: () => "Disable this mods effects", tooltip: () => "Game will follow vanilla behaviour if true.\n'True' overrides ALL other settings.");
             api.AddBoolOption(manifest, () => config.ChangeTapperTimes, (bool val) => config.ChangeTapperTimes = val,
                     name: () => "Enable modified production times", tooltip: () => "Let tappers use modified product times.\n'False' overrides the production times settings.");
-            /*api.AddBoolOption(manifest, () => config.Stackable, (bool val) => config.Stackable = val,
-                    name: () => "Make tappers stackable", tooltip: () => "Lets tappers stack in your inventory.\nStack size is 999.");*/
             api.AddBoolOption(manifest, () => config.TappersUseQuality, (bool val) => config.TappersUseQuality = val,
                     name: () => "Enable quality for tapper products", tooltip: () => "Lets tappers produce items with higher qualities.\n'False' overrides the quality section below.");
             api.AddNumberOption(manifest, () => config.TapperXP, (int val) => config.TapperXP = val,
@@ -139,7 +137,7 @@
                     name: () => "Enable Botanist perk on tappers", tooltip: () => "The botanist foraging perk (vanilla) makes forage items always irridium quality.");
 
 
-            //Production times for normal tappers
+            // Production times for normal tappers
             api.AddSectionTitle(manifest, text: () => "Tappers",
                 tooltip: () => "These options affect production time of tappers.\nThis section requires 'Enable modified production times' to be true.");
 
@@ -151,7 +149,7 @@
                     name: () => "Days for mushroom trees", tooltip: () => "Number of days for regular tappers to produce on mushroom trees.\nVanilla is varies heavily based on season.\nNote that rules for *which* mushroom is produced are not changed in any way.");
 
 
-            //Production time for heavy tappers
+            // Production time for heavy tappers
             api.AddSectionTitle(manifest, text: () => "Heavy Tappers",
                 tooltip: () => "These options affect production time of heavy tappers.\nThis section requires 'Enable modified production times' to be true.");
 
@@ -167,13 +165,13 @@
                     name: () => "Days for mushroom trees", tooltip: () => "Number of days for heavy tappers to produce on mushroom trees.");
 
 
-            //How to determine tapper product quality
+            // How to determine tapper product quality
             api.AddSectionTitle(manifest, text: () => "Tapper Product Quality");
             api.AddParagraph(manifest, text: () => "These options affect how output quality is determined. This section requires " +
                     "'Enable quality for tapper products' to be true. If all of these are false products will never have quality." +
-                    "\nWith default settings, each of 'Forage level', 'Times harvested', and 'Tree age' can one level of quality to an output. " +
-                    "Ex. if your forage level is high, and the tree is old, but you haven't harvested from the tapper much you will likely " +
-                    "end up with +2 quality levels (gold).");
+                    "\nWith default settings, each of 'Forage level', 'Times harvested', and 'Tree age' are added together to determine the output. " +
+                    "This gives a value between 0 and 6. On a 6 the quality will be irridium; otherwise the value is divided by 2 then rounded down and that is the quality. " +
+                    "Vanilla qualities are 0 for normal, 1 for silver, 2 for gold, and 4 for irridium (yes it skips 3)");
 
             api.AddBoolOption(manifest, () => config.ForageLevelAffectsQuality, (bool val) => config.ForageLevelAffectsQuality = val,
                     name: () => "Forage level affects quality", tooltip: () => "Your level of foraging will affect the quality of tapper products.");
