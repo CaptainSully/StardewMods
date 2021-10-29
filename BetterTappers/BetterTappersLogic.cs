@@ -1,11 +1,11 @@
-﻿namespace BetterTappers
-{
-    using StardewModdingAPI;
-    using StardewValley;
-    using StardewValley.TerrainFeatures;
-    using System;
-    using StardewObject = StardewValley.Object;
+﻿using StardewModdingAPI;
+using StardewValley;
+using StardewValley.TerrainFeatures;
+using System;
+using StardewObject = StardewValley.Object;
 
+namespace BetterTappers
+{
     internal class BetterTappersLogic
     {
         public const int LvlCap = 100;
