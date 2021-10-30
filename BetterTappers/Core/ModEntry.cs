@@ -4,34 +4,20 @@ using StardewModdingAPI.Events;
 
 namespace BetterTappers
 {
-    public class BetterTappersEntry : Mod
+    public class ModEntry : Mod
     {
-        public static IMonitor Logger { get; set; }
-        public static BetterTappersConfig Config { get; set; }
-        public static string UID { get; set; }
+        internal static IMonitor Logger { get; set; }
+        internal static Config Config { get; set; }
+        internal static string UID { get; set; }
 
         public override void Entry(IModHelper helper)
         {
             UID = ModManifest.UniqueID;
             Logger = Monitor;
-            Config = Helper.ReadConfig<BetterTappersConfig>();
-            BetterTappersConfig.VerifyConfigValues(Config, this);
+            Config = Helper.ReadConfig<Config>();
+            Config.VerifyConfigValues(Config, this);
 
             Helper.Events.GameLoop.GameLaunched += this.GameLoop_GameLaunched;
-        }
-        public static void DebugLog(object o, bool debug)
-        {
-            if (debug)
-            {
-                Logger.Log(o == null ? "null" : o.ToString(), LogLevel.Debug);
-            }
-        }
-        public static void ErrorLog(object o, Exception e = null)
-        {
-            string baseMessage = o == null ? "null" : o.ToString();
-            string errorMessage = e == null ? string.Empty : $"\n{e.Message}\n{e.StackTrace}";
-
-            Logger.Log(baseMessage + errorMessage, LogLevel.Error);
         }
         private void GameLoop_GameLaunched(object sender, GameLaunchedEventArgs e)
         {
@@ -48,11 +34,11 @@ namespace BetterTappers
         }
         private void Initialise()
         {
-            DebugLog("Initialising mod data.", true);
+            Log.T("Initialising mod data.");
 
             // Content
             //Translations.Initialise();
-            BetterTappersConfig.SetUpModConfigMenu(Config, this);
+            Config.SetUpModConfigMenu(Config, this);
 
             // Patches
             Patcher.PatchAll(this);
@@ -62,12 +48,12 @@ namespace BetterTappers
         }
         private bool LoadAPIs()
         {
-            DebugLog("Loading mod-provided APIs.", true);
-            ISpaceCoreAPI spacecoreAPI = this.Helper.ModRegistry.GetApi<ISpaceCoreAPI>("spacechase0.SpaceCore");
+            Log.T("Loading mod-provided APIs.");
+            ISpaceCoreAPI spacecoreAPI = Helper.ModRegistry.GetApi<ISpaceCoreAPI>("spacechase0.SpaceCore");
             if (spacecoreAPI == null)
             {
                 // Skip patcher mod behaviours if we fail to load the objects
-                ErrorLog($"Couldn't access mod-provided API for SpaceCore.{Environment.NewLine}Better Tappers will not be available, and no changes will be made.");
+                Log.E($"Couldn't access mod-provided API for SpaceCore.{Environment.NewLine}Better Tappers will not be available, and no changes will be made.");
                 return false;
             }
 

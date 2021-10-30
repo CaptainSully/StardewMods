@@ -12,7 +12,7 @@ namespace BetterTappers
 	public class Tapper : StardewObject
 	{
 		// Custom variables
-		public BetterTappersConfig Config { get; set; } = new BetterTappersConfig();
+		private Config Config { get; set; } = ModEntry.Config;
 		public int TimesHarvested { get; set; } = 0;
 
 
@@ -131,8 +131,9 @@ namespace BetterTappers
 			_GetOneFrom(parent);
 		}
 
-		public int TriggerGathererPerk(Farmer who)
+		private int TriggerGathererPerk(Farmer who)
         {
+			Log.D("Checking gatherer perk...", Config.DebugMode);
 			if (who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
             {
 				return 2;
@@ -142,6 +143,7 @@ namespace BetterTappers
 
 		public void SetTapperMinutes(int treeType)
         {
+			Log.D("Checking tapper minutes...", Config.DebugMode);
 			if (Config.DisableAllModEffects || !Config.ChangeTapperTimes)
             {
 				return;
@@ -149,8 +151,9 @@ namespace BetterTappers
 			ConfiguredMinutes(treeType);
 		}
 
-		public void ConfiguredMinutes(int treeType)
+		private void ConfiguredMinutes(int treeType)
 		{
+			Log.D("Changing minutes until ready as per configs.", Config.DebugMode);
 			if (ParentSheetIndex == 105)
 			{
 				switch (treeType)
@@ -210,6 +213,7 @@ namespace BetterTappers
 
 		public int GetQualityLevel(Farmer who, int age)
         {
+			Log.D("Quality check requested...", Config.DebugMode);
 			if (Config.DisableAllModEffects || !Config.TappersUseQuality)
 			{
 				return lowQuality;
@@ -224,6 +228,7 @@ namespace BetterTappers
 			{
 				if (who != null && who.professions.Contains(Farmer.botanist))
 				{
+					Log.D("Botanist perk applied.", Config.DebugMode);
 					return bestQuality;
 				}
 				return Math.Min(quality, highQuality);
@@ -235,8 +240,9 @@ namespace BetterTappers
 			return quality;
 		}
 
-		public int DetermineQuality(int foragingLevel, int age = 0)
+		private int DetermineQuality(int foragingLevel, int age = 0)
 		{
+			Log.D("Determining quality...", Config.DebugMode);
 			int n, FLQ, TAQ, THQ, t;
 			n = FLQ = TAQ = THQ = 0;
 
@@ -256,8 +262,9 @@ namespace BetterTappers
 				n++;
 			}
 
-			BetterTappersEntry.DebugLog("Active: " + n + "    FLQ: " + FLQ + "    TAQ: " + TAQ + "    THQ: " + THQ, Config.DebugMode);
+			Log.D("QualitiesActive: " + n + "    FLQ: " + FLQ + "    TAQ: " + TAQ + "    THQ: " + THQ, Config.DebugMode);
 			t = (FLQ + TAQ + THQ);
+			Log.D("Sum of qualty pieces: " + t, Config.DebugMode);
 			switch (n)
             {
 				case 3:
@@ -274,13 +281,14 @@ namespace BetterTappers
 				//these shouldn't happen, but if they do return low
 				case 0:
 				default:
-					BetterTappersEntry.DebugLog("BetterTappers: Asking for quality when no quality types are enabled. Defaulted to low.", true);
+					Log.D("Problem: shouldn't asking for quality when no quality types are enabled. Defaulted to low.", true);
 					return lowQuality;
 			}
 		}
 
-		public int GetQualityPart(int lvl)
+		private int GetQualityPart(int lvl)
         {
+			Log.D("Getting quality piece...", Config.DebugMode);
 			if (lvl > 0)
 			{
 				double ran = Game1.random.NextDouble();

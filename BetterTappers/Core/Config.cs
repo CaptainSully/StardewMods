@@ -1,19 +1,7 @@
-﻿using System;
-using StardewModdingAPI;
-
+﻿
 namespace BetterTappers
 {
-    public interface IGenericModConfigMenuAPI
-    {
-        void Register(IManifest mod, Action reset, Action save, bool titleScreenOnly = false);
-        void AddSectionTitle(IManifest mod, Func<string> text, Func<string> tooltip = null);
-        void AddParagraph(IManifest mod, Func<string> text);
-        void AddBoolOption(IManifest mod, Func<bool> getValue, Action<bool> setValue, Func<string> name, Func<string> tooltip = null, string fieldId = null);
-        void AddNumberOption(IManifest mod, Func<int> getValue, Action<int> setValue, Func<string> name, Func<string> tooltip = null, int? min = null, int? max = null, int? interval = null, string fieldId = null);
-        void AddNumberOption(IManifest mod, Func<float> getValue, Action<float> setValue, Func<string> name, Func<string> tooltip = null, float? min = null, float? max = null, float? interval = null, string fieldId = null);
-     }
-
-    public class BetterTappersConfig
+    public class Config
     {
         // General options
         public bool DisableAllModEffects { get; set; } = false;
@@ -53,7 +41,7 @@ namespace BetterTappers
         //different outputs?
         //more outputs? (like 3-8 sap)
 
-        public static void VerifyConfigValues(BetterTappersConfig config, BetterTappersEntry mod)
+        public static void VerifyConfigValues(Config config, ModEntry mod)
         {
             bool invalidConfig = false;
 
@@ -107,18 +95,18 @@ namespace BetterTappers
 
             if (invalidConfig)
             {
-                BetterTappersEntry.DebugLog("BetterTappers: At least one config value was out of range and was reset.", true);
+                Log.T("At least one config value was out of range and was reset.");
                 mod.Helper.WriteConfig(config);
             }
         }
         
-        public static void SetUpModConfigMenu(BetterTappersConfig config, BetterTappersEntry mod)
+        public static void SetUpModConfigMenu(Config config, ModEntry mod)
         {
-            IGenericModConfigMenuAPI api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuAPI>("spacechase0.GenericModConfigMenu");
+            IGenericModConfigMenuApi api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
             if (api == null) { return; }
             var manifest = mod.ModManifest;
 
-            api.Register(manifest, () => config = new BetterTappersConfig(), delegate { mod.Helper.WriteConfig(config); VerifyConfigValues(config, mod); });
+            api.Register(manifest, () => config = new Config(), delegate { mod.Helper.WriteConfig(config); VerifyConfigValues(config, mod); });
 
             // General mod settings. Some of these affect the other categories
             api.AddSectionTitle(manifest, text: () => "General");
@@ -171,7 +159,7 @@ namespace BetterTappers
                     "'Enable quality for tapper products' to be true. If all of these are false products will never have quality." +
                     "\nWith default settings, each of 'Forage level', 'Times harvested', and 'Tree age' are added together to determine the output. " +
                     "This gives a value between 0 and 6. On a 6 the quality will be irridium; otherwise the value is divided by 2 then rounded down and that is the quality. " +
-                    "Vanilla qualities are 0 for normal, 1 for silver, 2 for gold, and 4 for irridium (yes it skips 3)");
+                    "Vanilla qualities are 0 for normal, 1 for silver, 2 for gold, and 4 for irridium (yes it skips 3)\n");
 
             api.AddBoolOption(manifest, () => config.ForageLevelAffectsQuality, (bool val) => config.ForageLevelAffectsQuality = val,
                     name: () => "Forage level affects quality", tooltip: () => "Your level of foraging will affect the quality of tapper products.");
@@ -184,5 +172,5 @@ namespace BetterTappers
             api.AddBoolOption(manifest, () => config.DebugMode, (bool val) => config.DebugMode = val,
                     name: () => "This is for helping me test things, leave disabled.", tooltip: () => null);
         }
-    }//END class
-}//END namespace
+    }
+}

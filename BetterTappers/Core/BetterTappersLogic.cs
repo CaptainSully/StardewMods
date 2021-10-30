@@ -18,22 +18,24 @@ namespace BetterTappers
 
         public static int GetTreeAge(Tree tree)
         {
-            tree.modData.TryGetValue($"{BetterTappersEntry.UID}/treeAge", out string data);
+            tree.modData.TryGetValue($"{ModEntry.UID}/treeAge", out string data);
 
             if (!string.IsNullOrEmpty(data))
             {
                 return int.Parse(data);
             }
-            BetterTappersEntry.DebugLog("BetterTappers: Could not get tree age.", true);
+            Log.D("Could not get tree age.", true);
             return 0;
         }
 
-        public static void IncreaseTreeAges()
+        internal static void IncreaseTreeAges()
         {
             if (!Context.IsMainPlayer)
             {
                 return;
             }
+
+            Log.T("Increasing the age of trees.");
 
             foreach (var location in Game1.locations)
             {
@@ -47,17 +49,17 @@ namespace BetterTappers
             }
         }
 
-        public static void IncreaseTreeAge(Tree tree)
+        internal static void IncreaseTreeAge(Tree tree)
         {
-            tree.modData.TryGetValue($"{BetterTappersEntry.UID}/treeAge", out string data);
+            tree.modData.TryGetValue($"{ModEntry.UID}/treeAge", out string data);
 
             if (!string.IsNullOrEmpty(data))
             {
-                tree.modData[$"{BetterTappersEntry.UID}/treeAge"] = (int.Parse(data) + 1).ToString();
+                tree.modData[$"{ModEntry.UID}/treeAge"] = (int.Parse(data) + 1).ToString();
             }
             else
             {
-                tree.modData[$"{BetterTappersEntry.UID}/treeAge"] = "1";
+                tree.modData[$"{ModEntry.UID}/treeAge"] = "1";
             }
         }
 
