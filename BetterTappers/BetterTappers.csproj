@@ -56,7 +56,7 @@
     <Compile Include="Core\ModEntry.cs" />
     <Compile Include="Utilities\ISpaceCoreAPI.cs" />
     <Compile Include="Utilities\Log.cs" />
-    <Compile Include="Patcher.cs" />
+    <Compile Include="Core\Patcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Tapper.cs" />
   </ItemGroup>

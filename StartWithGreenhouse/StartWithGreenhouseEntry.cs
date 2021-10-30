@@ -12,7 +12,7 @@
         }
 
         private static void SetPantryFlag()
-        {  
+        {
                 Game1.player.mailReceived.Add("ccPantry");
         }
         
