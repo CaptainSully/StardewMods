@@ -59,7 +59,7 @@ namespace BetterTappers
 
 			StardewObject objectThatWasHeld = heldObject.Value;
 
-			if ((bool)readyForHarvest)
+			if (readyForHarvest.Value)
 			{
 				if (who.isMoving())
 				{
@@ -76,9 +76,9 @@ namespace BetterTappers
 					if (who.currentLocation.terrainFeatures.ContainsKey(tileLocation) && who.currentLocation.terrainFeatures[tileLocation] is Tree)
 					{
 						tree = (who.currentLocation.terrainFeatures[tileLocation] as Tree);
-						if (tree.treeType != 8)
+						if (tree.treeType.Value != 8)
 						{
-							objectThatWasHeld.quality.Value = GetQualityLevel(who, BetterTappersLogic.GetTreeAgeMonths(tree));
+							objectThatWasHeld.Quality = GetQualityLevel(who, CoreLogic.GetTreeAgeMonths(tree));
 						}
 						objectThatWasHeld.Stack = TriggerGathererPerk(who);
 					}
@@ -86,7 +86,7 @@ namespace BetterTappers
 					if (!who.addItemToInventoryBool(objectThatWasHeld))
 					{
 						//if harvesting failed, reset quality of the ready item back to low and stack size back to 1
-						objectThatWasHeld.quality.Value = lowQuality;
+						objectThatWasHeld.Quality = lowQuality;
 						objectThatWasHeld.Stack = 1;
 						heldObject.Value = objectThatWasHeld;
 						Game1.showRedMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:Crop.cs.588"));
@@ -106,7 +106,7 @@ namespace BetterTappers
 					tree.UpdateTapperProduct(this, objectThatWasHeld);
 
 					//Now that the tapper product has been reset, change the timer to what the player actually configured.
-					SetTapperMinutes((who.currentLocation.terrainFeatures[tileLocation] as Tree).treeType);
+					SetTapperMinutes((who.currentLocation.terrainFeatures[tileLocation] as Tree).treeType.Value);
 				}
 
 				readyForHarvest.Value = false;
@@ -142,73 +142,47 @@ namespace BetterTappers
 		}
 
 		public void SetTapperMinutes(int treeType)
-        {
+		{
 			Log.D("Checking tapper minutes...", Config.DebugMode);
 			if (Config.DisableAllModEffects || !Config.ChangeTapperTimes)
-            {
+			{
 				return;
-            }
-			ConfiguredMinutes(treeType);
-		}
+			}
 
-		private void ConfiguredMinutes(int treeType)
-		{
-			Log.D("Changing minutes until ready as per configs.", Config.DebugMode);
-			if (ParentSheetIndex == 105)
+			float days_configured = 1f;
+			float time_multiplier = 1f;
+
+			if (ParentSheetIndex == 264)
 			{
-				switch (treeType)
-				{
-					case 1:
-					case 2:
-					case 3:
-						MinutesUntilReady = (int)MathHelper.Max(1440 * Config.DaysForSyrups, 5);
-						break;
-					case 7:
-						MinutesUntilReady = (int)MathHelper.Max(1440 * Config.DaysForMushroom, 5);
-						break;
-					case 8:
-						MinutesUntilReady = (int)MathHelper.Max(1440 * Config.DaysForSap, 5);
-						break;
-				}
+				time_multiplier = Config.HeavyTapperMultiplier;
 			}
-			else if (ParentSheetIndex == 264)
+
+			switch (treeType)
 			{
-				switch (treeType)
-				{
-					case 1:
-					case 2:
-					case 3:
-						if (Config.OverrideHeavyTapperDefault)
-						{
-							MinutesUntilReady = (int)MathHelper.Max(1440 * Config.DaysForSyrupsHeavy, 5);
-						}
-						else
-						{
-							MinutesUntilReady = (int)MathHelper.Max(1440 * Config.DaysForSyrups * Config.HeavyTapperMultiplier, 5);
-						}
-						break;
-					case 7:
-						if (Config.OverrideHeavyTapperDefault)
-						{
-							MinutesUntilReady = (int)MathHelper.Max(1440 * Config.DaysForMushroomHeavy, 5);
-						}
-						else
-                           {
-							MinutesUntilReady = (int)MathHelper.Max(1440 * Config.DaysForMushroom * Config.HeavyTapperMultiplier, 5);
-						}
-						break;
-					case 8:
-						if (Config.OverrideHeavyTapperDefault)
-						{
-							MinutesUntilReady = (int)MathHelper.Max(1440 * Config.DaysForSapHeavy, 5);
-						}
-						else
-						{
-							MinutesUntilReady = (int)MathHelper.Max(1440 * Config.DaysForSap * Config.HeavyTapperMultiplier, 5);
-						}
-						break;
-				}
+				case 1:
+				case 2:
+				case 3:
+					days_configured = Config.DaysForSyrups;
+					break;
+				case 7:
+					days_configured = Config.DaysForMushroom;
+					break;
+				case 8:
+					days_configured = Config.DaysForSap;
+					break;
 			}
+
+			days_configured = (float)Math.Floor(days_configured * time_multiplier);
+			if (days_configured < 1)
+			{
+				MinutesUntilReady = (int)MathHelper.Max(1440 * days_configured, 5);
+			}
+			else
+            {
+				MinutesUntilReady = Utility.CalculateMinutesUntilMorning(Game1.timeOfDay, (int)Math.Max(1f, days_configured));
+			}
+
+			Log.D("Changing minutes until ready as per configs: " + MinutesUntilReady, Config.DebugMode);
 		}
 
 		public int GetQualityLevel(Farmer who, int age)
@@ -223,7 +197,7 @@ namespace BetterTappers
 				return lowQuality;
             }
 			
-			int quality = DetermineQuality(who.foragingLevel, age);
+			int quality = DetermineQuality(who.foragingLevel.Value, age);
 			if (Config.BotanistAffectsTappers)
 			{
 				if (who != null && who.professions.Contains(Farmer.botanist))
@@ -292,15 +266,15 @@ namespace BetterTappers
 			if (lvl > 0)
 			{
 				double ran = Game1.random.NextDouble();
-				switch (BetterTappersLogic.formula)
+				switch (CoreLogic.formula)
 				{
 					case 0:
 					default:
-						if (ran < (Math.Min(lvl, BetterTappersLogic.LvlCap) / 30f))
+						if (ran < (Math.Min(lvl, CoreLogic.LvlCap) / 30f))
 						{
 							return highQuality;
 						}
-						else if (ran < (Math.Min(lvl, BetterTappersLogic.LvlCap) / 15f))
+						else if (ran < (Math.Min(lvl, CoreLogic.LvlCap) / 15f))
 						{
 							return medQuality;
 						}

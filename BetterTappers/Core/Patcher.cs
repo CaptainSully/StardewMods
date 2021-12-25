@@ -10,7 +10,7 @@ namespace BetterTappers
 {
     internal class Patcher
     {
-        public static void PatchAll(ModEntry mod)
+        public static void PatchAll()
         {
             var harmony = new Harmony(ModEntry.UID);
 
@@ -50,17 +50,16 @@ namespace BetterTappers
                     if (location.terrainFeatures.ContainsKey(placementTile) && location.terrainFeatures[placementTile] is Tree)
                     {
                         Tree tree = location.terrainFeatures[placementTile] as Tree;
-                        if ((int)tree.growthStage >= 5 && !tree.stump && !location.objects.ContainsKey(placementTile))
+                        if (tree.growthStage.Value >= 5 && !tree.stump.Value && !location.objects.ContainsKey(placementTile))
                         {
-                            Tapper tapper_instance = new Tapper(__instance.tileLocation, __instance.parentSheetIndex);
-                            //tapper_instance.Config = ModEntry.Config;
+                            Tapper tapper_instance = new Tapper(__instance.TileLocation, __instance.ParentSheetIndex);
                             tapper_instance.CopyObjTapper(__instance);
                             tapper_instance.heldObject.Value = null;
-                            tapper_instance.tileLocation.Value = placementTile;
+                            tapper_instance.TileLocation = placementTile;
                             location.objects.Add(placementTile, tapper_instance);
                             tree.tapped.Value = true;
                             tree.UpdateTapperProduct(tapper_instance);
-                            tapper_instance.SetTapperMinutes(tree.treeType);
+                            tapper_instance.SetTapperMinutes(tree.treeType.Value);
                             location.playSound("axe");
 
                             __result = true;

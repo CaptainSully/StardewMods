@@ -6,14 +6,14 @@ namespace BetterTappers
 {
     public class ModEntry : Mod
     {
-        internal static IMonitor Logger { get; set; }
+        internal static ModEntry Instance { get; set; }
         internal static Config Config { get; set; }
         internal static string UID { get; set; }
 
         public override void Entry(IModHelper helper)
         {
+            Instance = this;
             UID = ModManifest.UniqueID;
-            Logger = Monitor;
             Config = Helper.ReadConfig<Config>();
             Config.VerifyConfigValues(Config, this);
 
@@ -41,10 +41,10 @@ namespace BetterTappers
             Config.SetUpModConfigMenu(Config, this);
 
             // Patches
-            Patcher.PatchAll(this);
+            Patcher.PatchAll();
 
             // Events
-            Helper.Events.GameLoop.DayStarted += delegate { BetterTappersLogic.IncreaseTreeAges(); };
+            Helper.Events.GameLoop.DayStarted += delegate { CoreLogic.IncreaseTreeAges(); };
         }
         private bool LoadAPIs()
         {

@@ -6,7 +6,7 @@ using StardewObject = StardewValley.Object;
 
 namespace BetterTappers
 {
-    internal class BetterTappersLogic
+    internal class CoreLogic
     {
         public const int LvlCap = 100;
         public const int formula = 0;
@@ -65,15 +65,15 @@ namespace BetterTappers
 
         public static bool IsAnyTapper(StardewObject o)
         {
-            return o != null && o.bigCraftable && (o.ParentSheetIndex == 105 || o.parentSheetIndex == 264);
+            return o != null && o.bigCraftable.Value && (o.ParentSheetIndex == 105 || o.ParentSheetIndex == 264);
         }
         public static bool IsTapper(StardewObject o)
         {
-            return o != null && o.bigCraftable && o.parentSheetIndex == 105;
+            return o != null && o.bigCraftable.Value && o.ParentSheetIndex == 105;
         }
         public static bool IsHeavyTapper(StardewObject o)
         {
-            return o != null && o.bigCraftable && o.parentSheetIndex == 264;
+            return o != null && o.bigCraftable.Value && o.ParentSheetIndex == 264;
         }
     }
 }

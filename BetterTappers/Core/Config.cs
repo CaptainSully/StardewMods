@@ -18,11 +18,11 @@ namespace BetterTappers
         public float DaysForMushroom { get; set; } = 7f;
 
         // Options for hardwood tappers
-        public bool OverrideHeavyTapperDefault { get; set; } = false;
+        internal bool OverrideHeavyTapperDefault { get; set; } = false;
         public float HeavyTapperMultiplier { get; set; } = 0.5f;
-        public float DaysForSyrupsHeavy { get; set; } = 3.5f;
-        public float DaysForSapHeavy { get; set; } = 0.5f;
-        public float DaysForMushroomHeavy { get; set; } = 3.5f;
+        internal float DaysForSyrupsHeavy { get; set; } = 3.5f;
+        internal float DaysForSapHeavy { get; set; } = 0.5f;
+        internal float DaysForMushroomHeavy { get; set; } = 3.5f;
 
         // Quality options
         public bool ForageLevelAffectsQuality { get; set; } = true;
@@ -75,27 +75,9 @@ namespace BetterTappers
                 config.HeavyTapperMultiplier = 0.5f;
             }
 
-            if (config.DaysForSyrupsHeavy < 0)
-            {
-                invalidConfig = true;
-                config.DaysForSyrupsHeavy = 3.5f;
-            }
-
-            if (config.DaysForSapHeavy < 0)
-            {
-                invalidConfig = true;
-                config.DaysForSapHeavy = 0.5f;
-            }
-
-            if (config.DaysForMushroomHeavy < 0)
-            {
-                invalidConfig = true;
-                config.DaysForMushroomHeavy = 3.5f;
-            }
-
             if (invalidConfig)
             {
-                Log.T("At least one config value was out of range and was reset.");
+                Log.I("At least one config value was out of range and was reset.");
                 mod.Helper.WriteConfig(config);
             }
         }
@@ -121,7 +103,7 @@ namespace BetterTappers
                     name: () => "Tapper experience gain", tooltip: () => "Amount of experience gained for harvesting from tappers.\nMod default is 10, vanilla is 0.");
             api.AddBoolOption(manifest, () => config.GathererAffectsTappers, (bool val) => config.GathererAffectsTappers = val,
                     name: () => "Enable Gatherer perk on tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");
-            api.AddBoolOption(manifest, () => config.GathererAffectsTappers, (bool val) => config.GathererAffectsTappers = val,
+            api.AddBoolOption(manifest, () => config.BotanistAffectsTappers, (bool val) => config.BotanistAffectsTappers = val,
                     name: () => "Enable Botanist perk on tappers", tooltip: () => "The botanist foraging perk (vanilla) makes forage items always irridium quality.");
 
 
@@ -142,7 +124,8 @@ namespace BetterTappers
                 tooltip: () => "These options affect production time of heavy tappers.\nThis section requires 'Enable modified production times' to be true.");
 
             api.AddNumberOption(manifest, () => config.HeavyTapperMultiplier, (float val) => config.HeavyTapperMultiplier = val,
-                    name: () => "Heavy tapper time multiplier", tooltip: () => "Defaults to half normal tappers, which is the same as vanilla.\nThis gets overriden if the manual setting below is true.");
+                    name: () => "Heavy tapper time multiplier", tooltip: () => "Defaults to half normal tappers, which is the same as vanilla.");
+            /*
             api.AddBoolOption(manifest, () => config.OverrideHeavyTapperDefault, (bool val) => config.OverrideHeavyTapperDefault = val,
                     name: () => "Manually set times for heavy tappers", tooltip: () => "Uses the above setting if this is false, and ignores the next 3 settings.");
             api.AddNumberOption(manifest, () => config.DaysForSyrupsHeavy, (float val) => config.DaysForSyrupsHeavy = val,
@@ -151,6 +134,7 @@ namespace BetterTappers
                     name: () => "Days for mahogany trees", tooltip: () => "Number of days for heavy tappers to produce on mahogany trees.");
             api.AddNumberOption(manifest, () => config.DaysForMushroomHeavy, (float val) => config.DaysForMushroomHeavy = val,
                     name: () => "Days for mushroom trees", tooltip: () => "Number of days for heavy tappers to produce on mushroom trees.");
+            */
 
 
             // How to determine tapper product quality

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StardewModdingAPI;
+using System;
 
 namespace BetterTappers
 {
@@ -6,33 +7,32 @@ namespace BetterTappers
 	{
 		public static void D(string str, bool debug)
 		{
-			if (debug)
-				ModEntry.Logger.Log(str, StardewModdingAPI.LogLevel.Debug);
+			if (debug) { ModEntry.Instance.Monitor.Log(str, LogLevel.Debug); }
 		}
-		public static void A(string str)
+		public static void T(string str)
 		{
-			ModEntry.Logger.Log(str, StardewModdingAPI.LogLevel.Alert);
+			ModEntry.Instance.Monitor.Log(str, LogLevel.Trace);
 		}
 		public static void E(string str)
 		{
-			ModEntry.Logger.Log(str, StardewModdingAPI.LogLevel.Alert);
+			ModEntry.Instance.Monitor.Log(str, LogLevel.Alert);
 		}
 		public static void E(string str, Exception e)
 		{
 			string errorMessage = e == null ? string.Empty : $"\n{e.Message}\n{e.StackTrace}";
-			ModEntry.Logger.Log(str + errorMessage, StardewModdingAPI.LogLevel.Error);
+			ModEntry.Instance.Monitor.Log(str + errorMessage, LogLevel.Error);
 		}
 		public static void I(string str)
 		{
-			ModEntry.Logger.Log(str, StardewModdingAPI.LogLevel.Info);
+			ModEntry.Instance.Monitor.Log(str, LogLevel.Info);
 		}
-		public static void T(string str)
+		public static void A(string str)
 		{
-			ModEntry.Logger.Log(str, StardewModdingAPI.LogLevel.Trace);
+			ModEntry.Instance.Monitor.Log(str, LogLevel.Alert);
 		}
 		public static void W(string str)
 		{
-			ModEntry.Logger.Log(str, StardewModdingAPI.LogLevel.Warn);
+			ModEntry.Instance.Monitor.Log(str, LogLevel.Warn);
 		}
 	}
 }
