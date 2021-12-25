@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using StardewValley;
@@ -9,16 +10,15 @@ namespace BetterTappers
 {
     internal class Patcher
     {
-        private static BetterTappersEntry mod;
-
-        public static void PatchAll(BetterTappersEntry bte)
+        public static void PatchAll()
         {
-            mod = bte;
-
-            var harmony = new Harmony(mod.ModManifest.UniqueID);
+            var harmony = new Harmony(ModEntry.UID);
 
             try
             {
+                Log.T(typeof(Patcher).GetMethods().Take(typeof(Patcher).GetMethods().Count() - 4).Select(mi => mi.Name)
+                .Aggregate("Applying Harmony patches:", (str, s) => $"{str}{Environment.NewLine}{s}"));
+
                 harmony.Patch(
                    original: AccessTools.Method(typeof(StardewObject), "placementAction"),
                    prefix: new HarmonyMethod(typeof(Patcher), nameof(PatchTapperPlacementAction))
@@ -26,8 +26,9 @@ namespace BetterTappers
             }
             catch (Exception e)
             {
-                BetterTappersEntry.ErrorLog("Error while trying to setup required patches:", e);
+                Log.E("Error while trying to setup required patches:", e);
             }
+            Log.T("Patches applied successfully.");
         }
 
         public static bool PatchTapperPlacementAction(ref StardewObject __instance, ref bool __result, ref GameLocation location, ref int x, ref int y, Farmer who = null)
@@ -49,17 +50,16 @@ namespace BetterTappers
                     if (location.terrainFeatures.ContainsKey(placementTile) && location.terrainFeatures[placementTile] is Tree)
                     {
                         Tree tree = location.terrainFeatures[placementTile] as Tree;
-                        if ((int)tree.growthStage >= 5 && !tree.stump && !location.objects.ContainsKey(placementTile))
+                        if (tree.growthStage.Value >= 5 && !tree.stump.Value && !location.objects.ContainsKey(placementTile))
                         {
-                            Tapper tapper_instance = new Tapper(__instance.tileLocation, __instance.parentSheetIndex);
-                            tapper_instance.Config = BetterTappersEntry.Config;
+                            Tapper tapper_instance = new Tapper(__instance.TileLocation, __instance.ParentSheetIndex);
                             tapper_instance.CopyObjTapper(__instance);
                             tapper_instance.heldObject.Value = null;
-                            tapper_instance.tileLocation.Value = placementTile;
+                            tapper_instance.TileLocation = placementTile;
                             location.objects.Add(placementTile, tapper_instance);
                             tree.tapped.Value = true;
                             tree.UpdateTapperProduct(tapper_instance);
-                            tapper_instance.SetTapperMinutes(tree.treeType);
+                            tapper_instance.SetTapperMinutes(tree.treeType.Value);
                             location.playSound("axe");
 
                             __result = true;

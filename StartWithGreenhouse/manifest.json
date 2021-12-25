@@ -1,7 +1,7 @@
 {
   "Name": "StartWithGreenhouse",
   "Author": "CaptainSully",
-  "Version": "0.1.0",
+  "Version": "1.0.0",
   "Description": "Start game with greenhouse enabled",
   "UniqueID": "CaptainSully.StartWithGreenhouse",
   "EntryDll": "StartWithGreenhouse.dll",

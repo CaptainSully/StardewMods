@@ -6,7 +6,7 @@ using StardewObject = StardewValley.Object;
 
 namespace BetterTappers
 {
-    internal class BetterTappersLogic
+    internal class CoreLogic
     {
         public const int LvlCap = 100;
         public const int formula = 0;
@@ -18,22 +18,24 @@ namespace BetterTappers
 
         public static int GetTreeAge(Tree tree)
         {
-            tree.modData.TryGetValue($"{BetterTappersEntry.UID}/treeAge", out string data);
+            tree.modData.TryGetValue($"{ModEntry.UID}/treeAge", out string data);
 
             if (!string.IsNullOrEmpty(data))
             {
                 return int.Parse(data);
             }
-            BetterTappersEntry.DebugLog("BetterTappers: Could not get tree age.", true);
+            Log.D("Could not get tree age.", true);
             return 0;
         }
 
-        public static void IncreaseTreeAges()
+        internal static void IncreaseTreeAges()
         {
             if (!Context.IsMainPlayer)
             {
                 return;
             }
+
+            Log.T("Increasing the age of trees.");
 
             foreach (var location in Game1.locations)
             {
@@ -47,31 +49,31 @@ namespace BetterTappers
             }
         }
 
-        public static void IncreaseTreeAge(Tree tree)
+        internal static void IncreaseTreeAge(Tree tree)
         {
-            tree.modData.TryGetValue($"{BetterTappersEntry.UID}/treeAge", out string data);
+            tree.modData.TryGetValue($"{ModEntry.UID}/treeAge", out string data);
 
             if (!string.IsNullOrEmpty(data))
             {
-                tree.modData[$"{BetterTappersEntry.UID}/treeAge"] = (int.Parse(data) + 1).ToString();
+                tree.modData[$"{ModEntry.UID}/treeAge"] = (int.Parse(data) + 1).ToString();
             }
             else
             {
-                tree.modData[$"{BetterTappersEntry.UID}/treeAge"] = "1";
+                tree.modData[$"{ModEntry.UID}/treeAge"] = "1";
             }
         }
 
         public static bool IsAnyTapper(StardewObject o)
         {
-            return o != null && o.bigCraftable && (o.ParentSheetIndex == 105 || o.parentSheetIndex == 264);
+            return o != null && o.bigCraftable.Value && (o.ParentSheetIndex == 105 || o.ParentSheetIndex == 264);
         }
         public static bool IsTapper(StardewObject o)
         {
-            return o != null && o.bigCraftable && o.parentSheetIndex == 105;
+            return o != null && o.bigCraftable.Value && o.ParentSheetIndex == 105;
         }
         public static bool IsHeavyTapper(StardewObject o)
         {
-            return o != null && o.bigCraftable && o.parentSheetIndex == 264;
+            return o != null && o.bigCraftable.Value && o.ParentSheetIndex == 264;
         }
     }
 }
