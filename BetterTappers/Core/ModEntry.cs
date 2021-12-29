@@ -14,10 +14,10 @@ namespace BetterTappers
         {
             Instance = this;
             UID = ModManifest.UniqueID;
-            Config = Helper.ReadConfig<Config>();
+            Config = helper.ReadConfig<Config>();
             Config.VerifyConfigValues(Config, this);
 
-            Helper.Events.GameLoop.GameLaunched += this.GameLoop_GameLaunched;
+            helper.Events.GameLoop.GameLaunched += this.GameLoop_GameLaunched;
         }
         private void GameLoop_GameLaunched(object sender, GameLaunchedEventArgs e)
         {

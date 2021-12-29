@@ -18,11 +18,7 @@ namespace BetterTappers
         public float DaysForMushroom { get; set; } = 7f;
 
         // Options for hardwood tappers
-        internal bool OverrideHeavyTapperDefault { get; set; } = false;
         public float HeavyTapperMultiplier { get; set; } = 0.5f;
-        internal float DaysForSyrupsHeavy { get; set; } = 3.5f;
-        internal float DaysForSapHeavy { get; set; } = 0.5f;
-        internal float DaysForMushroomHeavy { get; set; } = 3.5f;
 
         // Quality options
         public bool ForageLevelAffectsQuality { get; set; } = true;
@@ -98,7 +94,7 @@ namespace BetterTappers
             api.AddBoolOption(manifest, () => config.ChangeTapperTimes, (bool val) => config.ChangeTapperTimes = val,
                     name: () => "Enable modified production times", tooltip: () => "Let tappers use modified product times.\n'False' overrides the production times settings.");
             api.AddBoolOption(manifest, () => config.TappersUseQuality, (bool val) => config.TappersUseQuality = val,
-                    name: () => "Enable quality for tapper products", tooltip: () => "Lets tappers produce items with higher qualities.\n'False' overrides the quality section below.");
+                    name: () => "Enable quality", tooltip: () => "Lets tappers produce items with higher qualities.\n'False' overrides the quality section below.");
             api.AddNumberOption(manifest, () => config.TapperXP, (int val) => config.TapperXP = val,
                     name: () => "Tapper experience gain", tooltip: () => "Amount of experience gained for harvesting from tappers.\nMod default is 10, vanilla is 0.");
             api.AddBoolOption(manifest, () => config.GathererAffectsTappers, (bool val) => config.GathererAffectsTappers = val,
@@ -125,25 +121,14 @@ namespace BetterTappers
 
             api.AddNumberOption(manifest, () => config.HeavyTapperMultiplier, (float val) => config.HeavyTapperMultiplier = val,
                     name: () => "Heavy tapper time multiplier", tooltip: () => "Defaults to half normal tappers, which is the same as vanilla.");
-            /*
-            api.AddBoolOption(manifest, () => config.OverrideHeavyTapperDefault, (bool val) => config.OverrideHeavyTapperDefault = val,
-                    name: () => "Manually set times for heavy tappers", tooltip: () => "Uses the above setting if this is false, and ignores the next 3 settings.");
-            api.AddNumberOption(manifest, () => config.DaysForSyrupsHeavy, (float val) => config.DaysForSyrupsHeavy = val,
-                    name: () => "Days for maple/oak/pine trees", tooltip: () => "Number of days for heavy tappers to produce on listed trees.");
-            api.AddNumberOption(manifest, () => config.DaysForSapHeavy, (float val) => config.DaysForSapHeavy = val,
-                    name: () => "Days for mahogany trees", tooltip: () => "Number of days for heavy tappers to produce on mahogany trees.");
-            api.AddNumberOption(manifest, () => config.DaysForMushroomHeavy, (float val) => config.DaysForMushroomHeavy = val,
-                    name: () => "Days for mushroom trees", tooltip: () => "Number of days for heavy tappers to produce on mushroom trees.");
-            */
 
 
             // How to determine tapper product quality
+            api.AddParagraph(manifest, text: () => " ");
             api.AddSectionTitle(manifest, text: () => "Tapper Product Quality");
             api.AddParagraph(manifest, text: () => "These options affect how output quality is determined. This section requires " +
                     "'Enable quality for tapper products' to be true. If all of these are false products will never have quality." +
-                    "\nWith default settings, each of 'Forage level', 'Times harvested', and 'Tree age' are added together to determine the output. " +
-                    "This gives a value between 0 and 6. On a 6 the quality will be irridium; otherwise the value is divided by 2 then rounded down and that is the quality. " +
-                    "Vanilla qualities are 0 for normal, 1 for silver, 2 for gold, and 4 for irridium (yes it skips 3)\n");
+                    "\nWith default settings, each of 'Forage level', 'Times harvested', and 'Tree age' are used together to determine the output.");
 
             api.AddBoolOption(manifest, () => config.ForageLevelAffectsQuality, (bool val) => config.ForageLevelAffectsQuality = val,
                     name: () => "Forage level affects quality", tooltip: () => "Your level of foraging will affect the quality of tapper products.");
@@ -152,9 +137,10 @@ namespace BetterTappers
             api.AddBoolOption(manifest, () => config.TreeAgeAffectsQuality, (bool val) => config.TreeAgeAffectsQuality = val,
                     name: () => "Tree age affects quality", tooltip: () => "Tree age will affect the quality of tapper products.");
 
-            api.AddSectionTitle(manifest, text: () => "\n\nDebug");
+            api.AddParagraph(manifest, text: () => " ");
+            api.AddSectionTitle(manifest, text: () => "Debuging");
             api.AddBoolOption(manifest, () => config.DebugMode, (bool val) => config.DebugMode = val,
-                    name: () => "This is for helping me test things, leave disabled.", tooltip: () => null);
+                    name: () => "Debug mode", tooltip: () => "This is for helping me debug/test things.\nEnable only if you're trying to do the same.");
         }
     }
 }
