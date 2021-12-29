@@ -15,7 +15,7 @@ namespace BetterTappers
 		}
 		public static void E(string str)
 		{
-			ModEntry.Instance.Monitor.Log(str, LogLevel.Alert);
+			ModEntry.Instance.Monitor.Log(str, LogLevel.Error);
 		}
 		public static void E(string str, Exception e)
 		{

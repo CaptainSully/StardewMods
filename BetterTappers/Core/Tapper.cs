@@ -12,17 +12,22 @@ namespace BetterTappers
 	public class Tapper : StardewObject
 	{
 		// Custom variables
-		private Config Config { get; set; } = ModEntry.Config;
+		private static Config Config { get; set; } = ModEntry.Config;
 		public int TimesHarvested { get; set; } = 0;
 
 
 		// Overrides
         public Tapper() : base() { }
 
+		public Tapper(int parentSheetIndex) : base()
+        {
+			ParentSheetIndex = parentSheetIndex; 
+		}
+
 		public Tapper(Vector2 tileLocation, int parentSheetIndex, bool isRecipe = false)
 			: base(tileLocation, parentSheetIndex, isRecipe) { }
 
-		//this is actually currently useless since tappers only exist outside the inventory
+		//this is actually currently useless since tapper objects only exist outside the inventory
 		/*public override int maximumStackSize()
 		{
 			if (Stackable) { return 999; }
@@ -37,11 +42,13 @@ namespace BetterTappers
 
 		public override Item getOne()
         {
-			Tapper @tapper = new Tapper(tileLocation, ParentSheetIndex);
-			@tapper.name = name;
-			@tapper.DisplayName = DisplayName;
-			@tapper.SpecialVariable = SpecialVariable;
-			@tapper._GetOneFrom(this);
+            Tapper @tapper = new(tileLocation, ParentSheetIndex)
+            {
+                name = name,
+                DisplayName = DisplayName,
+                SpecialVariable = SpecialVariable
+            };
+            @tapper._GetOneFrom(this);
 			return @tapper;
 		}
 
@@ -104,9 +111,6 @@ namespace BetterTappers
 				if (tree != null)
 				{
 					tree.UpdateTapperProduct(this, objectThatWasHeld);
-
-					//Now that the tapper product has been reset, change the timer to what the player actually configured.
-					SetTapperMinutes((who.currentLocation.terrainFeatures[tileLocation] as Tree).treeType.Value);
 				}
 
 				readyForHarvest.Value = false;
@@ -131,7 +135,7 @@ namespace BetterTappers
 			_GetOneFrom(parent);
 		}
 
-		private int TriggerGathererPerk(Farmer who)
+		private static int TriggerGathererPerk(Farmer who)
         {
 			Log.D("Checking gatherer perk...", Config.DebugMode);
 			if (who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
@@ -140,21 +144,23 @@ namespace BetterTappers
 			}
 			return 1;
 		}
-
-		public void SetTapperMinutes(int treeType)
+		
+		public static int CalculateTapperMinutes(int treeType, int parentSheetIndex)
 		{
-			Log.D("Checking tapper minutes...", Config.DebugMode);
 			if (Config.DisableAllModEffects || !Config.ChangeTapperTimes)
 			{
-				return;
+				return 0;
 			}
+			Log.D("Calculating modded tapper minutes...", Config.DebugMode);
 
 			float days_configured = 1f;
 			float time_multiplier = 1f;
+			int result;
 
-			if (ParentSheetIndex == 264)
+			if (parentSheetIndex == 264)
 			{
 				time_multiplier = Config.HeavyTapperMultiplier;
+				Log.D("Time multiplier: " + time_multiplier, Config.DebugMode);
 			}
 
 			switch (treeType)
@@ -172,17 +178,18 @@ namespace BetterTappers
 					break;
 			}
 
-			days_configured = (float)Math.Floor(days_configured * time_multiplier);
+			days_configured *= time_multiplier;
+			Log.D("Days: " + days_configured, Config.DebugMode);
 			if (days_configured < 1)
 			{
-				MinutesUntilReady = (int)MathHelper.Max(1440 * days_configured, 5);
+				result = (int)MathHelper.Max(1440 * days_configured, 5);
 			}
 			else
             {
-				MinutesUntilReady = Utility.CalculateMinutesUntilMorning(Game1.timeOfDay, (int)Math.Max(1f, days_configured));
+				result = Utility.CalculateMinutesUntilMorning(Game1.timeOfDay, (int)Math.Max(1f, days_configured));
 			}
-
-			Log.D("Changing minutes until ready as per configs: " + MinutesUntilReady, Config.DebugMode);
+			Log.D("Changing minutes until ready as per configs: " + result, Config.DebugMode);
+			return result;
 		}
 
 		public int GetQualityLevel(Farmer who, int age)
@@ -196,7 +203,7 @@ namespace BetterTappers
             {
 				return lowQuality;
             }
-			
+
 			int quality = DetermineQuality(who.foragingLevel.Value, age);
 			if (Config.BotanistAffectsTappers)
 			{
@@ -260,7 +267,7 @@ namespace BetterTappers
 			}
 		}
 
-		private int GetQualityPart(int lvl)
+		private static int GetQualityPart(int lvl)
         {
 			Log.D("Getting quality piece...", Config.DebugMode);
 			if (lvl > 0)
