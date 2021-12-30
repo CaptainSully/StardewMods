@@ -153,7 +153,7 @@ namespace BetterTappers
 
 		private int TriggerGathererPerk(Farmer who)
         {
-			if (Config.GathererAffectsTappers && who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
+			if (!Config.DebugMode && Config.GathererAffectsTappers && who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
             {
 				Log.D("Gatherer perk applied", Config.DebugMode);
 				return 1;
