@@ -19,7 +19,7 @@ namespace BetterTappers
 		}
 		public static void E(string str, Exception e)
 		{
-			string errorMessage = e == null ? string.Empty : $"\n{e.Message}\n{e.StackTrace}";
+			string errorMessage = e is null ? string.Empty : $"\n{e.Message}\n{e.StackTrace}";
 			ModEntry.Instance.Monitor.Log(str + errorMessage, LogLevel.Error);
 		}
 		public static void I(string str)

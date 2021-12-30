@@ -8,6 +8,7 @@ namespace BetterTappers
         public bool ChangeTapperTimes { get; set; } = true;
         public bool TappersUseQuality { get; set; } = true;
         public int TapperXP { get; set; } = 10;
+        public bool AllowAutomatedXP { get; set; } = true;
         public bool GathererAffectsTappers { get; set; } = true;
         public bool BotanistAffectsTappers { get; set; } = true;
 
@@ -81,7 +82,7 @@ namespace BetterTappers
         public static void SetUpModConfigMenu(Config config, ModEntry mod)
         {
             IGenericModConfigMenuApi api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
-            if (api == null) { return; }
+            if (api is null) { return; }
             var manifest = mod.ModManifest;
 
             api.Register(manifest, () => config = new Config(), delegate { mod.Helper.WriteConfig(config); VerifyConfigValues(config, mod); });
@@ -97,6 +98,8 @@ namespace BetterTappers
                     name: () => "Enable quality", tooltip: () => "Lets tappers produce items with higher qualities.\n'False' overrides the quality section below.");
             api.AddNumberOption(manifest, () => config.TapperXP, (int val) => config.TapperXP = val,
                     name: () => "Tapper experience gain", tooltip: () => "Amount of experience gained for harvesting from tappers.\nMod default is 10, vanilla is 0.");
+            api.AddBoolOption(manifest, () => config.AllowAutomatedXP, (bool val) => config.ChangeTapperTimes = val,
+                    name: () => "XP is gained from automation", tooltip: () => "Whether or not autoharvesting tappers ('automate' mod for example) will give exp.");
             api.AddBoolOption(manifest, () => config.GathererAffectsTappers, (bool val) => config.GathererAffectsTappers = val,
                     name: () => "Enable Gatherer perk on tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");
             api.AddBoolOption(manifest, () => config.BotanistAffectsTappers, (bool val) => config.BotanistAffectsTappers = val,
@@ -124,7 +127,6 @@ namespace BetterTappers
 
 
             // How to determine tapper product quality
-            api.AddParagraph(manifest, text: () => " ");
             api.AddSectionTitle(manifest, text: () => "Tapper Product Quality");
             api.AddParagraph(manifest, text: () => "These options affect how output quality is determined. This section requires " +
                     "'Enable quality for tapper products' to be true. If all of these are false products will never have quality." +

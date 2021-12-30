@@ -65,15 +65,15 @@ namespace BetterTappers
 
         public static bool IsAnyTapper(StardewObject o)
         {
-            return o != null && o.bigCraftable.Value && (o.ParentSheetIndex == 105 || o.ParentSheetIndex == 264);
+            return o is not null && o.bigCraftable.Value && (o.ParentSheetIndex == 105 || o.ParentSheetIndex == 264);
         }
         public static bool IsTapper(StardewObject o)
         {
-            return o != null && o.bigCraftable.Value && o.ParentSheetIndex == 105;
+            return o is not null && o.bigCraftable.Value && o.ParentSheetIndex == 105;
         }
         public static bool IsHeavyTapper(StardewObject o)
         {
-            return o != null && o.bigCraftable.Value && o.ParentSheetIndex == 264;
+            return o is not null && o.bigCraftable.Value && o.ParentSheetIndex == 264;
         }
     }
 }
