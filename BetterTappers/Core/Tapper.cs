@@ -12,8 +12,10 @@ namespace BetterTappers
 	public class Tapper : StardewObject
 	{
 		// Custom variables
-		private static Config Config { get; set; } = ModEntry.Config;
+		public Config Config { get; set; } = ModEntry.Config;
+
 		public int TimesHarvested { get; set; } = 0;
+		public long TmpUMID { get; set; } = -1;
 
 
 		// Overrides
@@ -42,16 +44,25 @@ namespace BetterTappers
 
 		public override Item getOne()
         {
-            Tapper @tapper = new(tileLocation, ParentSheetIndex)
-            {
-                name = name,
-                DisplayName = DisplayName,
-                SpecialVariable = SpecialVariable
+			Tapper @tapper = new(tileLocation, ParentSheetIndex)
+			{
+				name = name,
+				DisplayName = DisplayName,
+				SpecialVariable = SpecialVariable,
             };
             @tapper._GetOneFrom(this);
 			return @tapper;
 		}
+		public override void _GetOneFrom(Item source)
+		{
+			orderData.Value = (source as StardewObject).orderData.Value;
+			base._GetOneFrom(source);
+		}
 
+		public void SetOwnerVal(long uniqueMPID)
+        {
+			owner.Value = uniqueMPID;
+        }
 		// Mostly vanilla behaviour thats been stripped of things unrelated to tappers. New things have comments
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
 		{
@@ -59,7 +70,7 @@ namespace BetterTappers
 			{
 				return true;
 			}
-			if (!justCheckingForActivity && who != null && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() - 1) && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() + 1) && who.currentLocation.isObjectAtTile(who.getTileX() + 1, who.getTileY()) && who.currentLocation.isObjectAtTile(who.getTileX() - 1, who.getTileY()) && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() - 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() + 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() - 1, who.getTileY()).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() + 1, who.getTileY()).isPassable())
+			if (!justCheckingForActivity && who is not null && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() - 1) && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() + 1) && who.currentLocation.isObjectAtTile(who.getTileX() + 1, who.getTileY()) && who.currentLocation.isObjectAtTile(who.getTileX() - 1, who.getTileY()) && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() - 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() + 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() - 1, who.getTileY()).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() + 1, who.getTileY()).isPassable())
 			{
 				performToolAction(null, who.currentLocation);
 			}
@@ -77,39 +88,44 @@ namespace BetterTappers
 				Tree tree = null;
 				if (who.IsLocalPlayer)
 				{
+					Config = ModEntry.Config;
 					heldObject.Value = null;
 
 					//Change quality value of objectThatWasHeld, then apply gatherer perk
+					int ogStackSize = objectThatWasHeld.Stack;
+					int ogQuality = objectThatWasHeld.Quality;
+					Log.D("Og Stack Size: " + ogStackSize + "    Og Quality: " + ogQuality, Config.DebugMode);
 					if (who.currentLocation.terrainFeatures.ContainsKey(tileLocation) && who.currentLocation.terrainFeatures[tileLocation] is Tree)
 					{
 						tree = (who.currentLocation.terrainFeatures[tileLocation] as Tree);
-						if (tree.treeType.Value != 8)
+						if (tree.treeType.Value is not 8)
 						{
-							objectThatWasHeld.Quality = GetQualityLevel(who, CoreLogic.GetTreeAgeMonths(tree));
+							int q = GetQualityLevel(who, CoreLogic.GetTreeAgeMonths(tree));
+							Log.D("New quality: " + q, Config.DebugMode);
+							objectThatWasHeld.Quality = q;
 						}
-						objectThatWasHeld.Stack = TriggerGathererPerk(who);
+						objectThatWasHeld.Stack += TriggerGathererPerk(who);
+						Log.D("New Stack Size: " + objectThatWasHeld.Stack, Config.DebugMode);
 					}
 
 					if (!who.addItemToInventoryBool(objectThatWasHeld))
 					{
 						//if harvesting failed, reset quality of the ready item back to low and stack size back to 1
-						objectThatWasHeld.Quality = lowQuality;
-						objectThatWasHeld.Stack = 1;
+						objectThatWasHeld.Quality = ogQuality;
+						objectThatWasHeld.Stack = ogStackSize;
 						heldObject.Value = objectThatWasHeld;
 						Game1.showRedMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:Crop.cs.588"));
 						return false;
 					}
+
 					Game1.playSound("coin");
 					check_for_reload = true;
-
-					//Give player experience, and then increment tapper TimesHarvested
-					who.gainExperience(2, Config.TapperXP);
-					TimesHarvested++;
 				}
 
 				//vanilla if statement moved up because quality needs to know if there's a tree. replaced with this check.
-				if (tree != null)
+				if (tree is not null)
 				{
+					TmpUMID = who.UniqueMultiplayerID;
 					tree.UpdateTapperProduct(this, objectThatWasHeld);
 				}
 
@@ -135,17 +151,17 @@ namespace BetterTappers
 			_GetOneFrom(parent);
 		}
 
-		private static int TriggerGathererPerk(Farmer who)
+		private int TriggerGathererPerk(Farmer who)
         {
-			Log.D("Checking gatherer perk...", Config.DebugMode);
-			if (who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
+			if (Config.GathererAffectsTappers && who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
             {
-				return 2;
+				Log.D("Gatherer perk applied", Config.DebugMode);
+				return 1;
 			}
-			return 1;
+			return 0;
 		}
 		
-		public static int CalculateTapperMinutes(int treeType, int parentSheetIndex)
+		public int CalculateTapperMinutes(int treeType, int parentSheetIndex)
 		{
 			if (Config.DisableAllModEffects || !Config.ChangeTapperTimes)
 			{
@@ -160,8 +176,8 @@ namespace BetterTappers
 			if (parentSheetIndex == 264)
 			{
 				time_multiplier = Config.HeavyTapperMultiplier;
-				Log.D("Time multiplier: " + time_multiplier, Config.DebugMode);
 			}
+			Log.D("Time multiplier: " + time_multiplier, Config.DebugMode);
 
 			switch (treeType)
 			{
@@ -179,7 +195,7 @@ namespace BetterTappers
 			}
 
 			days_configured *= time_multiplier;
-			Log.D("Days: " + days_configured, Config.DebugMode);
+			Log.D("Days calculated: " + days_configured, Config.DebugMode);
 			if (days_configured < 1)
 			{
 				result = (int)MathHelper.Max(1440 * days_configured, 5);
@@ -197,17 +213,20 @@ namespace BetterTappers
 			Log.D("Quality check requested...", Config.DebugMode);
 			if (Config.DisableAllModEffects || !Config.TappersUseQuality)
 			{
+				Log.D("Quality disabled", Config.DebugMode);
 				return lowQuality;
 			}
-			if ((!Config.ForageLevelAffectsQuality || who == null) && (!Config.TreeAgeAffectsQuality || age < 1) && !Config.TimesHarvestedAffectsQuality)
+			if ((!Config.ForageLevelAffectsQuality || who is null) && (!Config.TreeAgeAffectsQuality || age < 1) && 
+				(!Config.TimesHarvestedAffectsQuality || TimesHarvested < 1))
             {
+				Log.D("Quality all types disabled", Config.DebugMode);
 				return lowQuality;
             }
 
 			int quality = DetermineQuality(who.foragingLevel.Value, age);
 			if (Config.BotanistAffectsTappers)
 			{
-				if (who != null && who.professions.Contains(Farmer.botanist))
+				if (who is not null && who.professions.Contains(Farmer.botanist))
 				{
 					Log.D("Botanist perk applied.", Config.DebugMode);
 					return bestQuality;
@@ -267,7 +286,7 @@ namespace BetterTappers
 			}
 		}
 
-		private static int GetQualityPart(int lvl)
+		private int GetQualityPart(int lvl)
         {
 			Log.D("Getting quality piece...", Config.DebugMode);
 			if (lvl > 0)

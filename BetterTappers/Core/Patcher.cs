@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using StardewValley;
@@ -10,6 +11,8 @@ namespace BetterTappers
 {
     internal class Patcher
     {
+        private static Config Config { get; set; } = ModEntry.Config;
+
         public static void PatchAll()
         {
             var harmony = new Harmony(ModEntry.UID);
@@ -43,7 +46,7 @@ namespace BetterTappers
             try
             {
                 Vector2 placementTile = new(x / 64, y / 64);
-                if (who != null)
+                if (who is not null)
                 {
                     __instance.owner.Value = who.UniqueMultiplayerID;
                 }
@@ -63,6 +66,7 @@ namespace BetterTappers
                             {
                                 Tapper tapper_instance = new(__instance.TileLocation, __instance.ParentSheetIndex);
                                 tapper_instance.CopyObjTapper(__instance);
+                                tapper_instance.SetOwnerVal(__instance.owner.Value);
                                 tapper_instance.heldObject.Value = null;
                                 tapper_instance.TileLocation = placementTile;
                                 location.objects.Add(placementTile, tapper_instance);
@@ -93,15 +97,49 @@ namespace BetterTappers
         {
             try
             {
-                if (previous_object != null)
+                Tapper tapper = (Tapper)tapper_instance;
+                tapper.Config = ModEntry.Config;
+
+                //If the previous object wasn't null, then the tapper should have been harvested rather than just placed
+                if (previous_object is not null)
                 {
-                    //Exp could go here. Maybe quality.
+                    tapper.TimesHarvested++;
+                    Log.D("New times harvested: " + tapper.TimesHarvested, Config.DebugMode);
+
+                    Farmer who = null;
+                    if (tapper.TmpUMID is -1)
+                    {
+                        if (Config.AllowAutomatedXP)
+                        {
+                            who = Game1.getFarmer(tapper.owner.Value);
+                        }
+                    }
+                    else
+                    {
+                        who = Game1.getFarmer(tapper.TmpUMID);
+                    }
+                    tapper.TmpUMID = -1;
+
+                    if (who is not null && !Config.DisableAllModEffects)
+                    {
+                        Log.D("Farmer getting XP: " + who.Name, Config.DebugMode);
+                        who.gainExperience(2, Math.Max(Config.TapperXP, 0));
+                    }
+                    else
+                    {
+                        Log.D("No xp awarded", Config.DebugMode);
+                    }
+                }
+                else
+                {
+                    Log.D("Tapper placed; don't increment, no xp", Config.DebugMode);
                 }
 
                 //Once product has been updated by the game, recalculate and apply a time based on mod configs
-                int i = Tapper.CalculateTapperMinutes(__instance.treeType.Value, tapper_instance.ParentSheetIndex);
+                Log.D("Tapper original time: " + tapper.MinutesUntilReady, Config.DebugMode);
+                int i = tapper.CalculateTapperMinutes(__instance.treeType.Value, tapper.ParentSheetIndex);
                 if (i > 0) {
-                    tapper_instance.MinutesUntilReady = i;
+                    tapper.MinutesUntilReady = i;
                 }
             }
             catch (Exception e)

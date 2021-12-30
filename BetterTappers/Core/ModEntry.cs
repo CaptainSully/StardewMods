@@ -50,7 +50,7 @@ namespace BetterTappers
         {
             Log.T("Loading mod-provided APIs.");
             ISpaceCoreAPI spacecoreAPI = Helper.ModRegistry.GetApi<ISpaceCoreAPI>("spacechase0.SpaceCore");
-            if (spacecoreAPI == null)
+            if (spacecoreAPI is null)
             {
                 // Skip patcher mod behaviours if we fail to load the objects
                 Log.E($"Couldn't access mod-provided API for SpaceCore.{Environment.NewLine}Better Tappers will not be available, and no changes will be made.");
