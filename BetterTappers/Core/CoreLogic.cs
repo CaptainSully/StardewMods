@@ -2,12 +2,14 @@
 using StardewValley;
 using StardewValley.TerrainFeatures;
 using System;
+using SullySDVcore;
 using StardewObject = StardewValley.Object;
 
 namespace BetterTappers
 {
     internal class CoreLogic
     {
+        private static readonly Log log = BetterTappers.Instance.log;
         public const int LvlCap = 100;
         public const int formula = 0;
 
@@ -18,13 +20,13 @@ namespace BetterTappers
 
         public static int GetTreeAge(Tree tree)
         {
-            tree.modData.TryGetValue($"{ModEntry.UID}/treeAge", out string data);
+            tree.modData.TryGetValue($"{BetterTappers.UID}/treeAge", out string data);
 
             if (!string.IsNullOrEmpty(data))
             {
                 return int.Parse(data);
             }
-            Log.D("Could not get tree age.", true);
+            log.D("Could not get tree age.", true);
             return 0;
         }
 
@@ -35,7 +37,7 @@ namespace BetterTappers
                 return;
             }
 
-            Log.T("Increasing the age of trees.");
+            log.T("Increasing the age of trees.");
 
             foreach (var location in Game1.locations)
             {
@@ -51,15 +53,15 @@ namespace BetterTappers
 
         internal static void IncreaseTreeAge(Tree tree)
         {
-            tree.modData.TryGetValue($"{ModEntry.UID}/treeAge", out string data);
+            tree.modData.TryGetValue($"{BetterTappers.UID}/treeAge", out string data);
 
             if (!string.IsNullOrEmpty(data))
             {
-                tree.modData[$"{ModEntry.UID}/treeAge"] = (int.Parse(data) + 1).ToString();
+                tree.modData[$"{BetterTappers.UID}/treeAge"] = (int.Parse(data) + 1).ToString();
             }
             else
             {
-                tree.modData[$"{ModEntry.UID}/treeAge"] = "1";
+                tree.modData[$"{BetterTappers.UID}/treeAge"] = "1";
             }
         }
 

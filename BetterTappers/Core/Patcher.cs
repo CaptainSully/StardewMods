@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using System.Reflection;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
+using SullySDVcore;
 using StardewValley;
 using StardewValley.TerrainFeatures;
 using StardewObject = StardewValley.Object;
@@ -11,15 +11,16 @@ namespace BetterTappers
 {
     internal class Patcher
     {
-        private static Config Config { get; set; } = ModEntry.Config;
+        private static readonly Log log = BetterTappers.Instance.log;
+        private static Config Config { get; set; } = BetterTappers.Config;
 
         public static void PatchAll()
         {
-            var harmony = new Harmony(ModEntry.UID);
+            var harmony = new Harmony(BetterTappers.UID);
 
             try
             {
-                Log.T(typeof(Patcher).GetMethods().Take(typeof(Patcher).GetMethods().Length - 4).Select(mi => mi.Name)
+                log.T(typeof(Patcher).GetMethods().Take(typeof(Patcher).GetMethods().Length - 4).Select(mi => mi.Name)
                 .Aggregate("Applying Harmony patches:", (str, s) => $"{str}{Environment.NewLine}{s}"));
 
                 harmony.Patch(
@@ -33,9 +34,9 @@ namespace BetterTappers
             }
             catch (Exception e)
             {
-                Log.E("Error while trying to setup required patches:", e);
+                log.E("Error while trying to setup required patches:", e);
             }
-            Log.T("Patches applied successfully.");
+            log.T("Patches applied successfully.");
         }
 
         /**
@@ -85,7 +86,7 @@ namespace BetterTappers
             }
             catch (Exception e)
             {
-                Log.E("There was an exception in PatchTapperPlacementAction", e);
+                log.E("There was an exception in PatchTapperPlacementAction", e);
                 return true;
             }
         }
@@ -97,14 +98,25 @@ namespace BetterTappers
         {
             try
             {
-                Tapper tapper = (Tapper)tapper_instance;
-                tapper.Config = ModEntry.Config;
+                Tapper tapper;
+                if (tapper_instance is not Tapper)
+                {
+                    tapper = new(tapper_instance.TileLocation, tapper_instance.ParentSheetIndex);
+                    tapper.CopyObjTapper(tapper_instance);
+                    tapper.SetOwnerVal(tapper_instance.owner.Value);
+                    tapper.heldObject.Value = tapper_instance.heldObject.Value;
+                    tapper_instance = tapper;
+                }
+                else {
+                    tapper = (Tapper)tapper_instance;
+                }
+                tapper.Config = BetterTappers.Config;
 
                 //If the previous object wasn't null, then the tapper should have been harvested rather than just placed
                 if (previous_object is not null)
                 {
                     tapper.TimesHarvested++;
-                    Log.D("New times harvested: " + tapper.TimesHarvested, Config.DebugMode);
+                    log.D("New times harvested: " + tapper.TimesHarvested, Config.DebugMode);
 
                     Farmer who = null;
                     if (tapper.TmpUMID is -1)
@@ -122,21 +134,21 @@ namespace BetterTappers
 
                     if (who is not null && !Config.DisableAllModEffects)
                     {
-                        Log.D("Farmer getting XP: " + who.Name, Config.DebugMode);
+                        log.D("Farmer getting XP: " + who.Name, Config.DebugMode);
                         who.gainExperience(2, Math.Max(Config.TapperXP, 0));
                     }
                     else
                     {
-                        Log.D("No xp awarded", Config.DebugMode);
+                        log.D("No xp awarded", Config.DebugMode);
                     }
                 }
                 else
                 {
-                    Log.D("Tapper placed; don't increment, no xp", Config.DebugMode);
+                    log.D("Tapper placed; don't increment, no xp", Config.DebugMode);
                 }
 
                 //Once product has been updated by the game, recalculate and apply a time based on mod configs
-                Log.D("Tapper original time: " + tapper.MinutesUntilReady, Config.DebugMode);
+                log.D("Tapper original time: " + tapper.MinutesUntilReady, Config.DebugMode);
                 int i = tapper.CalculateTapperMinutes(__instance.treeType.Value, tapper.ParentSheetIndex);
                 if (i > 0) {
                     tapper.MinutesUntilReady = i;
@@ -144,7 +156,7 @@ namespace BetterTappers
             }
             catch (Exception e)
             {
-                Log.E("There was an exception in PatchUpdateTapperProduct", e);
+                log.E("There was an exception in PatchUpdateTapperProduct", e);
             }
         }
     }

@@ -3,6 +3,7 @@ using StardewValley;
 using StardewValley.TerrainFeatures;
 using System;
 using System.Xml.Serialization;
+using SullySDVcore;
 using StardewObject = StardewValley.Object;
 
 
@@ -12,7 +13,8 @@ namespace BetterTappers
 	public class Tapper : StardewObject
 	{
 		// Custom variables
-		public Config Config { get; set; } = ModEntry.Config;
+		internal static readonly Log log = BetterTappers.Instance.log;
+		public Config Config { get; set; } = BetterTappers.Config;
 
 		public int TimesHarvested { get; set; } = 0;
 		public long TmpUMID { get; set; } = -1;
@@ -88,24 +90,24 @@ namespace BetterTappers
 				Tree tree = null;
 				if (who.IsLocalPlayer)
 				{
-					Config = ModEntry.Config;
+					Config = BetterTappers.Config;
 					heldObject.Value = null;
 
 					//Change quality value of objectThatWasHeld, then apply gatherer perk
 					int ogStackSize = objectThatWasHeld.Stack;
 					int ogQuality = objectThatWasHeld.Quality;
-					Log.D("Og Stack Size: " + ogStackSize + "    Og Quality: " + ogQuality, Config.DebugMode);
+					log.D("Og Stack Size: " + ogStackSize + "    Og Quality: " + ogQuality, Config.DebugMode);
 					if (who.currentLocation.terrainFeatures.ContainsKey(tileLocation) && who.currentLocation.terrainFeatures[tileLocation] is Tree)
 					{
 						tree = (who.currentLocation.terrainFeatures[tileLocation] as Tree);
 						if (tree.treeType.Value is not 8)
 						{
 							int q = GetQualityLevel(who, CoreLogic.GetTreeAgeMonths(tree));
-							Log.D("New quality: " + q, Config.DebugMode);
+							log.D("New quality: " + q, Config.DebugMode);
 							objectThatWasHeld.Quality = q;
 						}
 						objectThatWasHeld.Stack += TriggerGathererPerk(who);
-						Log.D("New Stack Size: " + objectThatWasHeld.Stack, Config.DebugMode);
+						log.D("New Stack Size: " + objectThatWasHeld.Stack, Config.DebugMode);
 					}
 
 					if (!who.addItemToInventoryBool(objectThatWasHeld))
@@ -155,7 +157,7 @@ namespace BetterTappers
         {
 			if (!Config.DebugMode && Config.GathererAffectsTappers && who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
             {
-				Log.D("Gatherer perk applied", Config.DebugMode);
+				log.D("Gatherer perk applied", Config.DebugMode);
 				return 1;
 			}
 			return 0;
@@ -167,7 +169,7 @@ namespace BetterTappers
 			{
 				return 0;
 			}
-			Log.D("Calculating modded tapper minutes...", Config.DebugMode);
+			log.D("Calculating modded tapper minutes...", Config.DebugMode);
 
 			float days_configured = 1f;
 			float time_multiplier = 1f;
@@ -177,7 +179,7 @@ namespace BetterTappers
 			{
 				time_multiplier = Config.HeavyTapperMultiplier;
 			}
-			Log.D("Time multiplier: " + time_multiplier, Config.DebugMode);
+			log.D("Time multiplier: " + time_multiplier, Config.DebugMode);
 
 			switch (treeType)
 			{
@@ -195,7 +197,7 @@ namespace BetterTappers
 			}
 
 			days_configured *= time_multiplier;
-			Log.D("Days calculated: " + days_configured, Config.DebugMode);
+			log.D("Days calculated: " + days_configured, Config.DebugMode);
 			if (days_configured < 1)
 			{
 				result = (int)MathHelper.Max(1440 * days_configured, 5);
@@ -204,22 +206,22 @@ namespace BetterTappers
             {
 				result = Utility.CalculateMinutesUntilMorning(Game1.timeOfDay, (int)Math.Max(1f, days_configured));
 			}
-			Log.D("Changing minutes until ready as per configs: " + result, Config.DebugMode);
+			log.D("Changing minutes until ready as per configs: " + result, Config.DebugMode);
 			return result;
 		}
 
 		public int GetQualityLevel(Farmer who, int age)
         {
-			Log.D("Quality check requested...", Config.DebugMode);
+			log.D("Quality check requested...", Config.DebugMode);
 			if (Config.DisableAllModEffects || !Config.TappersUseQuality)
 			{
-				Log.D("Quality disabled", Config.DebugMode);
+				log.D("Quality disabled", Config.DebugMode);
 				return lowQuality;
 			}
 			if ((!Config.ForageLevelAffectsQuality || who is null) && (!Config.TreeAgeAffectsQuality || age < 1) && 
 				(!Config.TimesHarvestedAffectsQuality || TimesHarvested < 1))
             {
-				Log.D("Quality all types disabled", Config.DebugMode);
+				log.D("Quality all types disabled", Config.DebugMode);
 				return lowQuality;
             }
 
@@ -228,7 +230,7 @@ namespace BetterTappers
 			{
 				if (who is not null && who.professions.Contains(Farmer.botanist))
 				{
-					Log.D("Botanist perk applied.", Config.DebugMode);
+					log.D("Botanist perk applied.", Config.DebugMode);
 					return bestQuality;
 				}
 				return Math.Min(quality, highQuality);
@@ -242,7 +244,7 @@ namespace BetterTappers
 
 		private int DetermineQuality(int foragingLevel, int age = 0)
 		{
-			Log.D("Determining quality...", Config.DebugMode);
+			log.D("Determining quality...", Config.DebugMode);
 			int n, FLQ, TAQ, THQ, t;
 			n = FLQ = TAQ = THQ = 0;
 
@@ -262,9 +264,9 @@ namespace BetterTappers
 				n++;
 			}
 
-			Log.D("QualitiesActive: " + n + "    FLQ: " + FLQ + "    TAQ: " + TAQ + "    THQ: " + THQ, Config.DebugMode);
+			log.D("QualitiesActive: " + n + "    FLQ: " + FLQ + "    TAQ: " + TAQ + "    THQ: " + THQ, Config.DebugMode);
 			t = (FLQ + TAQ + THQ);
-			Log.D("Sum of qualty pieces: " + t, Config.DebugMode);
+			log.D("Sum of qualty pieces: " + t, Config.DebugMode);
 			switch (n)
             {
 				case 3:
@@ -281,14 +283,14 @@ namespace BetterTappers
 				//these shouldn't happen, but if they do return low
 				case 0:
 				default:
-					Log.D("Problem: shouldn't asking for quality when no quality types are enabled. Defaulted to low.", true);
+					log.D("Problem: shouldn't asking for quality when no quality types are enabled. Defaulted to low.", true);
 					return lowQuality;
 			}
 		}
 
 		private int GetQualityPart(int lvl)
         {
-			Log.D("Getting quality piece...", Config.DebugMode);
+			log.D("Getting quality piece...", Config.DebugMode);
 			if (lvl > 0)
 			{
 				double ran = Game1.random.NextDouble();

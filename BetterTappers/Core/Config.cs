@@ -1,8 +1,11 @@
-﻿
+﻿using SullySDVcore;
+using StardewModdingAPI;
+
 namespace BetterTappers
 {
     public class Config
     {
+        private static readonly Log log = BetterTappers.Instance.log;
         // General options
         public bool DisableAllModEffects { get; set; } = false;
         public bool ChangeTapperTimes { get; set; } = true;
@@ -38,7 +41,7 @@ namespace BetterTappers
         //different outputs?
         //more outputs? (like 3-8 sap)
 
-        public static void VerifyConfigValues(Config config, ModEntry mod)
+        public static void VerifyConfigValues(Config config, Mod mod)
         {
             bool invalidConfig = false;
 
@@ -74,12 +77,12 @@ namespace BetterTappers
 
             if (invalidConfig)
             {
-                Log.I("At least one config value was out of range and was reset.");
+                log.I("At least one config value was out of range and was reset.");
                 mod.Helper.WriteConfig(config);
             }
         }
         
-        public static void SetUpModConfigMenu(Config config, ModEntry mod)
+        public static void SetUpModConfigMenu(Config config, Mod mod)
         {
             IGenericModConfigMenuApi api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
             if (api is null) { return; }

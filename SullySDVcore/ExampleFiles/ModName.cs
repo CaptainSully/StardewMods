@@ -1,18 +1,22 @@
 ﻿using System;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using SullySDVcore;
 
-namespace BetterTappers
-{
-    public class ModEntry : Mod
+namespace ModName   // **** Rename namespace, class name, and class extends Mod. Then good to go ****
+{ /*
+    public class ModName : Mod 
     {
-        internal static ModEntry Instance { get; set; }
+        internal static ModName Instance { get; set; }
+        internal Log log;
         internal static Config Config { get; set; }
         internal static string UID { get; set; }
+        
 
         public override void Entry(IModHelper helper)
         {
             Instance = this;
+            log = new(this);
             UID = ModManifest.UniqueID;
             Config = helper.ReadConfig<Config>();
             Config.VerifyConfigValues(Config, this);
@@ -34,32 +38,23 @@ namespace BetterTappers
         }
         private void Initialise()
         {
-            Log.T("Initialising mod data.");
+            log.T("Initialising mod data.");
 
             // Content
             //Translations.Initialise();
-            Config.SetUpModConfigMenu(Config, this);
+            //Config.SetUpModConfigMenu(Config, this);
 
             // Patches
-            Patcher.PatchAll();
+            //Patcher.PatchAll();
 
             // Events
-            Helper.Events.GameLoop.DayStarted += delegate { CoreLogic.IncreaseTreeAges(); };
+            
         }
         private bool LoadAPIs()
         {
-            Log.T("Loading mod-provided APIs.");
-            ISpaceCoreAPI spacecoreAPI = Helper.ModRegistry.GetApi<ISpaceCoreAPI>("spacechase0.SpaceCore");
-            if (spacecoreAPI is null)
-            {
-                // Skip patcher mod behaviours if we fail to load the objects
-                Log.E($"Couldn't access mod-provided API for SpaceCore.{Environment.NewLine}Better Tappers will not be available, and no changes will be made.");
-                return false;
-            }
-
-            spacecoreAPI.RegisterSerializerType(typeof(Tapper));
-
+            
             return true;
         }
     }
+    */
 }
