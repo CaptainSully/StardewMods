@@ -1,22 +1,18 @@
-using System;
-using System.Linq;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
-using SullySDVcore;
 using StardewValley;
 using StardewValley.TerrainFeatures;
-using StardewObject = StardewValley.Object;
 
 namespace BetterTappers
 {
     internal class Patcher
     {
-        private static readonly Log log = BetterTappers.Instance.log;
-        private static Config Config { get; set; } = BetterTappers.Config;
+        private static readonly Log log = ModEntry.Instance.log;
+        private static ModConfig Config { get; set; } = ModEntry.Config;
 
         public static void PatchAll()
         {
-            var harmony = new Harmony(BetterTappers.UID);
+            var harmony = new Harmony(ModEntry.UID);
 
             try
             {
@@ -24,7 +20,7 @@ namespace BetterTappers
                 .Aggregate("Applying Harmony patches:", (str, s) => $"{str}{Environment.NewLine}{s}"));
 
                 harmony.Patch(
-                   original: AccessTools.Method(typeof(StardewObject), "placementAction"),
+                   original: AccessTools.Method(typeof(SObject), "placementAction"),
                    prefix: new HarmonyMethod(typeof(Patcher), nameof(PatchTapperPlacementAction))
                 );
                 harmony.Patch(
@@ -40,9 +36,9 @@ namespace BetterTappers
         }
 
         /**
-         * From StardewObject : public virtual bool placementAction(GameLocation location, int x, int y, Farmer who = null)
+         * From SObject : public virtual bool placementAction(GameLocation location, int x, int y, Farmer who = null)
          */
-        public static bool PatchTapperPlacementAction(ref StardewObject __instance, ref bool __result, ref GameLocation location, ref int x, ref int y, Farmer who = null)
+        public static bool PatchTapperPlacementAction(ref SObject __instance, ref bool __result, ref GameLocation location, ref int x, ref int y, Farmer who = null)
         {
             try
             {
@@ -94,7 +90,7 @@ namespace BetterTappers
         /**
          * From the Tree object: public void UpdateTapperProduct(Object tapper_instance, Object previous_object = null)
          */
-        public static void PatchUpdateTapperProduct(ref Tree __instance, StardewObject tapper_instance, StardewObject previous_object)
+        public static void PatchUpdateTapperProduct(ref Tree __instance, SObject tapper_instance, SObject previous_object)
         {
             try
             {
@@ -110,7 +106,7 @@ namespace BetterTappers
                 else {
                     tapper = (Tapper)tapper_instance;
                 }
-                tapper.Config = BetterTappers.Config;
+                tapper.Config = ModEntry.Config;
 
                 //If the previous object wasn't null, then the tapper should have been harvested rather than just placed
                 if (previous_object is not null)

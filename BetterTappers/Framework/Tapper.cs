@@ -1,49 +1,67 @@
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.TerrainFeatures;
-using System;
 using System.Xml.Serialization;
-using SullySDVcore;
-using StardewObject = StardewValley.Object;
 
 
 namespace BetterTappers
 {
 	[XmlType("Mods_CaptainSully_BetterTappers_Tapper")] // SpaceCore serialisation signature
-	public class Tapper : StardewObject
-	{
-		// Custom variables
-		internal static readonly Log log = BetterTappers.Instance.log;
-		public Config Config { get; set; } = BetterTappers.Config;
 
+	public class Tapper : SObject
+	{
+		/*********
+        ** Fields
+        *********/
+		/// <summary>Logging tool.</summary>
+		internal static readonly Log log = ModEntry.Instance.log;
+		/// <summary>The mod configuration.</summary>
+		public ModConfig Config { get; set; }
+		/// <summary>Number of times the tapper has been harvested since placed.</summary>
 		public int TimesHarvested { get; set; } = 0;
+		/// <summary>A unique multiplayer ID.</summary>
 		public long TmpUMID { get; set; } = -1;
 
 
-		// Overrides
-        public Tapper() : base() { }
+		/*********
+        ** Constructors
+        *********/
+		/// <summary>Construct an instance.</summary>
+		public Tapper() : base() { }
 
+		/// <summary>Construct an instance with an ID.</summary>
+		/// <param name="parentSheetIndex">The item ID for the new tapper.</param>
 		public Tapper(int parentSheetIndex) : base()
         {
 			ParentSheetIndex = parentSheetIndex; 
 		}
 
+		/// <summary>Construct an instance with an ID and location.</summary>
+		/// <param name="tileLocation">The location of the new tapper.</param>
+		/// <param name="parentSheetIndex">The item ID for the new tapper.</param>
+		/// <param name="isRecipe">					edit			</param>
 		public Tapper(Vector2 tileLocation, int parentSheetIndex, bool isRecipe = false)
 			: base(tileLocation, parentSheetIndex, isRecipe) { }
 
-		//this is actually currently useless since tapper objects only exist outside the inventory
-		/*public override int maximumStackSize()
+
+		/*********
+        ** Public methods
+        *********/
+		// Method overrides
+		/* this is actually currently useless since tapper objects only exist outside the inventory
+		 public override int maximumStackSize()
 		{
 			if (Stackable) { return 999; }
 			return 1;
 		}*/
 
-		//potentially useful for making new tapper types, or adding them to different trees etc.
-		/*public override bool canBePlacedHere(GameLocation l, Vector2 tile)
+		/* potentially useful for making new tapper types, or adding them to different trees etc.
+		 public override bool canBePlacedHere(GameLocation l, Vector2 tile)
 		{
 
 		}*/
 
+		/// <summary>Returns a new tapper object.</summary>
 		public override Item getOne()
         {
 			Tapper @tapper = new(tileLocation, ParentSheetIndex)
@@ -55,17 +73,17 @@ namespace BetterTappers
             @tapper._GetOneFrom(this);
 			return @tapper;
 		}
+
 		public override void _GetOneFrom(Item source)
 		{
-			orderData.Value = (source as StardewObject).orderData.Value;
+			orderData.Value = (source as SObject).orderData.Value;
 			base._GetOneFrom(source);
 		}
 
-		public void SetOwnerVal(long uniqueMPID)
-        {
-			owner.Value = uniqueMPID;
-        }
-		// Mostly vanilla behaviour thats been stripped of things unrelated to tappers. New things have comments
+		// Mostly vanilla behaviour thats been stripped of things unrelated to tappers.
+		/// <summary>Checks if player interacted with the tapper.</summary>
+		/// <param name="who">The current player.</param>
+		/// <param name="justCheckingForActivity">		edit		 .</param>
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
 		{
 			if (isTemporarilyInvisible || justCheckingForActivity)
@@ -77,7 +95,7 @@ namespace BetterTappers
 				performToolAction(null, who.currentLocation);
 			}
 
-			StardewObject objectThatWasHeld = heldObject.Value;
+			SObject objectThatWasHeld = heldObject.Value;
 
 			if (readyForHarvest.Value)
 			{
@@ -90,7 +108,7 @@ namespace BetterTappers
 				Tree tree = null;
 				if (who.IsLocalPlayer)
 				{
-					Config = BetterTappers.Config;
+					Config = ModEntry.Config;
 					heldObject.Value = null;
 
 					//Change quality value of objectThatWasHeld, then apply gatherer perk
@@ -145,24 +163,27 @@ namespace BetterTappers
 
 
 		// Custom methods
-		public void CopyObjTapper(StardewObject parent)
+		/// <summary>Set the owner of the tapper.</summary>
+		/// <param name="uniqueMPID">A unique multiplayer ID.</param>
+		public void SetOwnerVal(long uniqueMPID)
+		{
+			if (!(uniqueMPID < 0)) {
+				owner.Value = uniqueMPID;
+			}
+            else
+            {
+                log.W("Tried to set the owner to an invalid multiplayer ID. Defaulting to main player.");
+				owner.Value = Game1.serverHost.Value.UniqueMultiplayerID;
+			}
+        }
+		public void CopyObjTapper(SObject parent)
 		{
 			name = parent.name;
 			DisplayName = parent.DisplayName;
 			SpecialVariable = parent.SpecialVariable;
 			_GetOneFrom(parent);
 		}
-
-		private int TriggerGathererPerk(Farmer who)
-        {
-			if (!Config.DebugMode && Config.GathererAffectsTappers && who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
-            {
-				log.D("Gatherer perk applied", Config.DebugMode);
-				return 1;
-			}
-			return 0;
-		}
-		
+		/// <summary>Return number of minutes the tapper should take to produce.</summary>
 		public int CalculateTapperMinutes(int treeType, int parentSheetIndex)
 		{
 			if (Config.DisableAllModEffects || !Config.ChangeTapperTimes)
@@ -209,7 +230,7 @@ namespace BetterTappers
 			log.D("Changing minutes until ready as per configs: " + result, Config.DebugMode);
 			return result;
 		}
-
+		/// <summary>Return a quality level for tapper output.</summary>
 		public int GetQualityLevel(Farmer who, int age)
         {
 			log.D("Quality check requested...", Config.DebugMode);
@@ -225,7 +246,6 @@ namespace BetterTappers
 				return lowQuality;
             }
 
-			int quality = DetermineQuality(who.foragingLevel.Value, age);
 			if (Config.BotanistAffectsTappers)
 			{
 				if (who is not null && who.professions.Contains(Farmer.botanist))
@@ -233,8 +253,8 @@ namespace BetterTappers
 					log.D("Botanist perk applied.", Config.DebugMode);
 					return bestQuality;
 				}
-				return Math.Min(quality, highQuality);
 			}
+			int quality = DetermineQuality(who.foragingLevel.Value, age);
 			if (quality == 3)
             {
 				return highQuality;
@@ -242,6 +262,21 @@ namespace BetterTappers
 			return quality;
 		}
 
+
+		/*********
+        ** Private methods
+        *********/
+		/// <summary>Return number of items to add to a stack based on gatherer perk.</summary>
+		private int TriggerGathererPerk(Farmer who)
+		{
+			if (!Config.DebugMode && Config.GathererAffectsTappers && who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
+			{
+				log.D("Gatherer perk applied", Config.DebugMode);
+				return 1;
+			}
+			return 0;
+		}
+		/// <summary>Return a quality level based on what categories are enabled.</summary>
 		private int DetermineQuality(int foragingLevel, int age = 0)
 		{
 			log.D("Determining quality...", Config.DebugMode);
@@ -287,7 +322,7 @@ namespace BetterTappers
 					return lowQuality;
 			}
 		}
-
+		/// <summary>Calculate and return a quality level for one of the 3 quality categories.</summary>
 		private int GetQualityPart(int lvl)
         {
 			log.D("Getting quality piece...", Config.DebugMode);
@@ -311,5 +346,5 @@ namespace BetterTappers
 			}
 			return lowQuality;
 		}
-	}//END class
-}//END namespace
+	}
+}

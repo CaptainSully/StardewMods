@@ -6,7 +6,12 @@
   "UniqueID": "CaptainSully.BetterTappers",
   "EntryDll": "BetterTappers.dll",
   "UpdateKeys": [ "Nexus:9875" ],
+
   "Dependencies": [
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    },
     {
       "UniqueID": "spacechase0.SpaceCore"
     }

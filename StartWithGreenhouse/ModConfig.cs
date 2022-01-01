@@ -1,21 +1,31 @@
-﻿using SullySDVcore;
-using StardewModdingAPI;
-
+﻿
 namespace StartWithGreenhouse
 {
-    public class Config
+    // <summary>The raw mod configuration.</summary>
+    internal class ModConfig
     {
+       /*********
+       ** Accessors
+       *********/
+        /// <summary>Whether the mod is disabled.</summary>
         public bool DisableAllModEffects { get; set; } = false;
 
-        public static void SetUpModConfigMenu(Config config, Mod mod)
+
+        /*********
+        ** Public methods
+        *********/
+        /// <summary>Set up Generic Mod Config Menu integration.</summary>
+        public static void SetUpModConfigMenu(ModConfig config, Mod mod)
         {
+            // Get the Generic Mod Config Menu API
             IGenericModConfigMenuApi api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
             if (api is null) { return; }
             var manifest = mod.ModManifest;
 
-            api.Register(manifest, () => config = new Config(), delegate { mod.Helper.WriteConfig(config); }, true);
+            // Register the Generic Mod Config Menu API
+            api.Register(manifest, () => config = new ModConfig(), delegate { mod.Helper.WriteConfig(config); }, true);
 
-            //Configs to display
+            // Options to display
             api.AddBoolOption(manifest, () => config.DisableAllModEffects, (bool val) => config.DisableAllModEffects = val,
                     name: () => "Disable mod", tooltip: () => null);
             api.AddParagraph(manifest, text: () => "Will not affect newly loaded saves if true.\n" +
