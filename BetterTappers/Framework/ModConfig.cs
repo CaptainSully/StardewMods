@@ -132,7 +132,7 @@
                     name: () => "Enable quality", tooltip: () => "Lets tappers produce items with higher qualities.\n'False' overrides the quality section below.");
             api.AddNumberOption(manifest, () => config.TapperXP, (int val) => config.TapperXP = val,
                     name: () => "Tapper experience gain", tooltip: () => "Amount of experience gained for harvesting from tappers.\nMod default is 10, vanilla is 0.");
-            api.AddBoolOption(manifest, () => config.AllowAutomatedXP, (bool val) => config.ChangeTapperTimes = val,
+            api.AddBoolOption(manifest, () => config.AllowAutomatedXP, (bool val) => config.AllowAutomatedXP = val,
                     name: () => "XP is gained from automation", tooltip: () => "Whether or not autoharvesting tappers ('automate' mod for example) will give exp.");
             api.AddBoolOption(manifest, () => config.GathererAffectsTappers, (bool val) => config.GathererAffectsTappers = val,
                     name: () => "Enable Gatherer perk on tappers", tooltip: () => "The gatherer foraging perk (vanilla) gives a chance for double foraged items.");

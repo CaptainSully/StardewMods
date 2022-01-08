@@ -1,4 +1,5 @@
-﻿namespace BetterTappers
+﻿
+namespace BetterTappers
 {
     // <summary>The mod entry point.</summary>
     public class ModEntry : Mod
@@ -29,10 +30,12 @@
             UID = ModManifest.UniqueID;
 
             // load config
-            UpdateConfig();
+            Config = Helper.ReadConfig<ModConfig>();
+            ModConfig.VerifyConfigValues(Config, Instance);
 
             // hook events
             Helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            Helper.Events.GameLoop.DayStarted += delegate { CoreLogic.IncreaseTreeAges(); };
         }
 
 
@@ -52,15 +55,11 @@
             // Content
             //Translations.Initialise();
             
-
             // Patches
             Patcher.PatchAll();
 
             // Load APIs
             LoadAPIs();
-
-            // Events
-            Helper.Events.GameLoop.DayStarted += delegate { CoreLogic.IncreaseTreeAges(); };
         }
 
         /// <summary>Load other mod APIs.</summary>
@@ -79,13 +78,6 @@
                 log.E($"Couldn't access mod-provided API for SpaceCore. " + UID + " will not be available, and no changes will be made.");
             }
             spacecoreAPI.RegisterSerializerType(typeof(Tapper));
-        }
-
-        /// <summary>Update the mod configuration.</summary>
-        private void UpdateConfig()
-        {
-            Config = Helper.ReadConfig<ModConfig>();
-            ModConfig.VerifyConfigValues(Config, Instance);
         }
     }
 }
