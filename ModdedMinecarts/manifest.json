@@ -1,0 +1,16 @@
+{
+  "Name": "ModdedMinecarts",
+  "Author": "CaptainSully",
+  "Version": "0.0.1",
+  "Description": "A description.",
+  "UniqueID": "CaptainSully.ModdedMinecarts",
+  "EntryDll": "ModdedMinecarts.dll",
+  "UpdateKeys": [ "Nexus:0000" ],
+
+  "Dependencies": [
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    }
+  ]
+}

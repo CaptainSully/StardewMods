@@ -1,10 +1,5 @@
-﻿global using SObject = StardewValley.Object;
-global using SullySDVcore.Utilities;
-using StardewModdingAPI;
-using StardewModdingAPI.Events;
-using StardewValley;
-
-namespace ExpandedTileInteractions
+﻿
+namespace ModdedMinecarts
 {
     // <summary>The mod entry point.</summary>
     public class ModEntry : Mod 
@@ -36,7 +31,7 @@ namespace ExpandedTileInteractions
             log = new(this);
             UID = ModManifest.UniqueID;
 
-            UpdateConfig();
+            //UpdateConfig();
 
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
         }
@@ -53,7 +48,15 @@ namespace ExpandedTileInteractions
         /// <param name="e">The event arguments.</param>
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            ModConfig.SetUpModConfigMenu(Config, this);
+            log.T("Initialising mod data.");
+
+            // Content
+            //Translations.Initialise();
+
+            // Patches
+            Patcher.PatchAll();
+
+            //ModConfig.SetUpModConfigMenu(Config, this);
         }
 
         /// <summary>Update the mod configuration.</summary>

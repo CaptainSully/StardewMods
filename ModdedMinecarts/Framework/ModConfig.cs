@@ -1,7 +1,5 @@
-﻿using SullySDVcore.ExternalAPIs;
-using StardewModdingAPI;
-
-namespace ExpandedTileInteractions
+﻿
+namespace ModdedMinecarts
 {
     public class ModConfig
     {

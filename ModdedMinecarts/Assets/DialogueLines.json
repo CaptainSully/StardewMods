@@ -1,0 +1,9 @@
+{
+  "MineCart_Destination_Mines": "Mines",
+  "MineCart_Destination_Town": "Town",
+  "MineCart_Destination_BusStop": "Bus Stop",
+  "MineCart_Destination_Quarry": "Mountain",
+  "MineCart_Destination_Cancel": "Cancel",
+  "MineCart_ChooseDestination": "Choose destination:",
+  "MineCart_OutOfOrder": "Out of order"
+}

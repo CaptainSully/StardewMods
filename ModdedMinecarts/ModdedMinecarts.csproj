@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<AssemblyName>ExpandedTileInteractions</AssemblyName>
-		<RootNamespace>ExpandedTileInteractions</RootNamespace>
+		<AssemblyName>ModdedMinecarts</AssemblyName>
+		<RootNamespace>ModdedMinecarts</RootNamespace>
 		<Version>0.0.1</Version>
 		<TargetFramework>net5.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<EnableHarmony>false</EnableHarmony>
+		<EnableHarmony>true</EnableHarmony>
 	</PropertyGroup>
 
 	<Import Project="..\SullySDVcore\SullySDVcore.projitems" Label="Shared" />
@@ -18,10 +18,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Using Include ="StardewValley.Object" Alias="SObject"/>
-		<Using Include ="StardewValley"/>
-		<Using Include ="StardewModdingAPI"/>
-		<Using Include ="StardewModdingAPI.Events"/>
-		<Using Include ="SullySDVcore"/>
+		<Using Include="StardewValley.Object" Alias="SObject" />
+		<Using Include="StardewValley" />
+		<Using Include="StardewModdingAPI" />
+		<Using Include="StardewModdingAPI.Events" />
+		<Using Include="SullySDVcore" />
 	</ItemGroup>
 </Project>
