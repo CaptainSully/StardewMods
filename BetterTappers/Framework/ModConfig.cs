@@ -1,4 +1,5 @@
-﻿namespace BetterTappers
+﻿
+namespace BetterTappers
 {
     // <summary>The raw mod configuration.</summary>
     public class ModConfig

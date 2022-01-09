@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<AssemblyName>BetterTappers</AssemblyName>
 		<RootNamespace>BetterTappers</RootNamespace>
-		<Version>1.2.0</Version>
+		<Version>1.2.1</Version>
 		<TargetFramework>net5.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -18,10 +18,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Using Include ="StardewValley.Object" Alias="SObject"/>
-		<Using Include ="StardewValley"/>
-		<Using Include ="StardewModdingAPI"/>
-		<Using Include ="StardewModdingAPI.Events"/>
-		<Using Include ="SullySDVcore"/>
+		<Using Include="StardewValley.Object" Alias="SObject" />
+		<Using Include="StardewValley" />
+		<Using Include="StardewModdingAPI" />
+		<Using Include="StardewModdingAPI.Events" />
+		<Using Include="SullySDVcore" />
 	</ItemGroup>
 </Project>

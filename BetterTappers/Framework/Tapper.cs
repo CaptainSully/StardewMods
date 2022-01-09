@@ -1,7 +1,4 @@
-using Microsoft.Xna.Framework;
-using StardewValley.TerrainFeatures;
 using System.Xml.Serialization;
-
 
 namespace BetterTappers
 {

@@ -6,7 +6,7 @@ namespace BetterTappers
     internal class CoreLogic
     {
         private static readonly Log log = ModEntry.Instance.log;
-        private static ModConfig Config = ModEntry.Config;
+        private static readonly ModConfig Config = ModEntry.Config;
         public const int LvlCap = 100;
         public const int formula = 0;
 
@@ -175,9 +175,9 @@ namespace BetterTappers
 
         public static int GetTimesHarvested(SObject tapper)
         {
-            if (tapper is Tapper)
+            if (tapper is Tapper t && IsVanillaTapper(tapper))
             {
-                return ((Tapper)tapper).TimesHarvested;
+                return t.TimesHarvested;
             }
 
             tapper.modData.TryGetValue($"{ModEntry.UID}/timesHarvested", out string data);
@@ -192,9 +192,9 @@ namespace BetterTappers
 
         internal static void IncreaseTimesHarvested(SObject tapper)
         {
-            if (tapper is Tapper)
+            if (tapper is Tapper t && IsVanillaTapper(tapper))
             {
-                ((Tapper)tapper).TimesHarvested++;
+                t.TimesHarvested++;
                 return;
             }
 
@@ -210,10 +210,39 @@ namespace BetterTappers
             }
         }
 
-        internal static SObject ConvertToNormalTappers(SObject tapper)
+        internal static void SetTimesHarvested(SObject tapper, int num)
         {
-            SObject o = tapper;
-            return o;
+            tapper.modData[$"{ModEntry.UID}/timesHarvested"] = num.ToString();
+        }
+
+        internal static ModData GetData()
+        {
+            ModData model = ModEntry.Instance.Helper.Data.ReadSaveData<ModData>($"{ModEntry.UID}.moddata");
+            return model;
+        }
+
+        internal static void SaveData(ModData model)
+        {
+            ModEntry.Instance.Helper.Data.WriteSaveData($"{ModEntry.UID}.moddata", model);
+        }
+
+        internal static SObject ConvertToNormalTappers(SObject tapper, GameLocation location)
+        {
+            if (tapper is Tapper)
+            {
+                log.D("Attempting to convert tapper back to normal", Config.DebugMode);
+                SObject o = new(tapper.TileLocation, tapper.ParentSheetIndex);
+                o.owner.Value = tapper.owner.Value;
+                o.heldObject.Value = tapper.heldObject.Value;
+                o.MinutesUntilReady = tapper.MinutesUntilReady;
+                SetTimesHarvested(o, GetTimesHarvested(tapper));
+
+                location.objects.Remove(tapper.TileLocation);
+                location.objects.Add(o.TileLocation, o);
+
+                return o;
+            }
+            return tapper;
         }
 
         internal static long GetTmpUMID(SObject tapper)
@@ -289,14 +318,17 @@ namespace BetterTappers
         {
             return o is not null && o.bigCraftable.Value && (o.ParentSheetIndex == 105 || o.ParentSheetIndex == 264);
         }
+
         public static bool IsCustomTapper(SObject o)
         {
             return (o is Tapper) && !IsVanillaTapper(o);
         }
+
         public static bool IsVanillaTapper(SObject o)
         {
             return IsTapper(o) || IsHeavyTapper(o);
         }
+
         public static bool IsTapper(SObject o)
         {
             return o is not null && o.bigCraftable.Value && o.ParentSheetIndex == 105;

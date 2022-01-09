@@ -1,5 +1,4 @@
 using HarmonyLib;
-using Microsoft.Xna.Framework;
 using StardewValley.TerrainFeatures;
 
 namespace BetterTappers
@@ -100,9 +99,10 @@ namespace BetterTappers
         {
             try
             {
+                // For custom tappers
                 if (tapper_instance is Tapper)
                 {
-                    // For custom tappers
+
                 }
                 
                 //If the previous object wasn't null, then the tapper should have been harvested rather than just placed
@@ -144,7 +144,7 @@ namespace BetterTappers
                     log.D("Tapper placed; don't increment, no xp", Config.DebugMode);
                 }
 
-                // Once product has been updated by the game, recalculate and apply a time based on mod configs
+                // Once product has been updated by the game, recalculate and set time based on mod configs
                 log.D("Tapper original time: " + tapper_instance.MinutesUntilReady, Config.DebugMode);
                 int i = CoreLogic.CalculateTapperMinutes(__instance.treeType.Value, tapper_instance.ParentSheetIndex);
                 if (i > 0) {
