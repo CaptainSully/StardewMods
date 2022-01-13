@@ -83,9 +83,11 @@ namespace BetterTappers
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
+            if (!Context.IsMainPlayer) return;
+
             ModData data = CoreLogic.GetData() ?? new();
 
-            if (Context.IsMainPlayer && !data.VanillaTappersConverted)
+            if (!data.VanillaTappersConverted)
             {
                 int s = 0;
                 int f = 0;

@@ -1,5 +1,4 @@
-﻿
-namespace BetterTappers
+﻿namespace BetterTappers
 {
     // <summary>The raw mod configuration.</summary>
     public class ModConfig
@@ -149,7 +148,7 @@ namespace BetterTappers
             api.AddNumberOption(manifest, () => config.DaysForSap, (float val) => config.DaysForSap = val,
                     name: () => "Days for mahogany trees", tooltip: () => "Number of days for regular tappers to produce on mahogany trees.\nVanilla is 1.");
             api.AddNumberOption(manifest, () => config.DaysForMushroom, (float val) => config.DaysForMushroom = val,
-                    name: () => "Days for mushroom trees", tooltip: () => "Number of days for regular tappers to produce on mushroom trees.\nVanilla is varies heavily based on season.\nNote that rules for *which* mushroom is produced are not changed in any way.");
+                    name: () => "Days for mushroom trees", tooltip: () => "Number of days for regular tappers to produce on mushroom trees.\nVanilla is 1 or 2 or not at all based on season.\nNote that rules for *which* mushroom is produced are not changed in any way.");
 
             // Production time for heavy tappers
             api.AddSectionTitle(manifest, text: () => "Heavy Tappers",
