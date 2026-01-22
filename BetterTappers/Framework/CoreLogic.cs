@@ -11,7 +11,7 @@ namespace BetterTappers
         public const int formula = 0;
 
         /// <summary>Return number of minutes the tapper should take to produce.</summary>
-		internal static int CalculateTapperMinutes(int treeType, int parentSheetIndex)
+		internal static int CalculateTapperMinutes(String treeType, String qualifiedItemId)
         {
             if (Config.DisableAllModEffects || !Config.ChangeTapperTimes)
             {
@@ -23,7 +23,7 @@ namespace BetterTappers
             float time_multiplier = 1f;
             int result;
 
-            if (parentSheetIndex == 264)
+            if (qualifiedItemId == "(O)264")
             {
                 time_multiplier = Config.HeavyTapperMultiplier;
             }
@@ -31,15 +31,15 @@ namespace BetterTappers
 
             switch (treeType)
             {
-                case 1:
-                case 2:
-                case 3:
+                case "1":
+                case "2":
+                case "3":
                     days_configured = Config.DaysForSyrups;
                     break;
-                case 7:
+                case "7":
                     days_configured = Config.DaysForMushroom;
                     break;
-                case 8:
+                case "8":
                     days_configured = Config.DaysForSap;
                     break;
             }
@@ -231,7 +231,7 @@ namespace BetterTappers
             if (tapper is Tapper)
             {
                 log.D("Attempting to convert tapper back to normal", Config.DebugMode);
-                SObject o = new(tapper.TileLocation, tapper.ParentSheetIndex);
+                SObject o = new(tapper.TileLocation, tapper.itemId.Value);
                 o.owner.Value = tapper.owner.Value;
                 o.heldObject.Value = tapper.heldObject.Value;
                 o.MinutesUntilReady = tapper.MinutesUntilReady;
@@ -316,7 +316,7 @@ namespace BetterTappers
 
         public static bool IsAnyTapper(SObject o)
         {
-            return o is not null && o.bigCraftable.Value && (o.ParentSheetIndex == 105 || o.ParentSheetIndex == 264);
+            return o is not null && (o.QualifiedItemId == "(BC)105" || o.QualifiedItemId == "(BC)264");
         }
 
         public static bool IsCustomTapper(SObject o)
@@ -331,12 +331,12 @@ namespace BetterTappers
 
         public static bool IsTapper(SObject o)
         {
-            return o is not null && o.bigCraftable.Value && o.ParentSheetIndex == 105;
+            return o is not null && o.QualifiedItemId == "(BC)105";
         }
 
         public static bool IsHeavyTapper(SObject o)
         {
-            return o is not null && o.bigCraftable.Value && o.ParentSheetIndex == 264;
+            return o is not null && o.QualifiedItemId == "(BC)264";
         }
     }
 }

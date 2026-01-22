@@ -4,7 +4,7 @@
 		<AssemblyName>InfiniteWateringCan</AssemblyName>
 		<RootNamespace>InfiniteWateringCan</RootNamespace>
 		<Version>0.0.1</Version>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<EnableHarmony>false</EnableHarmony>
@@ -14,7 +14,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-		<PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.0.1" />
+		<PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>

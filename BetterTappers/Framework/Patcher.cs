@@ -1,5 +1,6 @@
 using HarmonyLib;
 using StardewValley.TerrainFeatures;
+using Microsoft.Xna.Framework;
 
 namespace BetterTappers
 {
@@ -23,7 +24,7 @@ namespace BetterTappers
                    prefix: new HarmonyMethod(typeof(Patcher), nameof(PatchTapperPlacementAction))
                 );*/
                 harmony.Patch(
-                   original: AccessTools.Method(typeof(Tree), "UpdateTapperProduct"),
+                   original: AccessTools.Method(typeof(Tree), nameof(Tree.UpdateTapperProduct)),
                    postfix: new HarmonyMethod(typeof(Patcher), nameof(PatchUpdateTapperProduct))
                 );
                 harmony.Patch(
@@ -93,40 +94,45 @@ namespace BetterTappers
         */
 
         /**
-         * From Tree object: public void UpdateTapperProduct(Object tapper_instance, Object previous_object = null)
+         * From Tree object: public void UpdateTapperProduct(Object tapper_instance, Object previous_object = null, bool onlyPerformRemovals = false)
          */
-        public static void PatchUpdateTapperProduct(ref Tree __instance, SObject tapper_instance, SObject previous_object)
+        public static void PatchUpdateTapperProduct(ref Tree __instance, SObject tapper, SObject previousOutput = null, bool onlyPerformRemovals = false)
         {
             try
             {
+                if (tapper is null)
+                {
+                    return;
+                }
+
                 // For custom tappers
-                if (tapper_instance is Tapper)
+                if (tapper is Tapper)
                 {
 
                 }
                 
                 //If the previous object wasn't null, then the tapper should have been harvested rather than just placed
-                if (previous_object is not null)
+                if (previousOutput is not null)
                 {
                     // Increment times harvested for the tapper
-                    CoreLogic.IncreaseTimesHarvested(tapper_instance);
-                    log.D("New times harvested: " + CoreLogic.GetTimesHarvested(tapper_instance), Config.DebugMode);
+                    CoreLogic.IncreaseTimesHarvested(tapper);
+                    log.D("New times harvested: " + CoreLogic.GetTimesHarvested(tapper), Config.DebugMode);
 
                     // If tapper was not harvested by a player (i.e. automation) and auto xp is allowed, get the owner
                     Farmer who = null;
-                    if (CoreLogic.GetTmpUMID(tapper_instance) is -1)
+                    if (CoreLogic.GetTmpUMID(tapper) is -1)
                     {
                         if (Config.AllowAutomatedXP)
                         {
-                            who = Game1.getFarmerMaybeOffline(tapper_instance.owner.Value);
+                            who = Game1.GetPlayer(tapper.owner.Value);
                         }
                     }
                     // Otherwise get the player who harvested
                     else
                     {
-                        who = Game1.getFarmer(CoreLogic.GetTmpUMID(tapper_instance));
+                        who = Game1.GetPlayer(CoreLogic.GetTmpUMID(tapper));
                     }
-                    CoreLogic.SetTmpUMID(tapper_instance, -1);
+                    CoreLogic.SetTmpUMID(tapper, -1);
 
                     // If harvester/owner were found, give them xp
                     if (who is not null && !Config.DisableAllModEffects)
@@ -145,10 +151,10 @@ namespace BetterTappers
                 }
 
                 // Once product has been updated by the game, recalculate and set time based on mod configs
-                log.D("Tapper original time: " + tapper_instance.MinutesUntilReady, Config.DebugMode);
-                int i = CoreLogic.CalculateTapperMinutes(__instance.treeType.Value, tapper_instance.ParentSheetIndex);
+                log.D("Tapper original time: " + tapper.MinutesUntilReady, Config.DebugMode);
+                int i = CoreLogic.CalculateTapperMinutes(__instance.treeType.Value, tapper.QualifiedItemId);
                 if (i > 0) {
-                    tapper_instance.MinutesUntilReady = i;
+                    tapper.MinutesUntilReady = i;
                 }
             }
             catch (Exception e)
@@ -166,9 +172,16 @@ namespace BetterTappers
             {
                 return true;
             }
-            if (!justCheckingForActivity && who is not null && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() - 1) && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() + 1) && who.currentLocation.isObjectAtTile(who.getTileX() + 1, who.getTileY()) && who.currentLocation.isObjectAtTile(who.getTileX() - 1, who.getTileY()) && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() - 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() + 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() - 1, who.getTileY()).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() + 1, who.getTileY()).isPassable())
+            //if (!justCheckingForActivity && who is not null && who.currentLocation.isObjectAtTile(who.Tile, who.getTileY() - 1) && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() + 1) && who.currentLocation.isObjectAtTile(who.getTileX() + 1, who.getTileY()) && who.currentLocation.isObjectAtTile(who.getTileX() - 1, who.getTileY()) && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() - 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() + 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() - 1, who.getTileY()).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() + 1, who.getTileY()).isPassable())
+            if (!justCheckingForActivity && who is not null)
             {
-                __instance.performToolAction(null, who.currentLocation);
+                GameLocation location = who.currentLocation;
+                Point tile = who.TilePoint;
+                if (location.isObjectAtTile(tile.X, tile.Y - 1) && location.isObjectAtTile(tile.X, tile.Y + 1) && location.isObjectAtTile(tile.X + 1, tile.Y) && location.isObjectAtTile(tile.X - 1, tile.Y) && !location.getObjectAtTile(tile.X, tile.Y - 1).isPassable() && !location.getObjectAtTile(tile.X, tile.Y + 1).isPassable() && !location.getObjectAtTile(tile.X - 1, tile.Y).isPassable() && !location.getObjectAtTile(tile.X + 1, tile.Y).isPassable())
+                {
+                    //__instance.performToolAction(null, who.currentLocation);
+                    __instance.performToolAction(null);
+                }
             }
 
             SObject objectThatWasHeld = __instance.heldObject.Value;
@@ -193,7 +206,7 @@ namespace BetterTappers
                     if (who.currentLocation.terrainFeatures.ContainsKey(__instance.TileLocation) && who.currentLocation.terrainFeatures[__instance.TileLocation] is Tree)
                     {
                         tree = (who.currentLocation.terrainFeatures[__instance.TileLocation] as Tree);
-                        if (tree.treeType.Value is not 8)
+                        if (tree.treeType.Value is not "8")
                         {
                             int quality = CoreLogic.GetQualityLevel(who, CoreLogic.GetTreeAgeMonths(tree), CoreLogic.GetTimesHarvested(__instance));
                             log.D("New quality: " + quality, Config.DebugMode);

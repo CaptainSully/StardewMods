@@ -25,24 +25,24 @@ namespace BetterTappers
 		public Tapper() : base() { }
 
 		/// <summary>Construct an instance with an ID.</summary>
-		/// <param name="parentSheetIndex">The item ID for the new tapper.</param>
-		public Tapper(int parentSheetIndex) : base()
+		/// <param name="qualifiedItemId">The item ID for the new tapper.</param>
+		public Tapper(String qualifiedItemId) : base()
         {
-			ParentSheetIndex = parentSheetIndex; 
+			QualifiedItemId = qualifiedItemId;
 		}
 
 		/// <summary>Construct an instance with an ID and location.</summary>
 		/// <param name="tileLocation">The location of the new tapper.</param>
-		/// <param name="parentSheetIndex">The item ID for the new tapper.</param>
+		/// <param name="qualifiedItemId">The item ID for the new tapper.</param>
 		/// <param name="isRecipe">					edit			</param>
-		public Tapper(Vector2 tileLocation, int parentSheetIndex, bool isRecipe = false)
-			: base(tileLocation, parentSheetIndex, isRecipe) { }
+		public Tapper(Vector2 tileLocation, String qualifiedItemId, bool isRecipe = false)
+			: base(tileLocation, qualifiedItemId, isRecipe) { }
 		*/
 
 		/*********
         ** Public methods
         *********/
-		
+
 		// Method overrides
 		/* this is actually currently useless since tapper objects only exist outside the inventory
 		 public override int maximumStackSize()
