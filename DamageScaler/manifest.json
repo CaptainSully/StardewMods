@@ -1,0 +1,16 @@
+{
+  "Name": "DamageScaler",
+  "Author": "CaptainSully",
+  "Version": "1.0.0",
+  "Description": "Gives options for increasing damage dealt both generally and per combat level",
+  "UniqueID": "CaptainSully.DamageScaler",
+  "EntryDll": "DamageScaler.dll",
+  "UpdateKeys": [ "Nexus:41721" ],
+
+  "Dependencies": [
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    }
+  ]
+}

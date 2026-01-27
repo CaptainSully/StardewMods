@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32014.148
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterTappers", "BetterTappers\BetterTappers.csproj", "{0F6654A2-2899-45B7-B63B-0FFA145704E1}"
 EndProject
@@ -18,13 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example Files", "Example Fi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfiniteWateringCan", "InfiniteWateringCan\InfiniteWateringCan.csproj", "{3826F677-FCEE-421C-A10E-8F441E0CE746}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DamageScaler", "DamageScaler\DamageScaler.csproj", "{07221856-394A-4419-A51E-2A96A9A2F697}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		SullySDVcore\SullySDVcore.projitems*{08fa5f02-0a48-4e9f-898c-2c5913be4bbe}*SharedItemsImports = 13
-		SullySDVcore\SullySDVcore.projitems*{0f6654a2-2899-45b7-b63b-0ffa145704e1}*SharedItemsImports = 5
-		SullySDVcore\SullySDVcore.projitems*{3826f677-fcee-421c-a10e-8f441e0ce746}*SharedItemsImports = 5
-		SullySDVcore\SullySDVcore.projitems*{83e011b9-ed03-4353-9a71-78060d8a3052}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -42,11 +38,22 @@ Global
 		{3826F677-FCEE-421C-A10E-8F441E0CE746}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3826F677-FCEE-421C-A10E-8F441E0CE746}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3826F677-FCEE-421C-A10E-8F441E0CE746}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07221856-394A-4419-A51E-2A96A9A2F697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07221856-394A-4419-A51E-2A96A9A2F697}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07221856-394A-4419-A51E-2A96A9A2F697}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07221856-394A-4419-A51E-2A96A9A2F697}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {743B6346-FCA4-4A14-B76F-BD1A56CAA711}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SullySDVcore\SullySDVcore.projitems*{07221856-394a-4419-a51e-2a96a9a2f697}*SharedItemsImports = 5
+		SullySDVcore\SullySDVcore.projitems*{08fa5f02-0a48-4e9f-898c-2c5913be4bbe}*SharedItemsImports = 13
+		SullySDVcore\SullySDVcore.projitems*{0f6654a2-2899-45b7-b63b-0ffa145704e1}*SharedItemsImports = 5
+		SullySDVcore\SullySDVcore.projitems*{3826f677-fcee-421c-a10e-8f441e0ce746}*SharedItemsImports = 5
+		SullySDVcore\SullySDVcore.projitems*{83e011b9-ed03-4353-9a71-78060d8a3052}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
