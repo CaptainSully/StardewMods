@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<AssemblyName>DamageScaler</AssemblyName>
 		<RootNamespace>DamageScaler</RootNamespace>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<TargetFramework>net6.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>

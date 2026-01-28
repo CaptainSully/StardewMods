@@ -38,8 +38,8 @@ namespace DamageScaler.Patches
 
             float scale = 1.0f + who.CombatLevel * Config.PercentDamagePerLevel * Config.PercentDamageBonus;
             int flat = who.CombatLevel * Config.FlatDamagePerLevel + Config.FlatDamageBonus;
-            minDamage = (int)(minDamage * scale + flat);
-            maxDamage = (int)(maxDamage * scale + flat);
+            minDamage = Math.Max(0, (int)(minDamage * scale + flat));
+            maxDamage = Math.Max(0, (int)(maxDamage * scale + flat));
         }
     }
 }
