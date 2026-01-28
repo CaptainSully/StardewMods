@@ -16,7 +16,7 @@
         /// <summary>Flat damage boost added per combat skill level.</summary>
         public int FlatDamagePerLevel { get; set; } = 0;
         /// <summary>Non-scaling percent damage boost added.</summary>
-        public float PercentDamageBonus { get; set; } = 0f;
+        public float PercentDamageBonus { get; set; } = 1f;
         /// <summary>Non-scaling damage boost added.</summary>
         public int FlatDamageBonus { get; set; } = 0;
 
