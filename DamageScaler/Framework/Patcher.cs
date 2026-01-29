@@ -36,8 +36,16 @@ namespace DamageScaler.Patches
             if (who == null)
                 return;
 
-            float scale = 1.0f + who.CombatLevel * Config.PercentDamagePerLevel * Config.PercentDamageBonus;
-            int flat = who.CombatLevel * Config.FlatDamagePerLevel + Config.FlatDamageBonus;
+            float scale = 1f;
+            int flat = 0;
+
+            if (who.CombatLevel == 0)
+                scale = Config.PercentDamageBonus;
+            else 
+                scale = who.CombatLevel * Config.PercentDamagePerLevel * Config.PercentDamageBonus;
+
+            flat = who.CombatLevel * Config.FlatDamagePerLevel + Config.FlatDamageBonus;
+
             minDamage = Math.Max(0, (int)(minDamage * scale + flat));
             maxDamage = Math.Max(minDamage, (int)(maxDamage * scale + flat));
         }
