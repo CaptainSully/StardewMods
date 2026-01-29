@@ -12,13 +12,13 @@
         /// <summary>Whether the mod is disabled.</summary>
         public bool DisableAllModEffects { get; set; } = false;
         /// <summary>Percent damage boost added per combat skill level.</summary>
-        public float PercentDamagePerLevel { get; set; } = 1.05f;
+        public float PerLevelDamageMultiplier { get; set; } = 1.05f;
         /// <summary>Flat damage boost added per combat skill level.</summary>
-        public int FlatDamagePerLevel { get; set; } = 0;
+        public int PerLevelDamageBonus { get; set; } = 0;
         /// <summary>Non-scaling percent damage boost added.</summary>
-        public float PercentDamageBonus { get; set; } = 1f;
+        public float SingleDamageMultiplier { get; set; } = 1f;
         /// <summary>Non-scaling damage boost added.</summary>
-        public int FlatDamageBonus { get; set; } = 0;
+        public int SingleDamageBonus { get; set; } = 0;
 
 
         // Debug mode
@@ -39,27 +39,27 @@
         {
             bool invalidConfig = false;
 
-            if (config.PercentDamagePerLevel < 0)
+            if (config.PerLevelDamageMultiplier < 0)
             {
                 invalidConfig = true;
-                config.PercentDamagePerLevel = 1.05f;
+                config.PerLevelDamageMultiplier = 1.05f;
             }
 
-            if (config.FlatDamagePerLevel < 0)
+            if (config.PerLevelDamageBonus < 0)
             {
                 invalidConfig = true;
-                config.FlatDamagePerLevel = 0;
+                config.PerLevelDamageBonus = 0;
             }
-            if (config.PercentDamageBonus < 0)
+            if (config.SingleDamageMultiplier < 0)
             {
                 invalidConfig = true;
-                config.PercentDamageBonus = 1f;
+                config.SingleDamageMultiplier = 1f;
             }
 
-            if (config.FlatDamageBonus < 0)
+            if (config.SingleDamageBonus < 0)
             {
                 invalidConfig = true;
-                config.FlatDamageBonus = 0;
+                config.SingleDamageBonus = 0;
             }
 
             if (invalidConfig)
@@ -86,17 +86,17 @@
             
             api.AddSectionTitle(manifest, text: () => "Scaling damage bonuses",
                 tooltip: () => "These options scale with your Combat Skill level.");
-            api.AddNumberOption(manifest, () => config.PercentDamagePerLevel, (float val) => config.PercentDamagePerLevel = val,
-                    name: () => "Percent damage bonus per level", tooltip: () => "Multiplier to damage per combat skill level.\nLess than 1 decreases; greater than 1 increases damage.");
-            api.AddNumberOption(manifest, () => config.FlatDamagePerLevel, (int val) => config.FlatDamagePerLevel = val,
-                    name: () => "Flat damage bonus per level", tooltip: () => "Amount of flat damage to add per combat skill level.\nMod default is 0.");
+            api.AddNumberOption(manifest, () => config.PerLevelDamageMultiplier, (float val) => config.PerLevelDamageMultiplier = val,
+                    name: () => "Per level damage multiplier", tooltip: () => "Multiplies damage according to your combat skill level.\nLess than 1 decreases; greater than 1 increases damage.");
+            api.AddNumberOption(manifest, () => config.PerLevelDamageBonus, (int val) => config.PerLevelDamageBonus = val,
+                    name: () => "Per level damage bonus", tooltip: () => "Damage added per combat skill level.\nMod default is 0.");
 
             api.AddSectionTitle(manifest, text: () => "Single damage bonuses",
-                tooltip: () => "These options do not scale with anything.");
-            api.AddNumberOption(manifest, () => config.PercentDamageBonus, (float val) => config.PercentDamageBonus = val,
-                   name: () => "Percent damage bonus.", tooltip: () => "Multiplier to damage: 1 is no change; 1.05 is a 5% increase.\nLess than 1 decreases; greater than 1 increases damage.");
-            api.AddNumberOption(manifest, () => config.FlatDamageBonus, (int val) => config.FlatDamageBonus = val,
-                    name: () => "Flat damage bonus.", tooltip: () => "Amount of flat damage to add.\nMod default is 0.");
+                tooltip: () => "These options do not scale.");
+            api.AddNumberOption(manifest, () => config.SingleDamageMultiplier, (float val) => config.SingleDamageMultiplier = val,
+                   name: () => "One time damage multiplier", tooltip: () => "One time multiplier to damage.\nLess than 1 decreases; greater than 1 increases damage.");
+            api.AddNumberOption(manifest, () => config.SingleDamageBonus, (int val) => config.SingleDamageBonus = val,
+                    name: () => "One time damage bonus", tooltip: () => "Amount of flat damage to add.\nMod default is 0.");
 
 
             // Debuging
