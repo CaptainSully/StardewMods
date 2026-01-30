@@ -33,7 +33,7 @@ namespace DamageScaler.Patches
         /// <summary>The method to call before <see cref="GameLocation.damageMonster(Rectangle, int, int, bool, Farmer, bool=false)"/>.</summary>
         private static void Before_DamageMonster(ref int minDamage, ref int maxDamage, Farmer who)
         {
-            if (who == null)
+            if (who == null || Config.DisableAllModEffects)
                 return;
 
             float levelMultiplier = 1f;

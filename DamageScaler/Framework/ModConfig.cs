@@ -45,21 +45,10 @@
                 config.PerLevelDamageMultiplier = 1.05f;
             }
 
-            if (config.PerLevelDamageBonus < 0)
-            {
-                invalidConfig = true;
-                config.PerLevelDamageBonus = 0;
-            }
             if (config.SingleDamageMultiplier < 0)
             {
                 invalidConfig = true;
                 config.SingleDamageMultiplier = 1f;
-            }
-
-            if (config.SingleDamageBonus < 0)
-            {
-                invalidConfig = true;
-                config.SingleDamageBonus = 0;
             }
 
             if (invalidConfig)
