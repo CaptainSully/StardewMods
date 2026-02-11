@@ -16,7 +16,7 @@
         /// <summary>Whether to give tapper products quality.</summary>
         public bool TappersUseQuality { get; set; } = true;
         /// <summary>Whether to have tappers give xp.</summary>
-        public int TapperXP { get; set; } = 10;
+        public int TapperXP { get; set; } = 3;
         /// <summary>Whether to allow the automate mod to give tapper xp.</summary>
         public bool AllowAutomatedXP { get; set; } = true;
         /// <summary>Whether the gatherer profession should affect tappers.</summary>
@@ -168,7 +168,7 @@
             api.AddNumberOption(manifest, () => config.DaysForFern, (float val) => config.DaysForFern = val,
                     name: () => "Days for green rain fern trees", tooltip: () => "Number of days for regular tappers to produce on green rain fern trees.\nVanilla is 2.");
             api.AddNumberOption(manifest, () => config.DaysForMystic, (float val) => config.DaysForMystic = val,
-                    name: () => "Days for mahogany trees", tooltip: () => "Number of days for regular tappers to produce on mystic trees.\nVanilla is 7.");
+                    name: () => "Days for mystic trees", tooltip: () => "Number of days for regular tappers to produce on mystic trees.\nVanilla is 7.");
 
             // Production time for heavy tappers
             api.AddSectionTitle(manifest, text: () => "Heavy Tappers",
