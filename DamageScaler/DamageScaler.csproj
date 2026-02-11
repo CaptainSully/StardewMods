@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<AssemblyName>DamageScaler</AssemblyName>
 		<RootNamespace>DamageScaler</RootNamespace>
-		<Version>1.0.5</Version>
+		<Version>1.0.6</Version>
 		<Description>Infinite water in watering can</Description>
 		<UpdateKeys>Nexus:41721</UpdateKeys>
 		<EnableHarmony>true</EnableHarmony>

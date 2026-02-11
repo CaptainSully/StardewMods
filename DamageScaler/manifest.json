@@ -10,7 +10,7 @@
   "UniqueID": "CaptainSully.DamageScaler",
   "Name": "DamageScaler",
   "Author": "CaptainSully",
-  "Version": "1.0.5",
+  "Version": "1.0.6",
   "Description": "Infinite water in watering can",
   "MinimumApiVersion": "4.5",
   "EntryDll": "DamageScaler.dll",
