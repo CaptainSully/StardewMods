@@ -186,14 +186,14 @@ namespace BetterTappers
         }
 
         /// <summary>Return number of items to add to a stack based on gatherer perk.</summary>
-		public static int TriggerGathererPerk(Farmer who)
+		public static bool TriggerGathererPerk(Farmer who)
         {
             if (!Config.DebugMode && Config.GathererAffectsTappers && who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
             {
                 log.D("Gatherer perk applied", Config.DebugMode);
-                return 1;
+                return true;
             }
-            return 0;
+            return false;
         }
 
         public static int GetTimesHarvested(SObject tapper)

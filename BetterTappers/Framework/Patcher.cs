@@ -166,14 +166,12 @@ namespace BetterTappers
             {
                 return true;
             }
-            //if (!justCheckingForActivity && who is not null && who.currentLocation.isObjectAtTile(who.Tile, who.getTileY() - 1) && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() + 1) && who.currentLocation.isObjectAtTile(who.getTileX() + 1, who.getTileY()) && who.currentLocation.isObjectAtTile(who.getTileX() - 1, who.getTileY()) && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() - 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() + 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() - 1, who.getTileY()).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() + 1, who.getTileY()).isPassable())
             if (!justCheckingForActivity && who is not null)
             {
                 GameLocation location = who.currentLocation;
                 Point tile = who.TilePoint;
                 if (location.isObjectAtTile(tile.X, tile.Y - 1) && location.isObjectAtTile(tile.X, tile.Y + 1) && location.isObjectAtTile(tile.X + 1, tile.Y) && location.isObjectAtTile(tile.X - 1, tile.Y) && !location.getObjectAtTile(tile.X, tile.Y - 1).isPassable() && !location.getObjectAtTile(tile.X, tile.Y + 1).isPassable() && !location.getObjectAtTile(tile.X - 1, tile.Y).isPassable() && !location.getObjectAtTile(tile.X + 1, tile.Y).isPassable())
                 {
-                    //__instance.performToolAction(null, who.currentLocation);
                     __instance.performToolAction(null);
                 }
             }
@@ -206,13 +204,16 @@ namespace BetterTappers
                             log.D("New quality: " + quality, Config.DebugMode);
                             objectThatWasHeld.Quality = quality;
                         }
-                        objectThatWasHeld.Stack += CoreLogic.TriggerGathererPerk(who);
+                        if (CoreLogic.TriggerGathererPerk(who))
+                        {
+                            objectThatWasHeld.Stack *= 2;
+                        }
                         log.D("New Stack Size: " + objectThatWasHeld.Stack, Config.DebugMode);
                     }
 
                     if (!who.addItemToInventoryBool(objectThatWasHeld))
                     {
-                        //if harvesting failed, reset quality of the ready item back to low and stack size back to 1
+                        //if harvesting failed, reset quality of the ready item back to low and stack size back to original
                         objectThatWasHeld.Quality = ogQuality;
                         objectThatWasHeld.Stack = ogStackSize;
                         __instance.heldObject.Value = objectThatWasHeld;

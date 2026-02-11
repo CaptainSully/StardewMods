@@ -1,16 +1,26 @@
 {
+  /*
+   | This file is automatically updated by ModManifestBuilder
+   | when the project is compiled.
+   | 
+   | Changes made to this file may be overwritten.
+   | 
+   */
+  "$schema": "https://smapi.io/schemas/manifest.json",
+  "UniqueID": "CaptainSully.BetterTappers",
   "Name": "BetterTappers",
   "Author": "CaptainSully",
   "Version": "1.4.0",
-  "Description": "Gives options for tapper production times, quality, and experience.",
-  "UniqueID": "CaptainSully.BetterTappers",
+  "Description": "Gives options for tapper production times, quality, and experience",
+  "MinimumApiVersion": "4.5",
   "EntryDll": "BetterTappers.dll",
-  "UpdateKeys": [ "Nexus:9875" ],
-
   "Dependencies": [
     {
       "UniqueID": "spacechase0.GenericModConfigMenu",
       "IsRequired": false
     }
+  ],
+  "UpdateKeys": [
+    "Nexus:9875"
   ]
 }
