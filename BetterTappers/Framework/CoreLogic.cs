@@ -59,8 +59,11 @@ namespace BetterTappers
                     break;
                 //Green rain 3 (fern)
                 case "12":
+                    days_configured = Config.DaysForFern;
+                    break;
                 //Mystic
                 case "13":
+                    days_configured = Config.DaysForMystic;
                     break;
             }
 
@@ -195,11 +198,6 @@ namespace BetterTappers
 
         public static int GetTimesHarvested(SObject tapper)
         {
-            if (tapper is Tapper t && IsVanillaTapper(tapper))
-            {
-                return t.TimesHarvested;
-            }
-
             tapper.modData.TryGetValue($"{ModEntry.UID}/timesHarvested", out string data);
 
             if (!string.IsNullOrEmpty(data))
@@ -212,12 +210,6 @@ namespace BetterTappers
 
         internal static void IncreaseTimesHarvested(SObject tapper)
         {
-            if (tapper is Tapper t && IsVanillaTapper(tapper))
-            {
-                t.TimesHarvested++;
-                return;
-            }
-
             tapper.modData.TryGetValue($"{ModEntry.UID}/timesHarvested", out string data);
 
             if (!string.IsNullOrEmpty(data))
@@ -233,36 +225,6 @@ namespace BetterTappers
         internal static void SetTimesHarvested(SObject tapper, int num)
         {
             tapper.modData[$"{ModEntry.UID}/timesHarvested"] = num.ToString();
-        }
-
-        internal static ModData GetData()
-        {
-            ModData model = ModEntry.Instance.Helper.Data.ReadSaveData<ModData>($"{ModEntry.UID}.moddata");
-            return model;
-        }
-
-        internal static void SaveData(ModData model)
-        {
-            ModEntry.Instance.Helper.Data.WriteSaveData($"{ModEntry.UID}.moddata", model);
-        }
-
-        internal static SObject ConvertToNormalTappers(SObject tapper, GameLocation location)
-        {
-            if (tapper is Tapper)
-            {
-                log.D("Attempting to convert tapper back to normal", Config.DebugMode);
-                SObject o = new(tapper.TileLocation, tapper.itemId.Value);
-                o.owner.Value = tapper.owner.Value;
-                o.heldObject.Value = tapper.heldObject.Value;
-                o.MinutesUntilReady = tapper.MinutesUntilReady;
-                SetTimesHarvested(o, GetTimesHarvested(tapper));
-
-                location.objects.Remove(tapper.TileLocation);
-                location.objects.Add(o.TileLocation, o);
-
-                return o;
-            }
-            return tapper;
         }
 
         internal static long GetTmpUMID(SObject tapper)
@@ -336,17 +298,7 @@ namespace BetterTappers
 
         public static bool IsAnyTapper(SObject o)
         {
-            return o is not null && (o.QualifiedItemId == "(BC)105" || o.QualifiedItemId == "(BC)264");
-        }
-
-        public static bool IsCustomTapper(SObject o)
-        {
-            return (o is Tapper) && !IsVanillaTapper(o);
-        }
-
-        public static bool IsVanillaTapper(SObject o)
-        {
-            return IsTapper(o) || IsHeavyTapper(o);
+            return o is not null && (IsTapper(o) || IsHeavyTapper(o));
         }
 
         public static bool IsTapper(SObject o)

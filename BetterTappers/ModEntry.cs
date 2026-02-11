@@ -69,15 +69,6 @@ namespace BetterTappers
 
             // setup GMCM
             ModConfig.SetUpModConfigMenu(Config, this);
-
-            // setup spacecore
-            ISpaceCoreAPI spacecoreAPI = Helper.ModRegistry.GetApi<ISpaceCoreAPI>("spacechase0.SpaceCore");
-            if (spacecoreAPI is null)
-            {
-                // Skip patcher mod behaviours if we fail to load the objects
-                log.E($"Couldn't access mod-provided API for SpaceCore. " + UID + " will not be available, and no changes will be made.");
-            }
-            spacecoreAPI.RegisterSerializerType(typeof(Tapper));
         }
     }
 }

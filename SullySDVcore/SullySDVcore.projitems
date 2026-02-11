@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ExternalAPIs\IGenericModConfigAPI.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ExternalAPIs\ISpaceCoreAPI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\Log.cs" />
   </ItemGroup>
   <ItemGroup>

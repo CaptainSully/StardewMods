@@ -104,12 +104,6 @@ namespace BetterTappers
                 {
                     return;
                 }
-
-                // For custom tappers
-                if (tapper is Tapper)
-                {
-
-                }
                 
                 //If the previous object wasn't null, then the tapper should have been harvested rather than just placed
                 if (previousOutput is not null)
