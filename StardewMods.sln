@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.2.11415.280 d18.0
+VisualStudioVersion = 18.2.11415.280
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterTappers", "BetterTappers\BetterTappers.csproj", "{0F6654A2-2899-45B7-B63B-0FFA145704E1}"
 EndProject
@@ -19,6 +19,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfiniteWateringCan", "InfiniteWateringCan\InfiniteWateringCan.csproj", "{3826F677-FCEE-421C-A10E-8F441E0CE746}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DamageScaler", "DamageScaler\DamageScaler.csproj", "{07221856-394A-4419-A51E-2A96A9A2F697}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CP Mods", "CP Mods", "{742F5C3D-E64C-450D-8363-7AE271A3F140}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "[CP] Calico Eggs Wallet Currency", "[CP] Calico Eggs Wallet Currency", "{52C8D416-33A4-4C7D-AB10-5289D152B625}"
+	ProjectSection(SolutionItems) = preProject
+		CP Mods\[CP] Calico Eggs Wallet Currency\content.json = CP Mods\[CP] Calico Eggs Wallet Currency\content.json
+		CP Mods\[CP] Calico Eggs Wallet Currency\manifest.json = CP Mods\[CP] Calico Eggs Wallet Currency\manifest.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +53,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{52C8D416-33A4-4C7D-AB10-5289D152B625} = {742F5C3D-E64C-450D-8363-7AE271A3F140}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {743B6346-FCA4-4A14-B76F-BD1A56CAA711}

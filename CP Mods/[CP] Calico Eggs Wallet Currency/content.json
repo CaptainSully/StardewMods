@@ -1,0 +1,78 @@
+{
+	"Format": "2.9.0",
+	"ConfigSchema": {
+		"Enable Mod": {
+			"Description": "You must reset the game for the wallet to display properly after changing this.\n\nWhen enabled, Calico Eggs go to your wallet.\nWhen disabled, they go to your inventory.",
+			"AllowValues": "true, false",
+			"Default": "true"
+		},
+		"Share Calico Eggs": {
+			"Description": "Should Calico Eggs be shared between players; false by default (Only applicable in multiplayer)",
+			"AllowValues": "true, false",
+			"Default": "false"
+		},
+		"Keep Calico Eggs": {
+			"Description": "Should Calico Eggs be kept after the desert festival ends? (Vanilla is false)",
+			"AllowValues": "true, false",
+			"Default": "false"
+		}
+	},
+	"Changes": [
+		{
+			"Action": "EditData",
+			"Target": "UnlockableBundles/WalletCurrencies",
+			"When": {
+				"Enable Mod": "true"
+			},
+			"Entries": {
+				"CaptainSully.CEWC.CalicoEggs": {
+					"Shared": "{{Share Calico Eggs}}",
+
+					"BillboardTexture": "Tilesheets\\Objects_2",
+					"BillboardTextureWidth": 16,
+					"BillboardDigits": 4,
+					"BillboardTexturePosition": {
+						"X": 112,
+						"Y": 0
+					},
+
+					"PlayMoneyRollSound": true,
+
+					"Items": [
+						{
+							"ItemId": "(O)CalicoEgg",
+							"Value": 1
+						}
+					],
+
+					"PowersData": {
+						"DisplayName": "Calico Eggs",
+						"TexturePath": "Tilesheets\\Objects_2",
+						"TexturePosition": {
+							"X": 112,
+							"Y": 0
+						}
+					}
+				}
+			}
+		},
+		{
+			"Action": "EditData",
+			"Target": "Data/TriggerActions",
+			"When": {
+				"Keep Calico Eggs": "false"
+			},
+			"Entries": {
+				"CaptainSully.CEWC.Cleanup": {
+					"Id": "CaptainSully.CEWC.Cleanup",
+					"Trigger": "DayEnding",
+					"Condition": "SEASON_DAY spring 17",
+					"Actions": [
+						"UB_AddCurrency Current CaptainSully.CEWC.CalicoEggs -{{DLX.Bundles/PersonalCurrency:CaptainSully.CEWC.CalicoEggs}}"
+					],
+					"MarkActionApplied": false
+				}
+			}
+		}
+	]
+}

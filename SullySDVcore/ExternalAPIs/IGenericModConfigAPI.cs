@@ -7,7 +7,7 @@ using StardewValley;
 
 namespace SullySDVcore
 {
-    // From spacechase0/StardewValleyMods/GenericModConfigMenu/IGenericModConfigMenuApi.cs
+    // From spacechase0/StardewValleyMods/framework/GenericModConfigMenu/IGenericModConfigMenuApi.cs
 
     /// <summary>The API which lets other mods add a config UI through Generic Mod Config Menu.</summary>
     public interface IGenericModConfigMenuApi
@@ -35,6 +35,12 @@ namespace SullySDVcore
         /// <param name="text">The title text shown in the form.</param>
         /// <param name="tooltip">The tooltip text shown when the cursor hovers on the title, or <c>null</c> to disable the tooltip.</param>
         void AddSectionTitle(IManifest mod, Func<string> text, Func<string> tooltip = null);
+
+        /// <summary>Add a subheader at the current position in the form.</summary>
+        /// <remarks>Larger than paragraph, smaller than title.</remarks>
+        /// <param name="mod">The mod's manifest.</param>
+        /// <param name="text">The title text shown in the form.</param>
+        void AddSubHeader(IManifest mod, Func<string> text);
 
         /// <summary>Add a paragraph of text at the current position in the form.</summary>
         /// <param name="mod">The mod's manifest.</param>
@@ -66,8 +72,9 @@ namespace SullySDVcore
         /// <param name="min">The minimum allowed value, or <c>null</c> to allow any.</param>
         /// <param name="max">The maximum allowed value, or <c>null</c> to allow any.</param>
         /// <param name="interval">The interval of values that can be selected.</param>
+        /// <param name="formatValue">Get the display text to show for a value, or <c>null</c> to show the number as-is.</param>
         /// <param name="fieldId">The unique field ID for use with <see cref="OnFieldChanged"/>, or <c>null</c> to auto-generate a randomized ID.</param>
-        void AddNumberOption(IManifest mod, Func<int> getValue, Action<int> setValue, Func<string> name, Func<string> tooltip = null, int? min = null, int? max = null, int? interval = null, string fieldId = null);
+        void AddNumberOption(IManifest mod, Func<int> getValue, Action<int> setValue, Func<string> name, Func<string> tooltip = null, int? min = null, int? max = null, int? interval = null, Func<int, string> formatValue = null, string fieldId = null);
 
         /// <summary>Add a float option at the current position in the form.</summary>
         /// <param name="mod">The mod's manifest.</param>
@@ -78,8 +85,9 @@ namespace SullySDVcore
         /// <param name="min">The minimum allowed value, or <c>null</c> to allow any.</param>
         /// <param name="max">The maximum allowed value, or <c>null</c> to allow any.</param>
         /// <param name="interval">The interval of values that can be selected.</param>
+        /// <param name="formatValue">Get the display text to show for a value, or <c>null</c> to show the number as-is.</param>
         /// <param name="fieldId">The unique field ID for use with <see cref="OnFieldChanged"/>, or <c>null</c> to auto-generate a randomized ID.</param>
-        void AddNumberOption(IManifest mod, Func<float> getValue, Action<float> setValue, Func<string> name, Func<string> tooltip = null, float? min = null, float? max = null, float? interval = null, string fieldId = null);
+        void AddNumberOption(IManifest mod, Func<float> getValue, Action<float> setValue, Func<string> name, Func<string> tooltip = null, float? min = null, float? max = null, float? interval = null, Func<float, string> formatValue = null, string fieldId = null);
 
         /// <summary>Add a string option at the current position in the form.</summary>
         /// <param name="mod">The mod's manifest.</param>
@@ -92,7 +100,7 @@ namespace SullySDVcore
         /// <param name="fieldId">The unique field ID for use with <see cref="OnFieldChanged"/>, or <c>null</c> to auto-generate a randomized ID.</param>
         void AddTextOption(IManifest mod, Func<string> getValue, Action<string> setValue, Func<string> name, Func<string> tooltip = null, string[] allowedValues = null, Func<string, string> formatAllowedValue = null, string fieldId = null);
 
-        /// <summary>Add a key binding at the current position in the form.</summary>
+        /// <summary>Add a keybind at the current position in the form.</summary>
         /// <param name="mod">The mod's manifest.</param>
         /// <param name="getValue">Get the current value from the mod config.</param>
         /// <param name="setValue">Set a new value in the mod config.</param>
@@ -101,7 +109,7 @@ namespace SullySDVcore
         /// <param name="fieldId">The unique field ID for use with <see cref="OnFieldChanged"/>, or <c>null</c> to auto-generate a randomized ID.</param>
         void AddKeybind(IManifest mod, Func<SButton> getValue, Action<SButton> setValue, Func<string> name, Func<string> tooltip = null, string fieldId = null);
 
-        /// <summary>Add a key binding list at the current position in the form.</summary>
+        /// <summary>Add a keybind list at the current position in the form.</summary>
         /// <param name="mod">The mod's manifest.</param>
         /// <param name="getValue">Get the current value from the mod config.</param>
         /// <param name="setValue">Set a new value in the mod config.</param>
@@ -135,13 +143,18 @@ namespace SullySDVcore
         /// <summary>Add an option at the current position in the form using custom rendering logic.</summary>
         /// <param name="mod">The mod's manifest.</param>
         /// <param name="name">The label text to show in the form.</param>
-        /// <param name="tooltip">The tooltip text shown when the cursor hovers on the field, or <c>null</c> to disable the tooltip.</param>
         /// <param name="draw">Draw the option in the config UI. This is called with the sprite batch being rendered and the pixel position at which to start drawing.</param>
-        /// <param name="saveChanges">Save the current value to the mod config.</param>
+        /// <param name="tooltip">The tooltip text shown when the cursor hovers on the field, or <c>null</c> to disable the tooltip.</param>
+        /// <param name="beforeMenuOpened">A callback raised just before the menu containing this option is opened.</param>
+        /// <param name="beforeSave">A callback raised before the form's current values are saved to the config (i.e. before the <c>save</c> callback passed to <see cref="Register"/>).</param>
+        /// <param name="afterSave">A callback raised after the form's current values are saved to the config (i.e. after the <c>save</c> callback passed to <see cref="Register"/>).</param>
+        /// <param name="beforeReset">A callback raised before the form is reset to its default values (i.e. before the <c>reset</c> callback passed to <see cref="Register"/>).</param>
+        /// <param name="afterReset">A callback raised after the form is reset to its default values (i.e. after the <c>reset</c> callback passed to <see cref="Register"/>).</param>
+        /// <param name="beforeMenuClosed">A callback raised just before the menu containing this option is closed.</param>
         /// <param name="height">The pixel height to allocate for the option in the form, or <c>null</c> for a standard input-sized option. This is called and cached each time the form is opened.</param>
         /// <param name="fieldId">The unique field ID for use with <see cref="OnFieldChanged"/>, or <c>null</c> to auto-generate a randomized ID.</param>
-        /// <remarks>The custom logic represented by <paramref name="draw"/> and <paramref name="saveChanges"/> is responsible for managing its own state if needed. For example, you can store state in a static field or use closures to use a state variable.</remarks>
-        void AddComplexOption(IManifest mod, Func<string> name, Func<string> tooltip, Action<SpriteBatch, Vector2> draw, Action saveChanges, Func<int> height = null, string fieldId = null);
+        /// <remarks>The custom logic represented by the callback parameters is responsible for managing its own state if needed. For example, you can store state in a static field or use closures to use a state variable.</remarks>
+        void AddComplexOption(IManifest mod, Func<string> name, Action<SpriteBatch, Vector2> draw, Func<string> tooltip = null, Action beforeMenuOpened = null, Action beforeSave = null, Action afterSave = null, Action beforeReset = null, Action afterReset = null, Action beforeMenuClosed = null, Func<int> height = null, string fieldId = null);
 
         /// <summary>Set whether the options registered after this point can only be edited from the title screen.</summary>
         /// <param name="mod">The mod's manifest.</param>
@@ -158,6 +171,10 @@ namespace SullySDVcore
         /// <summary>Open the config UI for a specific mod.</summary>
         /// <param name="mod">The mod's manifest.</param>
         void OpenModMenu(IManifest mod);
+
+        /// <summary>Open the config UI for a specific mod, as a child menu if there is an existing menu.</summary>
+        /// <param name="mod">The mod's manifest.</param>
+        void OpenModMenuAsChildMenu(IManifest mod);
 
         /// <summary>Get the currently-displayed mod config menu, if any.</summary>
         /// <param name="mod">The manifest of the mod whose config menu is being shown, or <c>null</c> if not applicable.</param>
