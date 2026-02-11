@@ -35,7 +35,6 @@ namespace BetterTappers
 
             // hook events
             Helper.Events.GameLoop.GameLaunched += OnGameLaunched;
-            Helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             Helper.Events.GameLoop.DayStarted += delegate { CoreLogic.IncreaseTreeAges(); };
         }
 
@@ -79,34 +78,6 @@ namespace BetterTappers
                 log.E($"Couldn't access mod-provided API for SpaceCore. " + UID + " will not be available, and no changes will be made.");
             }
             spacecoreAPI.RegisterSerializerType(typeof(Tapper));
-        }
-
-        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
-        {
-            if (!Context.IsMainPlayer) return;
-
-            ModData data = CoreLogic.GetData() ?? new();
-
-            if (!data.VanillaTappersConverted)
-            {
-                int s = 0;
-                int f = 0;
-                foreach (GameLocation location in Game1.locations)
-                {
-                    foreach (SObject o in location.Objects.Values.ToList())//foreach (KeyValuePair<Vector2, SObject> entry in location.Objects)
-                    {
-                        if (o is Tapper)
-                        {
-                            if (CoreLogic.ConvertToNormalTappers(o, location) is not Tapper) s++;
-                            else f++;
-                        }
-                    }
-                }
-                log.W("Successful conversions: " + s + "    failures: " + f);
-
-                if (f == 0) data.VanillaTappersConverted = true;
-                CoreLogic.SaveData(data);
-            }
         }
     }
 }
