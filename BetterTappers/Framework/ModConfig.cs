@@ -11,41 +11,45 @@
         *********/
         /// <summary>Whether the mod is disabled.</summary>
         public bool DisableAllModEffects { get; set; } = false;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Whether to use this mods tapper timings.</summary>
         public bool ChangeTapperTimes { get; set; } = true;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Whether to give tapper products quality.</summary>
         public bool TappersUseQuality { get; set; } = true;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Whether to have tappers give xp.</summary>
         public int TapperXP { get; set; } = 10;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Whether to allow the automate mod to give tapper xp.</summary>
         public bool AllowAutomatedXP { get; set; } = true;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Whether the gatherer profession should affect tappers.</summary>
         public bool GathererAffectsTappers { get; set; } = true;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Whether the botanist profession should affect tappers.</summary>
         public bool BotanistAffectsTappers { get; set; } = true;
 
         // Options for regular tappers
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Number of days to produce maple syrup, pine tar, and oak resin.</summary>
         public float DaysForSyrups { get; set; } = 7f;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Number of days to produce sap.</summary>
         public float DaysForSap { get; set; } = 1f;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Number of days to produce mushrooms.</summary>
         public float DaysForMushroom { get; set; } = 7f;
+        /// <summary>Number of days to produce ferns.</summary>
+        public float DaysForFern { get; set; } = 2f;
+        /// <summary>Number of days to produce mystic syrup.</summary>
+        public float DaysForMystic { get; set; } = 7f;
 
         // Options for hardwood tappers
+        /// <summary>Time multiplier for heavy tappers.</summary>
         public float HeavyTapperMultiplier { get; set; } = 0.5f;
-        /// <summary>Whether the mod is disabled.</summary>
 
         // Quality options
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Whether foraging level affects tapper product quality.</summary>
         public bool ForageLevelAffectsQuality { get; set; } = true;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Whether the number of times a tree has been harvested affects tapper product quality.</summary>
         public bool TimesHarvestedAffectsQuality { get; set; } = true;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Whether the age of a tree affects tapper product quality.</summary>
         public bool TreeAgeAffectsQuality { get; set; } = true;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary>Which formula to use for calculating tapper quality.</summary>
         internal int Formula { get; set; } = 0;
-        /// <summary>Whether the mod is disabled.</summary>
+        /// <summary></summary>
         internal int LvlCap { get; set; } = 0;
 
         // Debug mode
@@ -93,6 +97,18 @@
             {
                 invalidConfig = true;
                 config.DaysForMushroom = 7f;
+            }
+
+            if (config.DaysForFern < 0)
+            {
+                invalidConfig = true;
+                config.DaysForFern = 2f;
+            }
+
+            if (config.DaysForMystic < 0)
+            {
+                invalidConfig = true;
+                config.DaysForMystic = 7f;
             }
 
             if (config.HeavyTapperMultiplier < 0)
@@ -149,6 +165,10 @@
                     name: () => "Days for mahogany trees", tooltip: () => "Number of days for regular tappers to produce on mahogany trees.\nVanilla is 1.");
             api.AddNumberOption(manifest, () => config.DaysForMushroom, (float val) => config.DaysForMushroom = val,
                     name: () => "Days for mushroom trees", tooltip: () => "Number of days for regular tappers to produce on mushroom trees.\nVanilla is 1 or 2 or not at all based on season.\nNote that rules for *which* mushroom is produced are not changed in any way.");
+            api.AddNumberOption(manifest, () => config.DaysForFern, (float val) => config.DaysForFern = val,
+                    name: () => "Days for green rain fern trees", tooltip: () => "Number of days for regular tappers to produce on green rain fern trees.\nVanilla is 2.");
+            api.AddNumberOption(manifest, () => config.DaysForMystic, (float val) => config.DaysForMystic = val,
+                    name: () => "Days for mahogany trees", tooltip: () => "Number of days for regular tappers to produce on mystic trees.\nVanilla is 7.");
 
             // Production time for heavy tappers
             api.AddSectionTitle(manifest, text: () => "Heavy Tappers",

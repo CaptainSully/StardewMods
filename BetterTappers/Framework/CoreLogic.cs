@@ -31,16 +31,36 @@ namespace BetterTappers
 
             switch (treeType)
             {
+                //Oak
                 case "1":
+                //Maple
                 case "2":
+                //Pine
                 case "3":
                     days_configured = Config.DaysForSyrups;
                     break;
+                //Palm
+                case "6":
+                //Ginger island palm
+                case "9":
+                    break;
+                //Mushroom
                 case "7":
                     days_configured = Config.DaysForMushroom;
                     break;
+                //Mahogany
                 case "8":
                     days_configured = Config.DaysForSap;
+                    break;
+                //Green rain 1 (bushy)
+                case "10":
+                //Green rain 2 (leafy)
+                case "11":
+                    break;
+                //Green rain 3 (fern)
+                case "12":
+                //Mystic
+                case "13":
                     break;
             }
 
