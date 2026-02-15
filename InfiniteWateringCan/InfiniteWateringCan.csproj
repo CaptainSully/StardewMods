@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<AssemblyName>InfiniteWateringCan</AssemblyName>
 		<RootNamespace>InfiniteWateringCan</RootNamespace>
-		<Version>1.1.1</Version>
+		<Version>1.1.2</Version>
 		<Description>Infinite water in watering can</Description>
 		<UpdateKeys>Nexus:12739</UpdateKeys>
 		<EnableHarmony>false</EnableHarmony>
@@ -11,7 +11,7 @@
 		
 		<Authors>CaptainSully</Authors>
 		<UniqueId>$(Authors).$(AssemblyName)</UniqueId>
-		<MinimumApiVersion_Behavior>Update</MinimumApiVersion_Behavior>
+		<MinimumApiVersion_Behavior>Ignore</MinimumApiVersion_Behavior>
 		<MinimumGameVersion_Behavior>Ignore</MinimumGameVersion_Behavior>
 		<Version_AppendConfiguration>False</Version_AppendConfiguration>
 		<Dependencies_VersionBehavior>Ignore</Dependencies_VersionBehavior>

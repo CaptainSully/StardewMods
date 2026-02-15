@@ -3,15 +3,15 @@
 	<PropertyGroup>
 		<AssemblyName>DamageScaler</AssemblyName>
 		<RootNamespace>DamageScaler</RootNamespace>
-		<Version>1.0.6</Version>
-		<Description>Infinite water in watering can</Description>
+		<Version>1.0.7</Version>
+		<Description>Add one time and/or per level damage boosts (or negatives)</Description>
 		<UpdateKeys>Nexus:41721</UpdateKeys>
 		<EnableHarmony>true</EnableHarmony>
 
 
 		<Authors>CaptainSully</Authors>
 		<UniqueId>$(Authors).$(AssemblyName)</UniqueId>
-		<MinimumApiVersion_Behavior>Update</MinimumApiVersion_Behavior>
+		<MinimumApiVersion_Behavior>Ignore</MinimumApiVersion_Behavior>
 		<MinimumGameVersion_Behavior>Ignore</MinimumGameVersion_Behavior>
 		<Version_AppendConfiguration>False</Version_AppendConfiguration>
 		<Dependencies_VersionBehavior>Ignore</Dependencies_VersionBehavior>

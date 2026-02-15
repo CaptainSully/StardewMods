@@ -10,9 +10,8 @@
   "UniqueID": "CaptainSully.StartWithGreenhouse",
   "Name": "StartWithGreenhouse",
   "Author": "CaptainSully",
-  "Version": "1.1.1",
+  "Version": "1.1.2",
   "Description": "Start game with greenhouse enabled",
-  "MinimumApiVersion": "4.5",
   "EntryDll": "StartWithGreenhouse.dll",
   "Dependencies": [
     {

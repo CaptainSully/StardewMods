@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<AssemblyName>BetterTappers</AssemblyName>
 		<RootNamespace>BetterTappers</RootNamespace>
-		<Version>1.4.0</Version>
+		<Version>2.0.0</Version>
 		<Description>Gives options for tapper production times, quality, and experience</Description>
 		<UpdateKeys>Nexus:9875</UpdateKeys>
 		<EnableHarmony>true</EnableHarmony>
@@ -11,7 +11,7 @@
 		
 		<Authors>CaptainSully</Authors>
 		<UniqueId>$(Authors).$(AssemblyName)</UniqueId>
-		<MinimumApiVersion_Behavior>Update</MinimumApiVersion_Behavior>
+		<MinimumApiVersion_Behavior>Ignore</MinimumApiVersion_Behavior>
 		<MinimumGameVersion_Behavior>Ignore</MinimumGameVersion_Behavior>
 		<Version_AppendConfiguration>False</Version_AppendConfiguration>
 		<Dependencies_VersionBehavior>Ignore</Dependencies_VersionBehavior>

@@ -1,16 +1,83 @@
-﻿using Microsoft.Xna.Framework;
+﻿using StardewValley.GameData.WildTrees;
 using StardewValley.TerrainFeatures;
 
 namespace BetterTappers
 {
+    /*********
+    ** Handy Reference List:
+    *   Items and IDs
+    *       Tapper          - "(BC)105"
+    *       Heavy Tapper    - "(BC)264"
+    *       
+    *       Oak Resin       - "(O)725"
+    *       Maple Syrup     - "(O)724"
+    *       Pine Tar        - "(O)726"
+    *       Palm Oil        - "(O)247"
+    *       Brown Mushroom  - "(O)404"
+    *       Red Mushroom    - "(O)420"
+    *       Purple Mushroom - "(O)422"
+    *       Sap             - "(O)92"
+    *       Moss            - "(O)Moss"
+    *       Ferns           - "(O)259"
+    *       Mystic Syrup    - "(O)MysticSyrup"
+    *       
+    *       Coconut             - "(O)88"
+    *       Mushroom Tree Seed  - "(O)891"
+    *       
+    *   Tree Types 
+    *       Oak             - "1"
+    *       Maple           - "2"
+    *       Pine            - "3"
+    *       Palm            - "6"
+    *       Mushroom        - "7"
+    *       Mahogany        - "8"
+    *       Palm2           - "9"
+    *       GreenRain1      - "10"
+    *       GreenRain2      - "11"
+    *       GreenRain3      - "12"
+    *       Mystic          - "13"
+    *********/
+
+
     internal class CoreLogic
     {
         private static readonly Log log = ModEntry.Instance.log;
         private static readonly ModConfig Config = ModEntry.Config;
-        public const int LvlCap = 100;
-        public const int formula = 0;
+
+        internal static void AdjustTapperOutput(WildTreeData data, int minStack, int days, bool allYear=false)
+        {
+            foreach (WildTreeTapItemData tap in data.TapItems)
+            {
+                if (tap.ItemId == "(O)404" || tap.ItemId == "(O)420" || tap.ItemId == "(O)259")
+                {
+                    if (allYear)
+                    {
+                        tap.Condition = "";
+                    }
+                    else
+                    {
+                        tap.Condition = "!LOCATION_SEASON Target winter";
+                    }
+                }
+                if (tap.ItemId == "(O)422")
+                {
+                    if (allYear)
+                    {
+                        tap.Condition = "DAY_OF_MONTH 10 20";
+                    }
+                    else
+                    {
+                        tap.Condition = "!LOCATION_SEASON Target Winter, DAY_OF_MONTH 10 20";
+                    }
+                }
+                tap.MinStack = minStack;
+                tap.MaxStack = minStack;
+                tap.DaysUntilReady = days;
+            }
+        }
 
         /// <summary>Return number of minutes the tapper should take to produce.</summary>
+        /*
 		internal static int CalculateTapperMinutes(String treeType, String qualifiedItemId)
         {
             if (Config.DisableAllModEffects || !Config.ChangeTapperTimes)
@@ -33,16 +100,19 @@ namespace BetterTappers
             {
                 //Oak
                 case "1":
+                    days_configured = Config.DaysForResin;
+                    break;
                 //Maple
                 case "2":
+                    days_configured = Config.DaysForSyrup;
+                    break;
                 //Pine
                 case "3":
-                    days_configured = Config.DaysForSyrups;
+                    days_configured = Config.DaysForTar;
                     break;
                 //Palm
                 case "6":
-                //Ginger island palm
-                case "9":
+                    days_configured = Config.DaysForOil;
                     break;
                 //Mushroom
                 case "7":
@@ -56,6 +126,7 @@ namespace BetterTappers
                 case "10":
                 //Green rain 2 (leafy)
                 case "11":
+                    days_configured = Config.DaysForMoss;
                     break;
                 //Green rain 3 (fern)
                 case "12":
@@ -64,6 +135,14 @@ namespace BetterTappers
                 //Mystic
                 case "13":
                     days_configured = Config.DaysForMystic;
+                    break;
+
+                //Modded trees
+                case "FlashShifter.StardewValleyExpandedCP_Birch_Tree":
+                    //days_configured = "FlashShifter.StardewValleyExpandedCP_Birch_Water";
+                    break;
+                case "FlashShifter.StardewValleyExpandedCP_Fir_Tree":
+                    //days_configured = "FlashShifter.StardewValleyExpandedCP_Fir_Wax";
                     break;
             }
 
@@ -80,115 +159,66 @@ namespace BetterTappers
             log.D("Changing minutes until ready as per configs: " + result, Config.DebugMode);
             return result;
         }
+        */
 
-        /// <summary>Return a quality level for tapper output.</summary>
-		internal static int GetQualityLevel(Farmer who, int age, int timesHarvested)
+        public static int GetQualityLevel(Farmer who, Tree tree)
         {
-            log.D("Quality check requested...", Config.DebugMode);
-            if (Config.DisableAllModEffects || !Config.TappersUseQuality)
+            if (Config.QualitySetting is not "None" && who is not null && tree is not null)
             {
-                log.D("Quality disabled", Config.DebugMode);
-                return SObject.lowQuality;
-            }
-            if ((!Config.ForageLevelAffectsQuality || who is null) && (!Config.TreeAgeAffectsQuality || age < 1) &&
-                (!Config.TimesHarvestedAffectsQuality || timesHarvested < 1))
-            {
-                log.D("Quality all types disabled", Config.DebugMode);
-                return SObject.lowQuality;
-            }
-
-            if (Config.BotanistAffectsTappers)
-            {
-                if (who is not null && who.professions.Contains(Farmer.botanist))
+                if (Config.BotanistAffectsTappers && who.professions.Contains(Farmer.botanist))
                 {
-                    log.D("Botanist perk applied.", Config.DebugMode);
+                    log.D("Botanist perk applied", Config.DebugMode);
                     return SObject.bestQuality;
                 }
-            }
-            int quality = DetermineQuality(who.foragingLevel.Value, age, timesHarvested);
-            if (quality == 3)
-            {
-                return SObject.highQuality;
-            }
-            return quality;
-        }
-
-        /// <summary>Return a quality level based on what categories are enabled.</summary>
-		private static int DetermineQuality(int foragingLevel, int age, int timesHarvested)
-        {
-            log.D("Determining quality...", Config.DebugMode);
-            int n, FLQ, TAQ, THQ, t;
-            n = FLQ = TAQ = THQ = 0;
-
-            if (Config.ForageLevelAffectsQuality)
-            {
-                FLQ = GetQualityPart(foragingLevel);
-                n++;
-            }
-            if (Config.TreeAgeAffectsQuality)
-            {
-                TAQ = GetQualityPart(age);
-                n++;
-            }
-            if (Config.TimesHarvestedAffectsQuality)
-            {
-                THQ = GetQualityPart(timesHarvested);
-                n++;
-            }
-
-            log.D("QualitiesActive: " + n + "    FLQ: " + FLQ + "    TAQ: " + TAQ + "    THQ: " + THQ, Config.DebugMode);
-            t = (FLQ + TAQ + THQ);
-            log.D("Sum of qualty pieces: " + t, Config.DebugMode);
-            switch (n)
-            {
-                case 3:
-                    if (t == 6)
-                    {
-                        return SObject.bestQuality;
-                    }
-                    return (int)Math.Floor(t * 0.5);
-
-                case 2:
-                    return (int)Math.Floor(t * 0.75);
-                case 1:
-                    return t;
-                //these shouldn't happen, but if they do return low
-                case 0:
-                default:
-                    log.D("Problem: shouldn't asking for quality when no quality types are enabled. Defaulted to low.", true);
-                    return SObject.lowQuality;
-            }
-        }
-
-        /// <summary>Calculate and return a quality level for one of the 3 quality categories.</summary>
-        private static int GetQualityPart(int lvl)
-        {
-            log.D("Getting quality piece...", Config.DebugMode);
-            if (lvl > 0)
-            {
-                double ran = Game1.random.NextDouble();
-                switch (CoreLogic.formula)
+                else if (Config.QualitySetting == "Tree Age")
                 {
-                    case 0:
-                    default:
-                        if (ran < (Math.Min(lvl, CoreLogic.LvlCap) / 30f))
-                        {
-                            return SObject.highQuality;
-                        }
-                        else if (ran < (Math.Min(lvl, CoreLogic.LvlCap) / 15f))
-                        {
-                            return SObject.medQuality;
-                        }
-                        break;
+                    return QualityByTreeAge(who, GetTreeAge(tree));
+                }
+                else if (Config.QualitySetting == "Foraging Level")
+                {
+                    return QualityByForagingLevel(who);
                 }
             }
             return SObject.lowQuality;
         }
 
-        /// <summary>Return number of items to add to a stack based on gatherer perk.</summary>
+        public static int QualityByForagingLevel(Farmer who)
+        {
+            double r = Game1.random.NextDouble();
+            if (r < who.ForagingLevel / 30f)
+            {
+                return SObject.highQuality;
+            }
+            else if (r < who.ForagingLevel / 15f)
+            {
+                return SObject.medQuality;
+            }
+            else
+            {
+                return SObject.lowQuality;
+            }
+        }
+
+        public static int QualityByTreeAge(Farmer who, int age)
+        {
+            if (age >= Config.TreeAgeIncrement * 2)
+            {
+                return SObject.highQuality;
+            }
+            else if (age >= Config.TreeAgeIncrement)
+            {
+                return SObject.medQuality;
+            }
+            else
+            {
+                return SObject.lowQuality;
+            }
+        }
+
+        /// <summary>Return whether to double a stack based on gatherer perk.</summary>
 		public static bool TriggerGathererPerk(Farmer who)
         {
-            if (!Config.DebugMode && Config.GathererAffectsTappers && who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
+            if (Config.GathererAffectsTappers && who.professions.Contains(Farmer.gatherer) && Game1.random.NextDouble() < 0.2)
             {
                 log.D("Gatherer perk applied", Config.DebugMode);
                 return true;
@@ -218,7 +248,7 @@ namespace BetterTappers
             }
             else
             {
-                tapper.modData[$"{ModEntry.UID}/timesHarvested"] = "1";
+                SetTimesHarvested(tapper, 0);
             }
         }
 
@@ -292,8 +322,13 @@ namespace BetterTappers
             }
             else
             {
-                tree.modData[$"{ModEntry.UID}/treeAge"] = "1";
+                SetTreeAge(tree, 1);
             }
+        }
+
+        internal static void SetTreeAge(Tree tree, int num)
+        {
+            tree.modData[$"{ModEntry.UID}/treeAge"] = num.ToString();
         }
 
         public static bool IsAnyTapper(SObject o)

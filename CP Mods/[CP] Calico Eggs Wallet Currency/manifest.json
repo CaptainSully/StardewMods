@@ -1,11 +1,10 @@
 {
+	"UniqueID": "CaptainSully.CalicoEggsWalletCurrency",
 	"Name": "Calico Eggs Wallet Currency",
 	"Author": "CaptainSully",
 	"Version": "1.0.1",
 	"Description": "A mod that turns Calico Eggs into a wallet currency",
-	"UniqueID": "CaptainSully.CalicoEggsWalletCurrency",
 	"MinimumApiVersion": "4.0.0",
-	"UpdateKeys": ["Nexus:42124"],
 	"ContentPackFor": {
 		"UniqueID": "Pathoschild.ContentPatcher",
 		"MinimumVersion": "2.0.0"
@@ -14,6 +13,13 @@
 		{
 			"UniqueID": "DLX.Bundles",
 			"IsRequired": true
+		},
+		{
+			"UniqueID": "spacechase0.GenericModConfigMenu",
+			"IsRequired": false
 		}
+	],
+	"UpdateKeys": [
+		"Nexus:42124"
 	]
 }

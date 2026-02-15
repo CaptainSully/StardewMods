@@ -10,9 +10,8 @@
   "UniqueID": "CaptainSully.InfiniteWateringCan",
   "Name": "InfiniteWateringCan",
   "Author": "CaptainSully",
-  "Version": "1.1.1",
+  "Version": "1.1.2",
   "Description": "Infinite water in watering can",
-  "MinimumApiVersion": "4.5",
   "EntryDll": "InfiniteWateringCan.dll",
   "Dependencies": [
     {

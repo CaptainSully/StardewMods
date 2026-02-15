@@ -31,7 +31,6 @@ namespace BetterTappers
 
             // load config
             Config = Helper.ReadConfig<ModConfig>();
-            ModConfig.VerifyConfigValues(Config, Instance);
 
             // hook events
             Helper.Events.GameLoop.GameLaunched += OnGameLaunched;

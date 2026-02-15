@@ -10,9 +10,8 @@
   "UniqueID": "CaptainSully.BetterTappers",
   "Name": "BetterTappers",
   "Author": "CaptainSully",
-  "Version": "1.4.0",
+  "Version": "2.0.0",
   "Description": "Gives options for tapper production times, quality, and experience",
-  "MinimumApiVersion": "4.5",
   "EntryDll": "BetterTappers.dll",
   "Dependencies": [
     {
