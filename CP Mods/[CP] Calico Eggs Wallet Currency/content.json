@@ -1,5 +1,5 @@
 {
-	"Format": "2.9.0",
+	"Format": "2.0.0",
 	"ConfigSchema": {
 		"Enable Mod": {
 			"Description": "You must reset the game for the wallet to display properly after changing this.\n\nWhen enabled, Calico Eggs go to your wallet.\nWhen disabled, they go to your inventory.",
