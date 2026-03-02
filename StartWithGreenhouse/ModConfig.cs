@@ -4,19 +4,14 @@ namespace StartWithGreenhouse
     // <summary>The raw mod configuration.</summary>
     internal class ModConfig
     {
-       /*********
-       ** Accessors
-       *********/
+        private static readonly Log log = ModEntry.Instance.log;
         /// <summary>Whether the mod is disabled.</summary>
         public bool DisableAllModEffects { get; set; } = false;
 
-
-        /*********
-        ** Public methods
-        *********/
         /// <summary>Set up Generic Mod Config Menu integration.</summary>
         public static void SetUpModConfigMenu(ModConfig config, Mod mod)
         {
+            log.T("Set up GMCM.");
             // Get the Generic Mod Config Menu API
             IGenericModConfigMenuApi api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
             if (api is null) { return; }

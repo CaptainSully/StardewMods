@@ -74,6 +74,7 @@ namespace BetterTappers
         *********/
         public static void SetUpModConfigMenu(ModConfig config, Mod mod)
         {
+            log.T("Set up GMCM.");
             // Get the Generic Mod Config Menu API
             IGenericModConfigMenuApi api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
             if (api is null) { return; }

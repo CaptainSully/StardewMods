@@ -4,7 +4,7 @@ using StardewValley.TerrainFeatures;
 namespace BetterTappers
 {
     /*********
-    ** Handy Reference List:
+    *  Handy Reference List:
     *   Items and IDs
     *       Tapper          - "(BC)105"
     *       Heavy Tapper    - "(BC)264"

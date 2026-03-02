@@ -13,12 +13,6 @@
   "Version": "1.0.7",
   "Description": "Add one time and/or per level damage boosts (or negatives)",
   "EntryDll": "DamageScaler.dll",
-  "Dependencies": [
-    {
-      "UniqueID": "spacechase0.GenericModConfigMenu",
-      "IsRequired": false
-    }
-  ],
   "UpdateKeys": [
     "Nexus:41721"
   ]

@@ -2,43 +2,31 @@
 namespace StartWithGreenhouse
 {
     // <summary>The mod entry point.</summary>
-    internal class ModEntry : Mod
+    public class ModEntry : Mod
     {
-        /*********
-        ** Fields
-        *********/
+        /// <summary>Static reference to the mod instance for logging in other classes.</summary>
+        internal static ModEntry Instance { get; set; }
         /// <summary>Logging tool.</summary>
-        private Log log;
-
+        internal Log log;
         /// <summary>The mod configuration.</summary>
-        private ModConfig Config { get; set; }
+        internal ModConfig Config { get; set; }
 
-
-        /*********
-        ** Public methods
-        *********/
         /// <summary>The mod entry point, called after the mod is first loaded.</summary>
         /// <param name="helper">Provides methods for interacting with the mod directory, such as read/writing a config file or custom JSON files.</param>
         public override void Entry(IModHelper helper)
         {
             // initalize fields
+            Instance = this;
             log = new(this);
 
             // load config
-            UpdateConfig();
+            Config = Helper.ReadConfig<ModConfig>();
 
             // hook events
             Helper.Events.GameLoop.SaveLoaded += SaveLoaded;
             Helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
 
-
-        /*********
-        ** Private methods
-        *********/
-        /****
-        ** Event handlers
-        ****/
         /// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
@@ -55,20 +43,10 @@ namespace StartWithGreenhouse
             if (!Context.IsWorldReady || !Context.IsMainPlayer)
                 return;
             if (!Config.DisableAllModEffects && !Game1.player.mailReceived.Contains("ccPantry"))
-                SetPantryFlag();
-        }
-
-        /// <summary>Give player the pantry mail flag, which unlocks the greenhouse.</summary>
-        private void SetPantryFlag()
-        {
-            Game1.player.mailReceived.Add("ccPantry");
-            log.T("Pantry flag set (Greenhouse unlocked).");
-        }
-
-        /// <summary>Update the mod configuration.</summary>
-        private void UpdateConfig()
-        {
-            Config = Helper.ReadConfig<ModConfig>();
+            {
+                Game1.player.mailReceived.Add("ccPantry");
+                log.T("Pantry flag set (Greenhouse unlocked).");
+            }
         }
     }
 }

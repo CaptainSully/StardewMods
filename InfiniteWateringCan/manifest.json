@@ -13,12 +13,6 @@
   "Version": "1.1.2",
   "Description": "Infinite water in watering can",
   "EntryDll": "InfiniteWateringCan.dll",
-  "Dependencies": [
-    {
-      "UniqueID": "spacechase0.GenericModConfigMenu",
-      "IsRequired": false
-    }
-  ],
   "UpdateKeys": [
     "Nexus:12739"
   ]

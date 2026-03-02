@@ -1,8 +1,7 @@
 ﻿using HarmonyLib;
 using Microsoft.Xna.Framework;
-using StardewValley.Projectiles;
 
-namespace DamageScaler.Patches
+namespace DamageScaler
 {
     internal class Patcher
     {
@@ -20,7 +19,7 @@ namespace DamageScaler.Patches
 
                 harmony.Patch(
                     original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.damageMonster), new Type[] { typeof(Rectangle), typeof(int), typeof(int), typeof(bool), typeof(Farmer), typeof(bool) }),
-                    prefix: new HarmonyMethod(typeof(Patcher), nameof(Before_DamageMonster))
+                    prefix: new HarmonyMethod(typeof(Patcher), nameof(Prefix_DamageMonster))
                 );
             }
             catch (Exception e)
@@ -31,10 +30,11 @@ namespace DamageScaler.Patches
         }
 
         /// <summary>The method to call before <see cref="GameLocation.damageMonster(Rectangle, int, int, bool, Farmer, bool=false)"/>.</summary>
-        private static void Before_DamageMonster(ref int minDamage, ref int maxDamage, Farmer who)
+        private static void Prefix_DamageMonster(ref int minDamage, ref int maxDamage, Farmer who)
         {
             if (who == null || Config.DisableAllModEffects)
                 return;
+            log.T($"Modifying damage to monster by {who.Name}.");
 
             float levelMultiplier = 1f;
 

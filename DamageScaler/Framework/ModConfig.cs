@@ -1,4 +1,5 @@
-﻿namespace DamageScaler.Patches
+﻿
+namespace DamageScaler
 {
     // <summary>The raw mod configuration.</summary>
     public class ModConfig
@@ -37,6 +38,7 @@
         /// <summary>Check for and reset any invalid configuration settings.</summary>
         public static void VerifyConfigValues(ModConfig config, Mod mod)
         {
+            log.T("Verify config values.");
             bool invalidConfig = false;
 
             if (config.PerLevelDamageMultiplier < 0)
@@ -61,6 +63,7 @@
         /// <summary>Set up Generic Mod Config Menu integration.</summary>
         public static void SetUpModConfigMenu(ModConfig config, Mod mod)
         {
+            log.T("Set up GMCM.");
             // Get the Generic Mod Config Menu API
             IGenericModConfigMenuApi api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
             if (api is null) { return; }
@@ -76,23 +79,29 @@
             api.AddSectionTitle(manifest, text: () => "Scaling damage bonuses",
                 tooltip: () => "These options scale with your Combat Skill level.");
             api.AddNumberOption(manifest, () => config.PerLevelDamageMultiplier, (float val) => config.PerLevelDamageMultiplier = val,
-                    name: () => "Per level damage multiplier", tooltip: () => "Multiplies damage according to your combat skill level.\nLess than 1 decreases; greater than 1 increases damage.");
+                    name: () => "Per level damage multiplier",
+                    tooltip: () => "Multiplies damage according to your combat skill level." +
+                                    "\nLess than 1 decreases; greater than 1 increases damage.");
             api.AddNumberOption(manifest, () => config.PerLevelDamageBonus, (int val) => config.PerLevelDamageBonus = val,
-                    name: () => "Per level damage bonus", tooltip: () => "Damage added per combat skill level.\nMod default is 0.");
+                    name: () => "Per level damage bonus",
+                    tooltip: () => "Damage added per combat skill level.\nMod default is 0.");
 
             api.AddSectionTitle(manifest, text: () => "Single damage bonuses",
                 tooltip: () => "These options do not scale.");
             api.AddNumberOption(manifest, () => config.SingleDamageMultiplier, (float val) => config.SingleDamageMultiplier = val,
-                   name: () => "One time damage multiplier", tooltip: () => "One time multiplier to damage.\nLess than 1 decreases; greater than 1 increases damage.");
+                   name: () => "One time damage multiplier",
+                   tooltip: () => "One time multiplier to damage.\nLess than 1 decreases; greater than 1 increases damage.");
             api.AddNumberOption(manifest, () => config.SingleDamageBonus, (int val) => config.SingleDamageBonus = val,
-                    name: () => "One time damage bonus", tooltip: () => "Amount of flat damage to add.\nMod default is 0.");
+                    name: () => "One time damage bonus",
+                    tooltip: () => "Amount of flat damage to add.\nMod default is 0.");
 
 
             // Debuging
             api.AddParagraph(manifest, text: () => " ");
             api.AddSectionTitle(manifest, text: () => "Debuging");
             api.AddBoolOption(manifest, () => config.DebugMode, (bool val) => config.DebugMode = val,
-                    name: () => "Debug mode", tooltip: () => "This is for helping me debug/test things.\nEnable only if you're trying to do the same.");
+                    name: () => "Debug mode",
+                    tooltip: () => "This is for helping me debug/test things.\nEnable only if you're trying to do the same.");
         }
     }
 }

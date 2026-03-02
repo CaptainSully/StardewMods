@@ -4,9 +4,6 @@ namespace BetterTappers
     // <summary>The mod entry point.</summary>
     public class ModEntry : Mod
     {
-        /*********
-        ** Fields
-        *********/
         /// <summary>Static reference to the mod instance for logging in other classes.</summary>
         internal static ModEntry Instance { get; set; }
         /// <summary>Logging tool.</summary>
@@ -16,10 +13,6 @@ namespace BetterTappers
         /// <summary>The mods unique id.</summary>
         internal static string UID { get; set; }
 
-
-        /*********
-        ** Public methods
-        *********/
         /// <summary>The mod entry point, called after the mod is first loaded.</summary>
         /// <param name="helper">Provides methods for interacting with the mod directory, such as read/writing a config file or custom JSON files.</param>
         public override void Entry(IModHelper helper)
@@ -29,6 +22,9 @@ namespace BetterTappers
             log = new(this);
             UID = ModManifest.UniqueID;
 
+            // initialize translation helper
+            //I18n.Init(helper.Translation);
+
             // load config
             Config = Helper.ReadConfig<ModConfig>();
 
@@ -37,13 +33,6 @@ namespace BetterTappers
             Helper.Events.GameLoop.DayStarted += delegate { CoreLogic.IncreaseTreeAges(); };
         }
 
-
-        /*********
-        ** Private methods
-        *********/
-        /****
-        ** Event handlers
-        ****/
         /// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
@@ -51,9 +40,6 @@ namespace BetterTappers
         {
             log.T("Initialising mod data.");
 
-            // Content
-            //Translations.Initialise();
-            
             // Patches
             Patcher.PatchAll();
 

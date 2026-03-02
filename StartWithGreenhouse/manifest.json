@@ -13,12 +13,6 @@
   "Version": "1.1.2",
   "Description": "Start game with greenhouse enabled",
   "EntryDll": "StartWithGreenhouse.dll",
-  "Dependencies": [
-    {
-      "UniqueID": "spacechase0.GenericModConfigMenu",
-      "IsRequired": false
-    }
-  ],
   "UpdateKeys": [
     "Nexus:9878"
   ]

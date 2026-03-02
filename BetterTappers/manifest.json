@@ -13,12 +13,6 @@
   "Version": "2.0.0",
   "Description": "Gives options for tapper production times, quality, and experience",
   "EntryDll": "BetterTappers.dll",
-  "Dependencies": [
-    {
-      "UniqueID": "spacechase0.GenericModConfigMenu",
-      "IsRequired": false
-    }
-  ],
   "UpdateKeys": [
     "Nexus:9875"
   ]
