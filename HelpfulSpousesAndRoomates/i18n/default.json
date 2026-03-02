@@ -1,0 +1,61 @@
+{
+  /*********
+  * Generic Mod Config Menu UI
+  *********/
+  // general options
+  "title.general-settings": "General settings",
+  "disabled.name": "Disable the mod",
+  "disabled.desc": "Check this to turn off the mod.",
+  "roommate-chores.name": "Roommates do chores",
+  "roommate-chores.desc": "Whether to allow roommates to do chores.\nIf disabled, only spouses will do chores.",
+  "enable-custom-chores.name": "Enable custom chores",
+  "enablecustomchores.desc": "Whether to enable custom chores.\nIf disabled, only vanilla chores will be done.",
+  "combine-pet-chores.name": "Combine feed and pet for pets",
+  "combine-pet-chores.desc": "If spouses/roommates feed the pet(s), they will also pet them.\nOnly applies if \"{{ecn}}\" is true.\nIf enabled, \"{{cppn}}\" will not matter.\nCombined chore will also only count as 1 against max chores.",
+  "combine-animal-chores.name": "Combine feed and pet for animals",
+  "combine-animal-chores.desc": "If spouses/roommates feed the animals, they will also pet them.\nOnly applies if \"{{ecn}}\" is true.\nIf enabled, \"{{cpan}}\" will not matter.\nCombined chore will also only count as 1 against max chores.",
+  "always-feed-pets.name": "Always water pet bowls",
+  "always-feed-pets.desc": "If enabled, this no longer counts as a chore, and they will ALWAYS do it.",
+  "always-pet-pets.name": "Always pet your pets",
+  "always-pet-pets.desc": "If enabled, this no longer counts as a chore, and they will ALWAYS do it.",
+  "green-rain-behaviour.name": "Green rain behavior",
+  "green-rain-behaviour.desc": "What spouses/roommates should do during green rain.\n\"{{grboi}}\": Only do chores inside the farmhouse.\n\"{{grbnr}}\": Do any chores that would be done on a rainy day.\n\"{{grbn}}\": Don't do any chores.",
+  "g-r-b.only-inside": "Only Inside",
+  "g-r-b.normal-rain": "Normal Rain",
+  "g-r-b.none": "None",
+  "max-chores-per-spouse.name": "Max chores per spouse",
+  "max-chores-per-spouse.desc": "The maximum number of chores any single spouse/roommate can do each morning.",
+
+  // multi-spouse options
+  "title.multi-spouse-options": "Multi-spouse options",
+  "only-one-does-chores.name": "Only one NPC does chores",
+  "only-one-does-chores.desc": "If enabled, prevents multiple spouses/roommates from doing chores.\nOnly matters if you have some form of multi-spouse mod.",
+  "max-chores-per-day.name": "Max chores per day",
+  "max-chores-per-day.desc": "The maximum number of chores that can be done each day, accross all spouses.",
+
+  // vanilla chores
+  "title.vanilla-chores": "Vanilla chores",
+  "chance-feed-pet.name": "Chance for fill pet bowls",
+  "chance-feed-pet.desc": "The chance for spouses/roommates to fill pet bowls each morning.\nOnly applies if \"{{afpn}}\" is false.",
+  "chance-water-crops.name": "Chance for water crops",
+  "chance-water-crops.desc": "The chance that the spouse/roommate will water the crops on a given day.\nSkipped if it's raining.",
+  "chance-feed-animals.name": "Chance for feed animals",
+  "chance-feed-animals.desc": "The chance that the spouse/roommate will feed the animals on a given day.",
+  "chance-repair-fences.name": "Chance for repair fences",
+  "chance-repair-fences.desc": "The chance that the spouse/roommate will repair fences on a given day.",
+  "chance-make-breakfast.name": "Chance for make breakfast.",
+  "chance-make-breakfast.desc": "The chance that the spouse/roommate will make breakfast on a given day.",
+
+  // custom chores
+  "title.custom-chores": "Custom chores",
+  "chance-pet-pets.name": "Chance for pet pets",
+  "chance-pet-pets.desc": "The chance that the spouse/roommate will pet the animals/pets on a given day.\nOnly applies if \"{{appn}}\" is disabled.\nOnly applies if \"{{cpcn}}\" is disabled.",
+  "chance-pet-animals.name": "Chance for pet animals",
+  "chance-pet-animals.desc": "The chance that the spouse/roommate will pet the animals on a given day.\nOnly applies if \"{{cacn}}\" is disabled.",
+
+
+  // debugging
+  "title.debugging": "Debugging",
+  "debug-mode.name": "Debug mode",
+  "debug-mode.desc": "This is for helping me debug/test things.\nMay be spammy."
+}

@@ -1,6 +1,4 @@
-﻿using StardewModdingAPI;
-using System;
-
+﻿
 namespace SullySDVcore
 {
 	public class Log
@@ -21,7 +19,6 @@ namespace SullySDVcore
 		public void E(string str)
 		{
 			mod.Monitor.Log(str, LogLevel.Error);
-			//ModEntry.Instance.Monitor.Log(str, LogLevel.Error);
 		}
 		public void E(string str, Exception e)
 		{
