@@ -15,6 +15,7 @@ namespace HelpfulSpousesAndRoomates
         public bool CombinePetChores { get; set; } = false;
         public bool CombineAnimalChores { get; set; } = false;
         public string GreenRainBehaviour { get; set; } = I18n.GRB_OnlyInside(); // "Only Inside", "Normal Rain", "None"
+        public string ChoreDialogue { get; set; } = I18n.CD_First(); // "First", "All", "None"
         public bool AlwaysFeedPet { get; set; } = true;
         public bool AlwaysPetPets { get; set; } = true;
 
@@ -82,6 +83,10 @@ namespace HelpfulSpousesAndRoomates
                     name: () => I18n.GreenRainBehaviour_Name(),
                     allowedValues: [I18n.GRB_OnlyInside(), I18n.GRB_NormalRain(), I18n.GRB_None()],
                     tooltip: () => I18n.GreenRainBehaviour_Desc(grboi: I18n.GRB_OnlyInside(), grbnr: I18n.GRB_NormalRain(), grbn: I18n.GRB_None()));
+            api.AddTextOption(manifest, () => config.ChoreDialogue, (string val) => config.ChoreDialogue = val,
+                    name: () => I18n.ChoreDialogue_Name(),
+                    allowedValues: [I18n.CD_First(), I18n.CD_All(), I18n.CD_None()],
+                    tooltip: () => I18n.ChoreDialogue_Desc(cdf: I18n.CD_First(), cda: I18n.CD_All(), cdn: I18n.CD_None()));
             api.AddNumberOption(manifest, () => config.MaxChoresPerSpouse, (int val) => config.MaxChoresPerSpouse = val,
                     name: () => I18n.MaxChoresPerSpouse_Name(),
                     tooltip: () => I18n.MaxChoresPerSpouse_Desc(),
@@ -94,7 +99,7 @@ namespace HelpfulSpousesAndRoomates
                     tooltip: () => I18n.OnlyOneDoesChores_Desc());
             api.AddNumberOption(manifest, () => config.MaxChoresPerDay, (int val) => config.MaxChoresPerDay = val,
                     name: () => I18n.MaxChoresPerDay_Name(),
-                    tooltip: () => I18n.MaxChoresPerSpouse_Desc(),
+                    tooltip: () => I18n.MaxChoresPerDay_Desc(),
                     1, Enum.GetNames(typeof(Chores.ChoreType)).Length, 1);
 
             // Vanilla chores
@@ -115,12 +120,12 @@ namespace HelpfulSpousesAndRoomates
                     name: () => I18n.ChanceRepairFences_Name(),
                     tooltip: () => I18n.ChanceRepairFences_Desc(),
                     0f, 1f, 0.025f);
-            /*
+            
             api.AddNumberOption(manifest, () => config.ChanceMakeBreakfast, (float val) => config.ChanceMakeBreakfast = val,
                     name: () => I18n.ChanceMakeBreakfast_Name(),
                     tooltip: () => I18n.ChanceMakeBreakfast_Desc(),
                     0f, 1f, 0.025f);
-            */
+            
 
             // Custom chores
             api.AddSectionTitle(manifest, text: () => I18n.Title_CustomChores());

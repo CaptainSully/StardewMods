@@ -29,7 +29,10 @@ namespace HelpfulSpousesAndRoomates
 
             // hook events
             Helper.Events.GameLoop.GameLaunched += OnGameLaunched;
-            Helper.Events.GameLoop.DayEnding += delegate { Chores.ResetChores(); };
+            Helper.Events.Content.AssetRequested += OnAssetRequested;
+            Helper.Events.GameLoop.DayEnding += delegate { log.D("Day ending", Config.Debug); Chores.ResetChores(); };
+            Helper.Events.GameLoop.ReturnedToTitle += delegate { log.D("Return to title", Config.Debug); Chores.ResetChores(); };
+
         }
 
         /// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
@@ -38,7 +41,7 @@ namespace HelpfulSpousesAndRoomates
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             log.T("Initialising mod data.");
-            
+
             // Patches
             Patcher.PatchAll();
 
@@ -53,6 +56,35 @@ namespace HelpfulSpousesAndRoomates
 
             // setup GMCM
             ModConfig.SetUpModConfigMenu(Config, this);
+        }
+
+        private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
+        {
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/ChoreDialogue"))
+            {
+                e.LoadFrom(
+                    () => {
+                        return new Dictionary<string, string>
+                        {
+                            // debug/test
+                            ["Debug_Dialogue"] = I18n.DebugDialogue(),
+                            // vanilla changes
+                            ["Feed_Pet"] = I18n.D_FeedPet(),
+                            ["Multi_Feed_Pet"] = I18n.D_MultiFeedPet(),
+                            ["Sunny_Breakfast"] = I18n.D_SunnyBreakfast(),
+                            ["Rainy_Breakfast"] = I18n.D_RainyBreakfast(),
+                            // custom chores
+                            ["Pet_Pet"] = I18n.D_PetPet(),
+                            ["Multi_Pet_Pet"] = I18n.D_MultiPetPet(),
+                            ["Combined_Pet"] = I18n.D_CombinedPet(),
+                            ["Multi_Combined_Pet"] = I18n.D_MultiCombinedPet(),
+                            ["Pet_Animals"] = I18n.D_PetAnimals(),
+                            ["Combined_Animals"] = I18n.D_CombinedAnimals()
+                        };
+                    },
+                    AssetLoadPriority.Medium
+                );
+            }
         }
     }
 }

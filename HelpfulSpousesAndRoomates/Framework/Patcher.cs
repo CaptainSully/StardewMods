@@ -17,6 +17,11 @@ namespace HelpfulSpousesAndRoomates
                 .Aggregate("Applying Harmony patches:", (str, s) => $"{str}{Environment.NewLine}{s}"));
 
                 // Prefix patches
+                /*
+                harmony.Patch(
+                   original: AccessTools.Method(typeof(Game1), "OnDayStarted"),
+                   prefix: new HarmonyMethod(typeof(Patcher), nameof(Prefix_OnDayStarted))
+                );*/
                 harmony.Patch(
                    original: AccessTools.Method(typeof(NPC), "marriageDuties"),
                    prefix: new HarmonyMethod(typeof(Patcher), nameof(Prefix_MarriageDuties))
@@ -40,7 +45,14 @@ namespace HelpfulSpousesAndRoomates
         ** Prefix Patches
         *********/
 
-        public static bool Prefix_MarriageDuties()
+        /*
+        public static void Prefix_OnDayStarted()
+        {
+            log.T($"Game1.OnDayStarted");
+            Chores.ResetChores();
+        }*/
+
+        public static bool Prefix_MarriageDuties(NPC __instance)
         {
             log.T($"Modifying marriage duties.");
 

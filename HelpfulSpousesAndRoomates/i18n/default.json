@@ -23,6 +23,11 @@
   "g-r-b.only-inside": "Only Inside",
   "g-r-b.normal-rain": "Normal Rain",
   "g-r-b.none": "None",
+  "chore-dialogue.name": "Chore dialogue",
+  "chore-dialogue.desc": "How chore dialogue should be handled, helpful if you have high chores per spouse.\nNote: breakfast will ALWAYS give dialogue, since othewise you won't get it.\n\"{{cdf}}\": Only show dialogue for the first chore.\n\"{{cda}}\": Show dialogue for all chores.\n\"{{cdn}}\": Don't show dialogue for chores.",
+  "c-d.first": "First",
+  "c-d.all": "All",
+  "c-d.none": "None",
   "max-chores-per-spouse.name": "Max chores per spouse",
   "max-chores-per-spouse.desc": "The maximum number of chores any single spouse/roommate can do each morning.",
 
@@ -53,9 +58,44 @@
   "chance-pet-animals.name": "Chance for pet animals",
   "chance-pet-animals.desc": "The chance that the spouse/roommate will pet the animals on a given day.\nOnly applies if \"{{cacn}}\" is disabled.",
 
-
   // debugging
   "title.debugging": "Debugging",
   "debug-mode.name": "Debug mode",
-  "debug-mode.desc": "This is for helping me debug/test things.\nMay be spammy."
+  "debug-mode.desc": "This is for helping me debug/test things.\nMay be spammy.",
+
+
+  /*********
+  * Dialogue
+  *********/
+  // keys to vanilla dialogue, translators ignore these
+  //=====================
+  "V.Path": "Strings\\StringsFromCSFiles",
+  "V.Hi": "NPC.cs.4465", // add "%endearment" in call
+  "V.Good_Morn": "NPC.cs.4466", // add "%endearment" in call
+  "V.Water_Crops": "NPC.cs.4462",
+  "V.Water_Crops_Done": "NPC.cs.4470",
+  "V.Feed_Animals": "NPC.cs.4474",
+  "V.Repair_Fences": "NPC.cs.4481",
+  "V.Fed_Pet": "NPC.cs.4463", // add Game1.player.getPetDisplayName() in call
+  "V.Fed_Multi_Pets": "MultiplePetBowls_watered", // add Game1.player.getPetDisplayName() in call
+  //=====================
+
+  // testing/debugging
+  "Debug_Dialogue": "Dialogue test!",
+
+  // vanilla changed dialogue
+  "D.Feed_Pet": "#$e#I filled {0}'s water bowl. Don't forget to give them some love though!",
+  "D.Multi_Feed_Pet": "#$e#I filled the pets' water bowls. Don't forget to give them some love though!",
+  "D.Sunny_Breakfast": "Good morning! Smells good, doesn't it? I made you breakfast! [194 195 210 211 216] #$e#You need food to stay energized throughout the day.",
+  "D.Rainy_Breakfast": "Good morning! I woke up early from the sound of the rain and made you some breakfast. [194 195 210 211 216]  #$e#Stay warm and don't work too hard. I want you to stay healthy.",
+
+  // custom chores dialogue
+  "D.Pet_Pet": "I spent some time this morning petting {0}. Such a cutie.",
+  "D.Multi_Pet_Pet": "I spent some time this morning petting our pets. Such cuties.",
+  "D.Combined_Pet": "I fed and played with {0} this morning. Great start to the day.",
+  "D.Multi_Combined_Pet": "I fed and played with the pets this morning. Great start to the day.",
+  "D.Pet_Animals": "I went and pet all the animals this morning! It's nice to see them happy.",
+  "D.Combined_Animals": "I got up early to feed and pet all the farm animals. I hope that makes your job a little easier today."
+
+
 }

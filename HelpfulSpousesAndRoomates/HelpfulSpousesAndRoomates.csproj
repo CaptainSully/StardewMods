@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<AssemblyName>HelpfulSpousesAndRoomates</AssemblyName>
 		<RootNamespace>HelpfulSpousesAndRoomates</RootNamespace>
-		<Version>1.0.1</Version>
+		<Version>1.1.0</Version>
 		<Description>Makes spouses and roommates more helpful! Configure which, and how many, chores they will perform each morning.</Description>
 		<UpdateKeys>Nexus:42951</UpdateKeys>
 		<EnableHarmony>true</EnableHarmony>
