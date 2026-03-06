@@ -10,7 +10,7 @@
   "UniqueID": "CaptainSully.HelpfulSpousesAndRoomates",
   "Name": "HelpfulSpousesAndRoomates",
   "Author": "CaptainSully",
-  "Version": "1.0.1",
+  "Version": "1.1.1",
   "Description": "Makes spouses and roommates more helpful! Configure which, and how many, chores they will perform each morning.",
   "EntryDll": "HelpfulSpousesAndRoomates.dll",
   "UpdateKeys": [

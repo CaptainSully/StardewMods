@@ -116,6 +116,7 @@ namespace HelpfulSpousesAndRoomates
                 return;
             }
 
+            currentNpcDoneAny = false;
             Random r = new Random();
             List<int> chorelist = new List<int>();
             bool none = (Game1.isGreenRain && Config.GreenRainBehaviour == "None");
@@ -247,7 +248,7 @@ namespace HelpfulSpousesAndRoomates
             {
                 if (Utility.getAllPets().Count > 1 && Game1.content.GetCurrentLanguage() == LocalizedContentManager.LanguageCode.en)
                 {
-                    npc.addMarriageDialogue(path, "Multi_Feed_Pet", false, Game1.player.getPetDisplayName());
+                    npc.addMarriageDialogue(path, "Multi_Feed_Pet");
                     log.D($"Added Multi_Feed_Pet to dialogue.", Config.Debug);
                 }
                 else
@@ -338,12 +339,12 @@ namespace HelpfulSpousesAndRoomates
 
             if (Game1.isRaining)
             {
-                npc.addMarriageDialogue(path, "Rainy_Breakfast", true);
+                npc.addMarriageDialogue(path, "Rainy_Breakfast");
                 log.D($"Added Rainy_Breakfast to dialogue.", Config.Debug);
             }
             else
             {
-                npc.addMarriageDialogue(path, "Sunny_Breakfast", true);
+                npc.addMarriageDialogue(path, "Sunny_Breakfast");
                 log.D($"Added Sunny_Breakfast to dialogue.", Config.Debug);
             }
 
@@ -378,7 +379,7 @@ namespace HelpfulSpousesAndRoomates
             {
                 if (Utility.getAllPets().Count > 1 && Game1.content.GetCurrentLanguage() == LocalizedContentManager.LanguageCode.en)
                 {
-                    npc.addMarriageDialogue(path, !Config.CombinePetChores ? "Multi_Pet_Pet" : "Multi_Combined_Pet", false, Game1.player.getPetDisplayName());
+                    npc.addMarriageDialogue(path, !Config.CombinePetChores ? "Multi_Pet_Pet" : "Multi_Combined_Pet");
                     log.D($"Added {(!Config.CombinePetChores ? "Multi_Pet_Pet" : "Multi_Combined_Pet")} to dialogue.", Config.Debug);
                 }
                 else
@@ -408,7 +409,7 @@ namespace HelpfulSpousesAndRoomates
             }
             if ((petAny || fedAny) && Config.ChoreDialogue != "None" && (!currentNpcDoneAny && Config.ChoreDialogue != "First") && !Config.CombineAnimalChores)
             {
-                npc.addMarriageDialogue(path, !Config.CombinePetChores ? "Pet_Animals" : "Combined_Animals", false);
+                npc.addMarriageDialogue(path, !Config.CombinePetChores ? "Pet_Animals" : "Combined_Animals");
                 log.D($"Added {(!Config.CombinePetChores ? "Pet_Animals" : "Combined_Animals")} to dialogue.", Config.Debug);
             }
 
