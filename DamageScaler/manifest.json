@@ -10,7 +10,7 @@
   "UniqueID": "CaptainSully.DamageScaler",
   "Name": "DamageScaler",
   "Author": "CaptainSully",
-  "Version": "1.0.7",
+  "Version": "1.0.8",
   "Description": "Add one time and/or per level damage boosts (or negatives)",
   "EntryDll": "DamageScaler.dll",
   "UpdateKeys": [

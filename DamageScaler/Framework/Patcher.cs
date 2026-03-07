@@ -18,7 +18,8 @@ namespace DamageScaler
                 .Aggregate("Applying Harmony patches:", (str, s) => $"{str}{Environment.NewLine}{s}"));
 
                 harmony.Patch(
-                    original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.damageMonster), new Type[] { typeof(Rectangle), typeof(int), typeof(int), typeof(bool), typeof(Farmer), typeof(bool) }),
+                    //original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.damageMonster), new Type[] { typeof(Rectangle), typeof(int), typeof(int), typeof(bool), typeof(Farmer), typeof(bool) }),
+                    original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.damageMonster), new Type[] { typeof(Rectangle), typeof(int), typeof(int), typeof(bool), typeof(float), typeof(int), typeof(float), typeof(float), typeof(bool), typeof(Farmer), typeof(bool) }),
                     prefix: new HarmonyMethod(typeof(Patcher), nameof(Prefix_DamageMonster))
                 );
             }
@@ -29,12 +30,11 @@ namespace DamageScaler
             log.T("Patches applied successfully.");
         }
 
-        /// <summary>The method to call before <see cref="GameLocation.damageMonster(Rectangle, int, int, bool, Farmer, bool=false)"/>.</summary>
         private static void Prefix_DamageMonster(ref int minDamage, ref int maxDamage, Farmer who)
         {
             if (who == null || Config.DisableAllModEffects)
                 return;
-            log.T($"Modifying damage to monster by {who.Name}.");
+            log.T($"Modifying damage to monster by {who.Name}; min: {minDamage}, max: {maxDamage}");
 
             float levelMultiplier = 1f;
 
@@ -52,6 +52,7 @@ namespace DamageScaler
 
             minDamage = Math.Max(0, (int)(minDamage * multiplier + flat));
             maxDamage = Math.Max(minDamage, (int)(maxDamage * multiplier + flat));
+            log.T($"New damage calc; min: {minDamage}, max: {maxDamage}");
         }
     }
 }
