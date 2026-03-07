@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<AssemblyName>HelpfulSpousesAndRoomates</AssemblyName>
-		<RootNamespace>HelpfulSpousesAndRoomates</RootNamespace>
+		<AssemblyName>HelpfulSpousesAndRoommates</AssemblyName>
+		<RootNamespace>HelpfulSpousesAndRoommates</RootNamespace>
 		<Version>1.1.1</Version>
 		<Description>Makes spouses and roommates more helpful! Configure which, and how many, chores they will perform each morning.</Description>
 		<UpdateKeys>Nexus:42951</UpdateKeys>

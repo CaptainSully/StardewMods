@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace HelpfulSpousesAndRoomates
+namespace HelpfulSpousesAndRoommates
 {
     internal class Patcher
     {
@@ -52,7 +52,7 @@ namespace HelpfulSpousesAndRoomates
             Chores.ResetChores();
         }*/
 
-        public static bool Prefix_MarriageDuties(NPC __instance)
+        public static bool Prefix_MarriageDuties()
         {
             log.T($"Modifying marriage duties.");
 

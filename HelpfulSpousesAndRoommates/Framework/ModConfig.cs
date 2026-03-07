@@ -1,5 +1,5 @@
 ﻿
-namespace HelpfulSpousesAndRoomates
+namespace HelpfulSpousesAndRoommates
 {
     internal class ModConfig
     {

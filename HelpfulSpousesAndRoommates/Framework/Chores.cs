@@ -3,7 +3,7 @@ using StardewValley.Characters;
 using StardewValley.TerrainFeatures;
 using SullySDVcore.Utilities;
 
-namespace HelpfulSpousesAndRoomates
+namespace HelpfulSpousesAndRoommates
 {
     internal class Chores
     {

@@ -7,12 +7,12 @@
    | 
    */
   "$schema": "https://smapi.io/schemas/manifest.json",
-  "UniqueID": "CaptainSully.HelpfulSpousesAndRoomates",
-  "Name": "HelpfulSpousesAndRoomates",
+  "UniqueID": "CaptainSully.HelpfulSpousesAndRoommates",
+  "Name": "HelpfulSpousesAndRoommates",
   "Author": "CaptainSully",
   "Version": "1.1.1",
   "Description": "Makes spouses and roommates more helpful! Configure which, and how many, chores they will perform each morning.",
-  "EntryDll": "HelpfulSpousesAndRoomates.dll",
+  "EntryDll": "HelpfulSpousesAndRoommates.dll",
   "UpdateKeys": [
     "Nexus:42951"
   ]
