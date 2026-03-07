@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example Files", "Example Fi
 		ExampleFiles\manifest.json = ExampleFiles\manifest.json
 		ExampleFiles\ModConfig.cs = ExampleFiles\ModConfig.cs
 		ExampleFiles\ModEntry.cs = ExampleFiles\ModEntry.cs
+		ExampleFiles\Patcher.cs = ExampleFiles\Patcher.cs
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfiniteWateringCan", "InfiniteWateringCan\InfiniteWateringCan.csproj", "{3826F677-FCEE-421C-A10E-8F441E0CE746}"
@@ -28,7 +29,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "[CP] Calico Eggs Wallet Cur
 		CP Mods\[CP] Calico Eggs Wallet Currency\manifest.json = CP Mods\[CP] Calico Eggs Wallet Currency\manifest.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpfulSpousesAndRoomates", "HelpfulSpousesAndRoomates\HelpfulSpousesAndRoomates.csproj", "{87A3CCA0-F161-470F-8717-B7B71A0B053E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TilledSoilDecayOptions", "TilledSoilDecayOptions\TilledSoilDecayOptions.csproj", "{8EE9559F-AF57-6531-274D-ED0BE8C5462C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpfulSpousesAndRoommates", "HelpfulSpousesAndRoommates\HelpfulSpousesAndRoommates.csproj", "{6C46634E-23B8-88F3-39E8-8D5D5902B679}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,10 +55,14 @@ Global
 		{07221856-394A-4419-A51E-2A96A9A2F697}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{07221856-394A-4419-A51E-2A96A9A2F697}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07221856-394A-4419-A51E-2A96A9A2F697}.Release|Any CPU.Build.0 = Release|Any CPU
-		{87A3CCA0-F161-470F-8717-B7B71A0B053E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{87A3CCA0-F161-470F-8717-B7B71A0B053E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{87A3CCA0-F161-470F-8717-B7B71A0B053E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{87A3CCA0-F161-470F-8717-B7B71A0B053E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EE9559F-AF57-6531-274D-ED0BE8C5462C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EE9559F-AF57-6531-274D-ED0BE8C5462C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EE9559F-AF57-6531-274D-ED0BE8C5462C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EE9559F-AF57-6531-274D-ED0BE8C5462C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C46634E-23B8-88F3-39E8-8D5D5902B679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C46634E-23B8-88F3-39E8-8D5D5902B679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C46634E-23B8-88F3-39E8-8D5D5902B679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C46634E-23B8-88F3-39E8-8D5D5902B679}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,7 +78,8 @@ Global
 		SullySDVcore\SullySDVcore.projitems*{08fa5f02-0a48-4e9f-898c-2c5913be4bbe}*SharedItemsImports = 13
 		SullySDVcore\SullySDVcore.projitems*{0f6654a2-2899-45b7-b63b-0ffa145704e1}*SharedItemsImports = 5
 		SullySDVcore\SullySDVcore.projitems*{3826f677-fcee-421c-a10e-8f441e0ce746}*SharedItemsImports = 5
+		SullySDVcore\SullySDVcore.projitems*{6c46634e-23b8-88f3-39e8-8d5d5902b679}*SharedItemsImports = 5
 		SullySDVcore\SullySDVcore.projitems*{83e011b9-ed03-4353-9a71-78060d8a3052}*SharedItemsImports = 5
-		SullySDVcore\SullySDVcore.projitems*{87a3cca0-f161-470f-8717-b7b71a0b053e}*SharedItemsImports = 5
+		SullySDVcore\SullySDVcore.projitems*{8ee9559f-af57-6531-274d-ed0be8c5462c}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
