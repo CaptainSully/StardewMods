@@ -52,6 +52,8 @@ namespace TilledSoilDecayOptions
         {
             var matcher = new CodeMatcher(instructions);
 
+            // If "is Farm", then skip to the next code block, thus not doing any HoeDirt removals on farms.
+            // If someone added "ClearEmptyDirtOnNewMonth" to Ginger Island farm it won't work there.
             matcher.MatchStartForward(
                 new CodeMatch(OpCodes.Brfalse_S));
             Label lbl = (Label)matcher.Operand;
@@ -59,6 +61,18 @@ namespace TilledSoilDecayOptions
             matcher.Start().MatchStartForward(
                 new CodeMatch(OpCodes.Brtrue_S));
             matcher.SetOperandAndAdvance(lbl);
+            
+            // Alternative solution
+            // Remove the "is Farm" check, so only the property "ClearEmptyDirtOnNewMonth" is checked.
+            // Farms don't have this by default, so no seasonal decay unless added. Same with Ginger Island farm.
+            /*
+            matcher.MatchStartForward(
+                new CodeMatch(OpCodes.Ldarg_0),
+                new CodeMatch(OpCodes.Isinst),
+                new CodeMatch(OpCodes.Brtrue_S)
+                );
+            matcher.RemoveInstructions(3);
+            */
 
             return matcher.InstructionEnumeration();
         }
