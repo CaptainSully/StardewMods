@@ -1,0 +1,99 @@
+{
+  /*********
+  * Generic Mod Config Menu UI
+  *********/
+  // general options
+  "title.general-settings": "Configuración general",
+  "disabled.name": "Deshabilitar el mod",
+  "disabled.desc": "Marca esto para desactivar el mod.",
+  "roommate-chores.name": "Los compañeros hacen tareas",
+  "roommate-chores.desc": "Si se permite que los compañeros de cuarto hagan tareas.\nSi está desactivado, solo los cónyuges harán tareas.",
+  "enable-custom-chores.name": "Habilitar tareas personalizadas",
+  "enablecustomchores.desc": "Si se habilitan las tareas personalizadas.\nSi está desactivado, solo se harán las tareas del juego base.",
+  "combine-pet-chores.name": "Combinar alimentar y acariciar mascotas",
+  "combine-pet-chores.desc": "Si los cónyuges/compañeros alimentan a las mascotas, también las acariciarán.\nSolo aplica si \"{{ecn}}\" está activado.\nSi está habilitado, \"{{cppn}}\" no importará.\nLa tarea combinada también contará solo como 1 en el máximo de tareas.",
+  "combine-animal-chores.name": "Combinar alimentar y acariciar animales",
+  "combine-animal-chores.desc": "Si los cónyuges/compañeros alimentan a los animales, también los acariciarán.\nSolo aplica si \"{{ecn}}\" está activado.\nSi está habilitado, \"{{cpan}}\" no importará.\nLa tarea combinada también contará solo como 1 en el máximo de tareas.",
+  "always-feed-pets.name": "Llenar siempre los cuencos de las mascotas",
+  "always-feed-pets.desc": "Si está habilitado, esto deja de contar como tarea y SIEMPRE lo harán.",
+  "always-pet-pets.name": "Acariciar siempre a tus mascotas",
+  "always-pet-pets.desc": "Si está habilitado, esto deja de contar como tarea y SIEMPRE lo harán.",
+  "green-rain-behaviour.name": "Comportamiento durante la lluvia verde",
+  "green-rain-behaviour.desc": "Qué deben hacer los cónyuges/compañeros durante la lluvia verde.\n\"{{grboi}}\": Solo hacer tareas dentro de la casa de la granja.\n\"{{grbnr}}\": Hacer cualquier tarea que se haría en un día lluvioso.\n\"{{grbn}}\": No hacer ninguna tarea.",
+  "g-r-b.only-inside": "Solo adentro",
+  "g-r-b.normal-rain": "Lluvia normal",
+  "g-r-b.none": "Ninguna",
+  "chore-dialogue.name": "Diálogo de tareas",
+  "chore-dialogue.desc": "Cómo manejar el diálogo de tareas; útil si tienes muchas tareas por cónyuge.\nNota: el desayuno SIEMPRE mostrará diálogo, ya que de otro modo no lo recibirías.\n\"{{cdf}}\": Solo mostrar diálogo para la primera tarea.\n\"{{cda}}\": Mostrar diálogo para todas las tareas.\n\"{{cdn}}\": No mostrar diálogo para las tareas.",
+  "c-d.first": "Primera",
+  "c-d.all": "Todas",
+  "c-d.none": "Ninguno",
+  "max-chores-per-spouse.name": "Máximo de tareas por cónyuge",
+  "max-chores-per-spouse.desc": "El número máximo de tareas que cualquier cónyuge/compañero puede hacer cada mañana.",
+
+  // multi-spouse options
+  "title.multi-spouse-options": "Opciones para múltiples cónyuges",
+  "only-one-does-chores.name": "Solo un NPC hace tareas",
+  "only-one-does-chores.desc": "Si está habilitado, evita que múltiples cónyuges/compañeros hagan tareas.\nSolo importa si tienes algún mod de múltiples cónyuges.",
+  "max-chores-per-day.name": "Máximo de tareas por día",
+  "max-chores-per-day.desc": "El número máximo de tareas que se pueden hacer cada día, entre todos los cónyuges.",
+
+  // vanilla chores
+  "title.vanilla-chores": "Tareas del juego base",
+  "chance-feed-pet.name": "Probabilidad de llenar cuencos de mascotas",
+  "chance-feed-pet.desc": "La probabilidad de que los cónyuges/compañeros llenen los cuencos de las mascotas cada mañana.\nSolo aplica si \"{{afpn}}\" está desactivado.",
+  "chance-water-crops.name": "Probabilidad de regar cultivos",
+  "chance-water-crops.desc": "La probabilidad de que el cónyuge/compañero riegue los cultivos en un día determinado.\nSe omite si está lloviendo.",
+  "chance-feed-animals.name": "Probabilidad de alimentar animales",
+  "chance-feed-animals.desc": "La probabilidad de que el cónyuge/compañero alimente a los animales en un día determinado.",
+  "chance-repair-fences.name": "Probabilidad de reparar cercas",
+  "chance-repair-fences.desc": "La probabilidad de que el cónyuge/compañero repare las cercas en un día determinado.",
+  "chance-make-breakfast.name": "Probabilidad de preparar desayuno",
+  "chance-make-breakfast.desc": "La probabilidad de que el cónyuge/compañero prepare el desayuno en un día determinado.",
+
+  // custom chores
+  "title.custom-chores": "Tareas personalizadas",
+  "chance-pet-pets.name": "Probabilidad de acariciar mascotas",
+  "chance-pet-pets.desc": "La probabilidad de que el cónyuge/compañero acaricie a los animales/mascotas en un día determinado.\nSolo aplica si \"{{appn}}\" está desactivado.\nSolo aplica si \"{{cpcn}}\" está desactivado.",
+  "chance-pet-animals.name": "Probabilidad de acariciar animales",
+  "chance-pet-animals.desc": "La probabilidad de que el cónyuge/compañero acaricie a los animales en un día determinado.\nSolo aplica si \"{{cacn}}\" está desactivado.",
+
+  // debugging
+  "title.debugging": "Depuración",
+  "debug-mode.name": "Modo de depuración",
+  "debug-mode.desc": "Esto es para ayudarme a depurar/probar cosas.\nPuede generar muchos mensajes.",
+
+
+  /*********
+  * Dialogue
+  *********/
+  // keys to vanilla dialogue, translators ignore these
+  //=====================
+  "V.Path": "Strings\\StringsFromCSFiles",
+  "V.Hi": "NPC.cs.4465", // add "%endearment" in call
+  "V.Good_Morn": "NPC.cs.4466", // add "%endearment" in call
+  "V.Water_Crops": "NPC.cs.4462",
+  "V.Water_Crops_Done": "NPC.cs.4470",
+  "V.Feed_Animals": "NPC.cs.4474",
+  "V.Repair_Fences": "NPC.cs.4481",
+  "V.Fed_Pet": "NPC.cs.4463", // add Game1.player.getPetDisplayName() in call
+  "V.Fed_Multi_Pets": "MultiplePetBowls_watered", // add Game1.player.getPetDisplayName() in call
+  //=====================
+
+  // testing/debugging
+  "Debug_Dialogue": "¡Diálogo de prueba!",
+
+  // vanilla changed dialogue
+  "D.Feed_Pet": "#$e#Le llené el cuenco de agua a {0}. ¡No olvides darle algo de cariño también!",
+  "D.Multi_Feed_Pet": "#$e#Les llené los cuencos de agua a las mascotas. ¡No olvides darles algo de cariño también!",
+  "D.Sunny_Breakfast": "¡Buenos días! ¿Qué rico huele, verdad? ¡Te preparé el desayuno! [194 195 210 211 216] #$e#Necesitas comer bien para mantenerte con energía durante el día.",
+  "D.Rainy_Breakfast": "¡Buenos días! Me desperté temprano con el sonido de la lluvia y te preparé el desayuno. [194 195 210 211 216] #$e#Abrígate y no trabajes demasiado. Quiero que te mantengas sano/a.",
+
+  // custom chores dialogue
+  "D.Pet_Pet": "Esta mañana estuve un rato acariciando a {0}. Qué monada.",
+  "D.Multi_Pet_Pet": "Esta mañana estuve un rato acariciando a nuestras mascotas. Qué monadas.",
+  "D.Combined_Pet": "Esta mañana alimenté y jugué con {0}. Un gran comienzo del día.",
+  "D.Multi_Combined_Pet": "Esta mañana alimenté y jugué con las mascotas. Un gran comienzo del día.",
+  "D.Pet_Animals": "¡Esta mañana fui a acariciar a todos los animales! Es bonito verlos contentos.",
+  "D.Combined_Animals": "Me levanté temprano para alimentar y acariciar a todos los animales de la granja. Espero que eso te facilite un poco el trabajo hoy."
+}
